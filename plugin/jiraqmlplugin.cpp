@@ -1,7 +1,7 @@
 #include <qqml.h>
 
 #include "jiraqmlplugin.h"
-#include "jira.h"
+#include "qmltypes/jira.h"
 
 void JiraQmlPlugin::registerTypes(const char *uri)
 {

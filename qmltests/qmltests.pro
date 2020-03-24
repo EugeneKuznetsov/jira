@@ -1,6 +1,6 @@
 TEMPLATE = app
 
-TARGET = plugin_test
+TARGET = qml_plugin_test
 
 CONFIG += warn_on qmltestcase qml_debug
 

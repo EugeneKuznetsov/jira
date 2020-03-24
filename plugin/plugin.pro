@@ -2,16 +2,18 @@ TEMPLATE = lib
 
 TARGET = $$qtLibraryTarget(qmljiraplugin)
 
-QT = qml
+QT = qml network
 
 CONFIG += qt plugin
 
 HEADERS += \
-    jira.h \
+    network/session.h \
+    qmltypes/jira.h \
     jiraqmlplugin.h
 
 SOURCES += \
-    jira.cpp \
+    network/session.cpp \
+    qmltypes/jira.cpp \
     jiraqmlplugin.cpp
 
 DISTFILES += \
