@@ -5,9 +5,10 @@ import Jira 1.0
 TestCase {
     id: root
 
-    name: "Plugin Test Case"
+    name: "Jira Plugin"
 
-    readonly property string jira_server: "https://bugreports.qt.io/"
+    readonly property url valid_jira_server: "https://bugreports.qt.io/"
+    readonly property url invalid_jira_server: "http://127.0.0.1:12345/wrong/server"
     property Jira jira_instance
 
     function initTestCase() {
@@ -23,19 +24,19 @@ TestCase {
         jira.destroy()
     }
 
-    function test_01_connect_simple_negative() {
+    function test_01_connect_simple_invalid_server() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira {}", root)
 
-        jira.connect("http://127.0.0.1:12345/wrong/server")
+        jira.connect(invalid_jira_server)
         compare(jira.connectionStatus, Jira.CONNECTING, "Failed to initiate connection")
 
         jira.destroy()
     }
 
-    function test_01_connect_simple_positive() {
+    function test_01_connect_simple_valid_server() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira {}", root)
 
-        jira.connect(jira_server)
+        jira.connect(valid_jira_server)
         compare(jira.connectionStatus, Jira.CONNECTING, "Failed to initiate connection")
 
         jira.destroy()

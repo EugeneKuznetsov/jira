@@ -6,4 +6,4 @@ void SetupTestCase::qmlEngineAvailable(QQmlEngine *engine) {
     engine->addImportPath("../plugin/imports");
 }
 
-QUICK_TEST_MAIN_WITH_SETUP(test_plugin, SetupTestCase)
+QUICK_TEST_MAIN_WITH_SETUP(JiraQmlPluginTest, SetupTestCase)
