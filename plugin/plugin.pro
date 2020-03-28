@@ -7,14 +7,16 @@ QT = qml network
 CONFIG += qt plugin
 
 HEADERS += \
+    jiraqmlplugin.h \
     network/session.h \
     qmltypes/jira.h \
-    jiraqmlplugin.h
+    qmltypes/options.h
 
 SOURCES += \
+    jiraqmlplugin.cpp \
     network/session.cpp \
     qmltypes/jira.cpp \
-    jiraqmlplugin.cpp
+    qmltypes/options.cpp
 
 DISTFILES += \
     imports/qmldir
