@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QUrl>
 
 class SessionTestCase : public QObject
 {
@@ -9,4 +10,6 @@ class SessionTestCase : public QObject
 private slots:
     void initTestCase();
     void cleanupTestCase();
+
+    void test_create_session_invalid_server();
 };

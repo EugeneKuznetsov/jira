@@ -3,16 +3,15 @@
 #include <QNetworkReply>
 #include "session.h"
 
-Session::Session(const QUrl &server, QObject *parent)
+Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent)
     : QObject(parent)
-    , m_network(new QNetworkAccessManager(this))
+    , m_network(network)
     , m_server(server)
 {
 }
 
-QNetworkReply *Session::httpGet(QNetworkRequest *request)
+QNetworkReply *Session::get(const QUrl &uri)
 {
-    Q_UNUSED(request)
-
+    Q_UNUSED(uri)
     return nullptr;
 }

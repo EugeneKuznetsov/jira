@@ -2,7 +2,7 @@ TEMPLATE = app
 
 TARGET = cpp_plugin_test
 
-QT += testlib
+QT += qml testlib
 
 CONFIG += warn_on testcase
 
