@@ -4,13 +4,16 @@
 Jira::Jira(QObject *parent/* = nullptr*/)
     : QObject(parent)
     , m_session(nullptr)
-    , m_options(nullptr)
-    , m_connectionStatus(OFFLINE)
+    , m_options(new Options(this))
 {
 }
 
-void Jira::connect()
+void Jira::setOptions(Options *new_value)
 {
-    m_connectionStatus = CONNECTING;
-    emit connectionStatusChanged();
+    if (nullptr == new_value)
+        return;
+    if (nullptr != m_options)
+        delete m_options;
+    m_options = new_value;
+    m_options->setParent(this);
 }
