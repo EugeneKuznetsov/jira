@@ -1,15 +1,13 @@
 #pragma once
 
 #include <QObject>
-#include <QUrl>
 
 class SessionTestCase : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void test_create_session_invalid_server();
+    void test_session_get_with_invalid_hostname();
+    void test_session_get_with_invalid_jira_server();
+    void test_session_get_with_valid_jira_server();
 };

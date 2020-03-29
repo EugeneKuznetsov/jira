@@ -1,6 +1,7 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include "reply.h"
 #include "session.h"
 
 Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent)
@@ -10,8 +11,15 @@ Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *pa
 {
 }
 
-QNetworkReply *Session::get(const QUrl &uri)
+Reply *Session::get(const QUrl &uri)
 {
-    Q_UNUSED(uri)
-    return nullptr;
+    QNetworkRequest request(completeUri(uri));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("X-Atlassian-Token", "no-check");
+    return new Reply(m_network->get(request), this);
+}
+
+QUrl Session::completeUri(const QUrl &uri) const
+{
+    return QUrl(m_server.toString() + uri.toString());
 }

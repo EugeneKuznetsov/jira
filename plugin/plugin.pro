@@ -8,12 +8,14 @@ CONFIG += qt plugin
 
 HEADERS += \
     jiraqmlplugin.h \
+    network/reply.h \
     network/session.h \
     qmltypes/jira.h \
     qmltypes/options.h
 
 SOURCES += \
     jiraqmlplugin.cpp \
+    network/reply.cpp \
     network/session.cpp \
     qmltypes/jira.cpp \
     qmltypes/options.cpp

@@ -7,9 +7,12 @@ QT += qml testlib
 CONFIG += warn_on testcase
 
 HEADERS += \
+    test_reply.h \
     test_session.h
 
 SOURCES += \
+    main.cpp \
+    test_reply.cpp \
     test_session.cpp
 
 INCLUDEPATH += $$PWD/../plugin

@@ -4,7 +4,7 @@
 #include <QUrl>
 
 class QNetworkAccessManager;
-class QNetworkReply;
+class Reply;
 
 class Session : public QObject
 {
@@ -16,7 +16,10 @@ class Session : public QObject
 public:
     Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent);
 
-    QNetworkReply *get(const QUrl &uri);
+    Reply *get(const QUrl &uri);
+
+private:
+    QUrl completeUri(const QUrl &uri) const;
 
 private:
     QNetworkAccessManager   *m_network;
