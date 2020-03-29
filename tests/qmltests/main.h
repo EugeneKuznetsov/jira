@@ -4,7 +4,7 @@
 
 class QQmlEngine;
 
-class SetupTestCase : public QObject
+class SetupTestSuit : public QObject
 {
     Q_OBJECT
 

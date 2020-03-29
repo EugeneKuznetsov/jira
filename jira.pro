@@ -1,6 +1,5 @@
 TEMPLATE = subdirs
 
-SUBDIRS = plugin cpptests qmltests
+SUBDIRS = plugin tests
 
-cpptests.depends = plugin
-qmltests.depends = plugin
+tests.depends = plugin

@@ -36,3 +36,5 @@ void SessionTestCase::test_session_get_with_valid_jira_server()
     QSignalSpy replySpy(reply, &Reply::ready);
     QVERIFY2(replySpy.wait(3000), "Ready signal was not emitted by Reply");
 }
+
+QTEST_GUILESS_MAIN(SessionTestCase)
