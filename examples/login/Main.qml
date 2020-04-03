@@ -50,6 +50,8 @@ Window {
         login_result_text.text = (success) ? "Welcome!" : "Authentication was not successful."
         login_button.visible = false
         login_result_area.visible = true
+        if (jira.getCurrentErrorType() === Jira.NETWORK_ERROR)
+            login_result_text.text += " Due to network error."
     }
 
     Component.onCompleted: root.visible = true
