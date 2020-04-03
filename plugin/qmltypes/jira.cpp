@@ -13,7 +13,9 @@ Jira::Jira(QObject *parent/* = nullptr*/)
     , m_options(new Options(this))
     , m_session(nullptr)
     , m_lastNetworkError()
-    , m_lastJiraError()
+    , m_lastJiraApiError()
+    , m_lastJiraUserError()
+    , m_currentErrorType(NO_ERROR)
 {
 }
 
@@ -38,8 +40,10 @@ const QString Jira::getLastError() const
 {
     if (!m_lastNetworkError.isEmpty())
         return m_lastNetworkError;
-    else if (!m_lastJiraError.isEmpty())
-        return m_lastJiraError;
+    else if (!m_lastJiraApiError.isEmpty())
+        return m_lastJiraApiError;
+    else if (!m_lastJiraUserError.isEmpty())
+        return m_lastJiraUserError;
     else
         return "";
 }
@@ -59,10 +63,13 @@ void Jira::login(const QJSValue &callback)
         if (!success) {
             if (0 == statusCode) {
                 m_lastNetworkError = reply->getErrorString();
+                m_currentErrorType = NETWORK_ERROR;
             } else if (400 == statusCode) {
-                m_lastJiraError = "Incorrect usage of REST API";
+                m_lastJiraApiError = "Incorrect usage of REST API"; // TODO: get more details
+                m_currentErrorType = JIRA_API_ERROR;
             } else {
-                m_lastJiraError = "Some auth error";  // TODO: add more informatoin based on status
+                m_lastJiraUserError = "Some auth error";  // TODO: add more informatoin based on status
+                m_currentErrorType = JIRA_USER_ERROR;
             }
             emit lastErrorChanged(getLastError());
         }
@@ -85,7 +92,10 @@ Session *Jira::activeSession(bool createNewSession/* = false*/)
         if (nullptr == engine)  // TODO: handle error case properly
             return nullptr;
         m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        QObject::connect(m_options, &Options::serverChanged, m_session, &Session::setServer);
     }
+
+    m_currentErrorType = NO_ERROR;
 
     return m_session;
 }

@@ -16,7 +16,7 @@ public:
     explicit Options(QObject *parent = nullptr);
 
 signals:
-    void serverChanged();
+    void serverChanged(const QUrl &newValue);
     void usernameChanged();
     void passwordChanged();
 
