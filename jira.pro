@@ -1,5 +1,6 @@
 TEMPLATE = subdirs
 
-SUBDIRS = plugin tests
+SUBDIRS = plugin examples tests
 
+examples.depends = plugin
 tests.depends = plugin
