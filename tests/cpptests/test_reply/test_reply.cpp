@@ -42,13 +42,28 @@ void ReplyTestCase::test_reply_from_invalid_jira_server()
     QVERIFY2(replySpy.wait(3000), "Ready signal was not emitted by Reply");
 }
 
-void ReplyTestCase::test_reply_from_valid_jira_server()
+void ReplyTestCase::test_reply_from_valid_offline_jira_server()
 {
     QQmlEngine engine;
     QNetworkAccessManager *network = engine.networkAccessManager();
-    QNetworkRequest request(QUrl("http://localhost:2990/jira/rest/api/2/serverInfo"));
+    QNetworkRequest request(QUrl("http://localhost:299/jira/rest/api/2/serverInfo"));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setRawHeader("X-Atlassian-Token", "no-check");
+    Reply *reply = new Reply(network->get(request), this);
+    connect(reply, &Reply::ready, this, [reply](const int statusCode, const QByteArray &){
+        QCOMPARE(statusCode, 0);
+        QVERIFY2(!reply->getErrorString().isEmpty(), "Connection to a valid Jira server in offline did not produce an error string");
+    });
+    QSignalSpy replySpy(reply, &Reply::ready);
+    QVERIFY2(replySpy.wait(3000), "Ready signal was not emitted by Reply");
+}
+
+void ReplyTestCase::test_reply_from_valid_online_jira_server()
+{
+    QQmlEngine engine;
+    QNetworkAccessManager *network = engine.networkAccessManager();
+    QNetworkRequest request(QUrl("https://jira.atlassian.com/rest/api/2/serverInfo"));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     Reply *reply = new Reply(network->get(request), this);
     connect(reply, &Reply::ready, this, [reply](const int statusCode, const QByteArray &data){
         QCOMPARE(statusCode, 200);
