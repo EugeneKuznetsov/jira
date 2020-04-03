@@ -8,6 +8,8 @@ class SessionTestCase : public QObject
     Q_OBJECT
 
 private slots:
+    void test_change_server();
+
     void test_session_get_with_invalid_networkmanager();
     void test_session_post_with_invalid_networkmanager();
 
