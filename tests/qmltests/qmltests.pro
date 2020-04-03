@@ -12,4 +12,3 @@ DISTFILES += \
     tst_options.qml
 
 QML_IMPORT_PATH = $$OUT_PWD/../../plugin/imports
-

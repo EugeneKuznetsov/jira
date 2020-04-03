@@ -5,7 +5,7 @@ import Jira 1.0
 TestCase {
     id: root
 
-    name: "[Type Options]"
+    name: "[Options]"
 
     function test_default_values() {
         var options = Qt.createQmlObject("import Jira 1.0; Options { }", root)
