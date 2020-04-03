@@ -13,10 +13,24 @@ Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *pa
 
 Reply *Session::get(const QUrl &uri)
 {
+    if (nullptr == m_network)
+        return nullptr;
+
     QNetworkRequest request(completeUri(uri));
     request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
     request.setRawHeader("X-Atlassian-Token", "no-check");
     return new Reply(m_network->get(request), this);
+}
+
+Reply *Session::post(const QUrl &uri, const QByteArray &payload)
+{
+    if (nullptr == m_network)
+        return nullptr;
+
+    QNetworkRequest request(completeUri(uri));
+    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    request.setRawHeader("X-Atlassian-Token", "no-check");
+    return new Reply(m_network->post(request, payload));
 }
 
 QUrl Session::completeUri(const QUrl &uri) const

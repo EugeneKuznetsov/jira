@@ -17,6 +17,7 @@ public:
     Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent);
 
     Reply *get(const QUrl &uri);
+    Reply *post(const QUrl &uri, const QByteArray &payload);
 
 private:
     QUrl completeUri(const QUrl &uri) const;
