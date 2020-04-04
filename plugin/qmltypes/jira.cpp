@@ -79,6 +79,41 @@ void Jira::login(const QJSValue &callback)
     });
 }
 
+void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
+{
+    if (!callback.isCallable()) // TODO: handle error case properly
+        return;
+
+    QString path = "/rest/api/2/issue/" + issueIdOrKey;
+    Reply *reply = activeSession()->get(QUrl(path));
+    connect(reply, &Reply::ready, this, [this, callback, reply](const int statusCode, const QByteArray &data) {
+        QJSValue callbackCopy(callback);
+        bool success = (200 == statusCode);
+        if (!success) {
+            if (0 == statusCode) {
+                m_lastNetworkError = reply->getErrorString();
+                m_currentErrorType = NETWORK_ERROR;
+                emit lastErrorChanged(getLastError());
+            } else if (400 == statusCode) {
+                m_lastJiraApiError = "Incorrect usage of REST API"; // TODO: get more details
+                m_currentErrorType = JIRA_API_ERROR;
+                emit lastErrorChanged(getLastError());
+            } else if (404 == statusCode) {
+                callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(nullptr)});
+            } else {
+                m_lastJiraUserError = "Some other error";  // TODO: add more informatoin based on status
+                m_currentErrorType = JIRA_USER_ERROR;
+                emit lastErrorChanged(getLastError());
+            }
+        } else {
+            Issue issue(QJsonDocument::fromJson(data));
+            qmlEngine(this)->setObjectOwnership(&issue, QQmlEngine::JavaScriptOwnership);   // now it is not our "headache" anymore ... ;-)
+            callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(&issue)});
+        }
+        reply->deleteLater();
+    });
+}
+
 Session *Jira::activeSession(bool createNewSession/* = false*/)
 {
     if (createNewSession) {

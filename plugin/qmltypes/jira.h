@@ -5,6 +5,8 @@
 
 #include "options.h"
 
+#include "resources/issue.h"
+
 class Session;
 
 class Jira : public QObject
@@ -39,6 +41,7 @@ signals:
 
 public slots:
     void login(const QJSValue &callback);
+    void issue(const QString &issueIdOrKey, const QJSValue &callback);
 
     ErrorTypes getCurrentErrorType() const {
         return m_currentErrorType;

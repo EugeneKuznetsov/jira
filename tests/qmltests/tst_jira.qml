@@ -168,4 +168,19 @@ TestCase {
 
         jira.destroy()
     }
+
+    function test_issue_with_invalid_key() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+
+        var visited = false
+        var callback = function onIssue(issue) {
+            visited = true
+            compare(issue, null, "Received a valid Issue object instead of null")
+        }
+
+        jira.issue("INVALID-1", callback)
+        tryVerify(function() { return visited === true }, 3000, "Issue callback was not invoked")
+
+        jira.destroy()
+    }
 }
