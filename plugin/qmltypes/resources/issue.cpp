@@ -1,3 +1,4 @@
+#include <QJsonObject>
 #include "issue.h"
 
 Issue::Issue(QObject *parent/* = nullptr*/)
@@ -7,10 +8,10 @@ Issue::Issue(QObject *parent/* = nullptr*/)
 
 Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
     : QObject(parent)
-    , m_id()
-    , m_key()
 {
-    Q_UNUSED(issueJson);
+    QJsonObject root = issueJson.object();
+    m_id = root["id"].toString();
+    m_key = root["key"].toString();
 }
 
 const QString &Issue::getId() const
