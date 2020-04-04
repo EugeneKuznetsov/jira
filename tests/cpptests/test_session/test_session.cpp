@@ -11,9 +11,9 @@
 void SessionTestCase::test_change_server()
 {
     QQmlEngine engine;
-    Session session(QUrl("http://localhost:2990/jira"), engine.networkAccessManager(), &engine);
+    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
 
-    Reply *reply = session.get(QUrl("/"));
+    Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
     QVERIFY2(nullptr != reply, "GET method did not return Reply object");
     QSignalSpy replyOnlineSpy(reply, &Reply::ready);
     QVERIFY2(replyOnlineSpy.wait(3000), "Ready signal was not emitted by Reply");
@@ -72,7 +72,7 @@ void SessionTestCase::test_session_get_with_invalid_jira_server()
 void SessionTestCase::test_session_get_with_valid_jira_server()
 {
     QQmlEngine engine;
-    Session session(QUrl("http://localhost:2990/jira"), engine.networkAccessManager(), &engine);
+    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
 
     Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
     QVERIFY2(nullptr != reply, "GET method did not return Reply object");
@@ -83,7 +83,7 @@ void SessionTestCase::test_session_get_with_valid_jira_server()
 void SessionTestCase::test_session_post_with_valid_jira_server()
 {
     QQmlEngine engine;
-    Session session(QUrl("http://localhost:2990/jira"), engine.networkAccessManager(), &engine);
+    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
 
     const QByteArray payload = "{\"username\": \"\", \"password\": \"\"}";
     Reply *reply = session.post(QUrl("/rest/auth/1/session"), payload);
