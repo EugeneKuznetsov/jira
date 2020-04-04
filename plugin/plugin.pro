@@ -11,14 +11,16 @@ HEADERS += \
     network/reply.h \
     network/session.h \
     qmltypes/jira.h \
-    qmltypes/options.h
+    qmltypes/options.h \
+    qmltypes/resources/issue.h
 
 SOURCES += \
     jiraqmlplugin.cpp \
     network/reply.cpp \
     network/session.cpp \
     qmltypes/jira.cpp \
-    qmltypes/options.cpp
+    qmltypes/options.cpp \
+    qmltypes/resources/issue.cpp
 
 DISTFILES += \
     imports/qmldir

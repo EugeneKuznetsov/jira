@@ -8,6 +8,7 @@ HEADERS = main.h
 SOURCES = main.cpp
 
 DISTFILES += \
+    tst_issue.qml \
     tst_jira.qml \
     tst_options.qml
 
