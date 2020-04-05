@@ -194,6 +194,13 @@ TestCase {
             visited = true
             verify(issue !== null, "Received null insted of valid Issue object")
             compare(issue.key, "QTBUG-1", "Requested QTBUG-1, but received something else")
+            verify(issue.expand & Issue.RenderedFields, "Issue QTBUG-1 cannot be expanded with changelog")
+            verify(issue.expand & Issue.Names, "Issue QTBUG-1 cannot be expanded with names")
+            verify(issue.expand & Issue.Schema, "Issue QTBUG-1 cannot be expanded with schema")
+            verify(issue.expand & Issue.Operations, "Issue QTBUG-1 cannot be expanded with operations")
+            verify(issue.expand & Issue.EditMeta, "Issue QTBUG-1 cannot be expanded with editmeta")
+            verify(issue.expand & Issue.Changelog, "Issue QTBUG-1 cannot be expanded with changelog")
+            verify(issue.expand & Issue.VersionedRepresentations, "Issue QTBUG-1 cannot be expanded with versioned representations")
         }
 
         jira.issue("QTBUG-1", callback)
