@@ -28,12 +28,10 @@ public:
 public:
     explicit Jira(QObject *parent = nullptr);
 
-    Options *getOptions() const {
-        return m_options;
-    }
+    Options *getOptions() const;
+    const QString getLastError() const;
 
     void setOptions(Options *new_value);
-    const QString getLastError() const;
 
 signals:
     void optionsChanged();
@@ -43,9 +41,7 @@ public slots:
     void login(const QJSValue &callback);
     void issue(const QString &issueIdOrKey, const QJSValue &callback);
 
-    ErrorTypes getCurrentErrorType() const {
-        return m_currentErrorType;
-    }
+    ErrorTypes getCurrentErrorType() const;
 
 private:
     Session *activeSession(bool createNewSession = false);

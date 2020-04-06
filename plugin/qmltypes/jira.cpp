@@ -19,6 +19,11 @@ Jira::Jira(QObject *parent/* = nullptr*/)
 {
 }
 
+Options *Jira::getOptions() const
+{
+    return m_options;
+}
+
 void Jira::setOptions(Options *new_value)
 {
     if (nullptr == new_value)
@@ -112,6 +117,11 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
         }
         reply->deleteLater();
     });
+}
+
+Jira::ErrorTypes Jira::getCurrentErrorType() const
+{
+    return m_currentErrorType;
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)
