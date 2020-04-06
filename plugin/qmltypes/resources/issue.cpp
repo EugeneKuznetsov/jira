@@ -1,12 +1,14 @@
 #include <QJsonObject>
 #include "issue.h"
-
+#include <QDebug>
+#include <QQmlPropertyMap>
 Issue::Issue(QObject *parent/* = nullptr*/)
     : QObject(parent)
+    , m_self()
     , m_id()
     , m_key()
-    , m_self()
     , m_expandFlags()
+    , m_fields()
 {
 }
 
@@ -14,10 +16,11 @@ Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
     : QObject(parent)
 {
     QJsonObject root = issueJson.object();
+    m_self = root["self"].toString();
     m_id = root["id"].toString();
     m_key = root["key"].toString();
-    m_self = root["self"].toString();
     m_expandFlags = root["expand"].toString();
+    m_fields = root["fields"].toObject().toVariantMap();
 }
 
 const QString &Issue::getId() const
@@ -46,4 +49,14 @@ quint8 Issue::getExpand() const
     flags |= (m_expandFlags.contains("changelog")) ? Changelog : 0;
     flags |= (m_expandFlags.contains("versionedRepresentations")) ? VersionedRepresentations : 0;
     return flags;
+}
+
+const QVariantMap &Issue::getFields() const
+{
+    return m_fields;
+}
+
+void Issue::setFields(const QVariantMap &newValue)
+{
+    m_fields = newValue;
 }

@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QJsonDocument>
+#include <QVariantMap>
 #include <QUrl>
 
 class Issue : public QObject
@@ -12,6 +13,7 @@ class Issue : public QObject
     Q_PROPERTY(QString key READ getKey)
     Q_PROPERTY(QUrl self READ getSelf)
     Q_PROPERTY(quint8 expand READ getExpand)
+    Q_PROPERTY(QVariantMap fields READ getFields WRITE setFields)
 
 public:
     enum ExpandFlag {
@@ -34,10 +36,17 @@ public:
     const QString &getKey() const;
     const QUrl &getSelf() const;
     quint8 getExpand() const;
+    const QVariantMap &getFields() const;
+
+    void setFields(const QVariantMap &newValue);
+
+signals:
+    void onFieldsChanged();
 
 private:
-    QString m_id;
-    QString m_key;
-    QUrl    m_self;
-    QString m_expandFlags;
+    QUrl        m_self;
+    QString     m_id;
+    QString     m_key;
+    QString     m_expandFlags;
+    QVariantMap m_fields;
 };

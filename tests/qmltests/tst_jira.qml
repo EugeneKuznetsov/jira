@@ -47,7 +47,7 @@ TestCase {
                    "Connection to offline server did not produce NETWORK_ERROR (1). Got " + jira.getCurrentErrorType() + " instead")
         }
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked for a first server")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a first server")
 
         visited = false
         callback = function onLoginOnline(success) {
@@ -58,7 +58,7 @@ TestCase {
         }
         jira.options.server = "http://localhost:2990/jira"
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked for a second server")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a second server")
 
         visited = false
         callback = function onLoginOffline(success) {
@@ -70,7 +70,7 @@ TestCase {
         var options = Qt.createQmlObject("import Jira 1.0; Options { server: \"http://localhost:2999/jira\" }", root)
         jira.options = options
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked for a third server")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a third server")
 
         jira.destroy()
     }
@@ -86,7 +86,7 @@ TestCase {
                    "Connection to server did not produce JIRA_USER_ERROR (2). Got " + jira.getCurrentErrorType() + " instead")
         }
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked for the first pair of username/password")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for the first pair of username/password")
 
         visited = false
         callback = function onLoginOnline(success) {
@@ -98,7 +98,7 @@ TestCase {
         jira.options.username = 'admin'
         jira.options.password = 'admin'
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked for the second pair of username/password")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for the second pair of username/password")
     }
 
     function test_login_with_offline_server() {
@@ -116,7 +116,7 @@ TestCase {
         spy.signalName = "lastErrorChanged"
         jira.login(callback)
 
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
         compare(spy.count, 1, "lastErrorChanged was not emitted")
 
         jira.destroy()
@@ -137,7 +137,7 @@ TestCase {
         spy.signalName = "lastErrorChanged"
         jira.login(callback)
 
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
         compare(spy.count, 1, "lastErrorChanged was not emitted")
 
         jira.destroy()
@@ -163,7 +163,7 @@ TestCase {
         spy.signalName = "lastErrorChanged"
         jira.login(callback)
 
-        tryVerify(function() { return visited === true }, 3000, "Login callback was not invoked")
+        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
         compare(spy.count, 0, "lastErrorChanged was emitted")
 
         jira.destroy()
@@ -180,7 +180,7 @@ TestCase {
         }
 
         jira.issue("QTBUG-0", callback)
-        tryVerify(function() { return visited === true }, 3000, "Issue callback was not invoked")
+        tryVerify(function() { return visited === true }, 5000, "Issue callback was not invoked")
 
         jira.destroy()
     }
@@ -201,10 +201,11 @@ TestCase {
             verify(issue.expand & Issue.EditMeta, "Issue QTBUG-1 cannot be expanded with editmeta")
             verify(issue.expand & Issue.Changelog, "Issue QTBUG-1 cannot be expanded with changelog")
             verify(issue.expand & Issue.VersionedRepresentations, "Issue QTBUG-1 cannot be expanded with versioned representations")
+            compare(issue.fields.status.name, "Closed", "Status of issue QTBUG-1 is not Closed")
         }
 
         jira.issue("QTBUG-1", callback)
-        tryVerify(function() { return visited === true }, 3000, "Issue callback was not invoked")
+        tryVerify(function() { return visited === true }, 5000, "Issue callback was not invoked")
 
         jira.destroy()
     }
