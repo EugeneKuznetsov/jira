@@ -36,5 +36,4 @@ private:
 private:
     Options *m_options;
     Session *m_session;
-    bool    m_networkError;
 };
