@@ -4,7 +4,6 @@
 Reply::Reply(QNetworkReply *networkReply, QObject *parent/* = nullptr*/)
     : QObject(parent)
     , m_networkReply(networkReply)
-    , m_errorString()
 {
     connect(networkReply, &QNetworkReply::finished, this, &Reply::onReady);
 }
@@ -15,9 +14,10 @@ void Reply::onReady()
     const QByteArray data = m_networkReply->readAll();
 
     if (0 == statusCode)
-        m_errorString = m_networkReply->errorString();
-
-    emit ready(statusCode, data);
+        emit networkError(m_networkReply->errorString());
+    else
+        emit ready(statusCode, data);
 
     m_networkReply->deleteLater();
+    emit destroy();
 }

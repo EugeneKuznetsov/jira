@@ -13,10 +13,10 @@ TestCase {
 
     function test_default_values() {
         var options = Qt.createQmlObject("import Jira 1.0; Options { }", root)
+
         compare(options.server.toString(), "http://localhost:2990/jira", "Default server was changed")
         compare(options.username, "", "Default username was changed")
         compare(options.password, "", "Default password was changed")
-        options.destroy()
     }
 
     function test_change_default_values() {
@@ -41,7 +41,5 @@ TestCase {
         options.password = "admin"
         tryCompare(spy, "count", 1, 500, "Password property change signal was not emitted")
         compare(options.password, "admin", "Default password was not changed")
-
-        options.destroy()
     }
 }

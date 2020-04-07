@@ -16,7 +16,5 @@ TestCase {
         compare(issue.self, "", "Initial value of self is not empty")
         compare(issue.expand, 0x00, "Initial value of expand is incorrect")
         verify(issue.fields instanceof Object, "Initial type of fields is not an Object")
-
-        issue.destroy()
     }
 }

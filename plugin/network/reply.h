@@ -14,17 +14,14 @@ class Reply : public QObject
 public:
     explicit Reply(QNetworkReply *networkReply, QObject *parent = nullptr);
 
-    const QString &getErrorString() const {
-        return m_errorString;
-    }
-
 signals:
     void ready(const int statusCode, const QByteArray &data);
+    void destroy();
+    void networkError(const QString &errorString);
 
 private slots:
     void onReady();
 
 private:
     QNetworkReply   *m_networkReply;
-    QString         m_errorString;
 };

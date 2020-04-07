@@ -8,13 +8,11 @@ TestCase {
     name: "[Jira]"
 
     SignalSpy {
-        id: spy
+        id: errorSpy
     }
 
-    function test_initial_errors() {
-        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
-        compare(jira.lastError, "", "Jira was created already with an error message")
-        verify(jira.getCurrentErrorType() === Jira.NO_ERROR, "Jira was created already with an error type")
+    SignalSpy {
+        id: optionsSpy
     }
 
     function test_default_options() {
@@ -34,139 +32,162 @@ TestCase {
         compare(options.server.toString(), "http://server", "Default server was not changed")
         compare(options.username, "username", "Default username was not changed")
         compare(options.password, "password", "Default password was not changed")
+
+        options = Qt.createQmlObject("import Jira 1.0; Options { }", root)
+        optionsSpy.clear()
+        optionsSpy.target = jira
+        optionsSpy.signalName = "optionsChanged"
+        jira.options = options
+        optionsSpy.wait(100)
+        verify(optionsSpy.count === 1, "Change of options did not produce signal optionsChanged")
+    }
+
+    function test_login_with_invalid_callback() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.login(null)
+        tryVerify(function() { return errorSpy.count === 0 }, 1000, "Issue call produced a network error")
     }
 
     function test_login_with_change_options_jira_server() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira { options: Options { server: \"http://localhost:2999/jira\" } }", root)
 
-        var visited = false
-        var callback = function onLoginOffline(success) {
-            visited = true
-            compare(success, false, "Login to offline server was successful")
-            verify(jira.getCurrentErrorType() === Jira.NETWORK_ERROR,
-                   "Connection to offline server did not produce NETWORK_ERROR (1). Got " + jira.getCurrentErrorType() + " instead")
-        }
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        var callback = function onLoginOffline(success) { fail("Login callback was invoked for a first server") }
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a first server")
+        errorSpy.wait(5000)
+        verify(errorSpy.count === 1, "Connection to offline server did not produce network error")
+        verify(errorSpy.signalArguments[0].length !== 0, "Connection to the first server did not produced networkErrorDetails error string")
 
-        visited = false
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        var visited = false
         callback = function onLoginOnline(success) {
             visited = true
             compare(success, false, "Login to changed (online) server was successful")
-            verify(jira.getCurrentErrorType() === Jira.JIRA_USER_ERROR,
-                   "Connection to changed (online) server did not produce JIRA_USER_ERROR (2). Got " + jira.getCurrentErrorType() + " instead")
         }
-        jira.options.server = "http://localhost:2990/jira"
+        jira.options.server = "https://jira.atlassian.com/"
         jira.login(callback)
         tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a second server")
+        verify(errorSpy.count === 0, "Connection to online server produced network error")
 
-        visited = false
-        callback = function onLoginOffline(success) {
-            visited = true
-            compare(success, false, "Login to changed (offline) server was successful")
-            verify(jira.getCurrentErrorType() === Jira.NETWORK_ERROR,
-                   "Connection to changed (offline) server did not produce NETWORK_ERROR (1). Got " + jira.getCurrentErrorType() + " instead")
-        }
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        callback = function onLoginOffline(success) { fail("Login callback was invoked for a third server") }
         var options = Qt.createQmlObject("import Jira 1.0; Options { server: \"http://localhost:2999/jira\" }", root)
         jira.options = options
         jira.login(callback)
-        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for a third server")
-
-        jira.destroy()
+        errorSpy.wait(5000)
+        verify(errorSpy.count === 1, "Connection to offline server did not produce network error")
+        verify(errorSpy.signalArguments[0].length !== 0, "Connection to the third server did not produced networkErrorDetails error string")
     }
 
     function test_login_with_change_options_jira_username_and_password() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
 
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         var visited = false
         var callback = function onLogin(success) {
             visited = true
-            compare(success, false, "Login to server was successful")
-            verify(jira.getCurrentErrorType() === Jira.JIRA_USER_ERROR,
-                   "Connection to server did not produce JIRA_USER_ERROR (2). Got " + jira.getCurrentErrorType() + " instead")
+            compare(success, false, "Login to jira server was successful")
         }
         jira.login(callback)
         tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for the first pair of username/password")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
 
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         visited = false
-        callback = function onLoginOnline(success) {
+        callback = function onLogin(success) {
             visited = true
-            compare(success, true, "Login with changed credentials was not successful")
-            verify(jira.getCurrentErrorType() === Jira.NO_ERROR,
-                   "Connection with changed (valid) credentials produced an error " + jira.getCurrentErrorType())
+            compare(success, true, "Login to jira server was not successful")
         }
-        jira.options.username = 'admin'
-        jira.options.password = 'admin'
+        jira.options.username = "admin"
+        jira.options.password = "admin"
         jira.login(callback)
         tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked for the second pair of username/password")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
     }
 
     function test_login_with_offline_server() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira { options: Options { server: \"http://localhost:2999/jira\"} }", root)
 
-        var visited = false
-        var callback = function onLogin(success) {
-            visited = true
-            compare(success, false, "Login to offline server was successful")
-            verify(jira.getLastError().length() !== 0, "Error message was still empty after connection to offline server")
-        }
-
-        spy.clear()
-        spy.target = jira
-        spy.signalName = "lastErrorChanged"
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        var callback = function onLoginOffline(success) { fail("Login callback was invoked when trying to connect to offline server") }
         jira.login(callback)
-
-        tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
-        compare(spy.count, 1, "lastErrorChanged was not emitted")
-
-        jira.destroy()
+        errorSpy.wait(5000)
+        verify(errorSpy.count === 1, "Connection to offline server did not produce network error")
+        verify(errorSpy.signalArguments[0].length !== 0, "Connection to offline server did not produced networkErrorDetails error string")
     }
 
     function test_login_with_default_options() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
 
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         var visited = false
         var callback = function onLogin(success) {
             visited = true
-            compare(success, false, "Login was successful with invalid credentials")
-            verify(jira.getLastError().length() !== 0, "Error message was still empty after connection with default credentials")
+            compare(success, false, "Login to jira server was successful")
         }
-
-        spy.clear()
-        spy.target = jira
-        spy.signalName = "lastErrorChanged"
         jira.login(callback)
-
         tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
-        compare(spy.count, 1, "lastErrorChanged was not emitted")
-
-        jira.destroy()
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
     }
 
     function test_login_with_valid_credentials() {
         var jira = Qt.createQmlObject("import Jira 1.0; Jira {  }", root)
-        jira.options.username = 'admin'
-        jira.options.password = 'admin'
 
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         var visited = false
         var callback = function onLogin(success) {
             visited = true
-            compare(success, true, "Login was not successful with valid credentials")
-            verify(jira.getLastError().length() === 0,
-                   "Error message was not empty after connection with valid credentials: " + jira.getLastError())
-            verify(jira.getCurrentErrorType() === Jira.NO_ERROR,
-                   "Connection with valid credentials produced an error " + jira.getCurrentErrorType())
+            compare(success, true, "Login to jira server was not successful")
         }
-
-        spy.clear()
-        spy.target = jira
-        spy.signalName = "lastErrorChanged"
+        jira.options.username = "admin"
+        jira.options.password = "admin"
         jira.login(callback)
-
         tryVerify(function() { return visited === true }, 5000, "Login callback was not invoked")
-        compare(spy.count, 0, "lastErrorChanged was emitted")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
+    }
 
-        jira.destroy()
+    function test_issue_with_invalid_callback() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+        jira.options.server = "https://bugreports.qt.io/"
+
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.issue("QTBUG-0", null)
+        tryVerify(function() { return errorSpy.count === 0 }, 1000, "Issue call produced a network error")
+    }
+
+    function test_issue_with_invalid_server() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { options: Options { server: \"http://localhost:2999/jira\"} }", root)
+
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        var callback = function onIssue(issue) { fail("Issue callback was invoked when trying to connect to offline server") }
+        jira.issue("SANDBOX-1", callback)
+        errorSpy.wait(5000)
+        verify(errorSpy.count === 1, "Connection to offline server did not produce network error")
+        verify(errorSpy.signalArguments[0].length !== 0, "Connection to offline server did not produced networkErrorDetails error string")
     }
 
     function test_issue_with_invalid_key() {
@@ -178,11 +199,12 @@ TestCase {
             visited = true
             compare(issue, null, "Received a valid Issue object instead of null")
         }
-
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         jira.issue("QTBUG-0", callback)
         tryVerify(function() { return visited === true }, 5000, "Issue callback was not invoked")
-
-        jira.destroy()
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
     }
 
     function test_issue_with_valid_key() {
@@ -203,10 +225,11 @@ TestCase {
             verify(issue.expand & Issue.VersionedRepresentations, "Issue QTBUG-1 cannot be expanded with versioned representations")
             compare(issue.fields.status.name, "Closed", "Status of issue QTBUG-1 is not Closed")
         }
-
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
         jira.issue("QTBUG-1", callback)
         tryVerify(function() { return visited === true }, 5000, "Issue callback was not invoked")
-
-        jira.destroy()
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
     }
 }
