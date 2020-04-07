@@ -16,8 +16,8 @@ Window {
         anchors.margins: 5
         text: "Login"
         onClicked: {
-            options.username = 'admin'
-            options.password = 'admin'
+            options.username = "admin"
+            options.password = "admin"
             jira.login(onLogin)
         }
     }
@@ -43,15 +43,13 @@ Window {
             // default server is http://localhost:2990/jira
         }
 
-        onLastErrorChanged: console.log("Error occurred when trying to login: '" + errorString + "'")
+        onNetworkErrorDetails: console.log("Error occurred when trying to connect to server: '" + errorString + "'")
     }
 
     function onLogin(success) {
         login_result_text.text = (success) ? "Welcome!" : "Authentication was not successful."
         login_button.visible = false
         login_result_area.visible = true
-        if (jira.getCurrentErrorType() === Jira.NETWORK_ERROR)
-            login_result_text.text += " Due to network error."
     }
 
     Component.onCompleted: root.visible = true

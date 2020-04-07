@@ -89,8 +89,8 @@ Window {
     }
 
     function onIssueData(issue) {
-        issue_field_summary.text = 'Summary: ' + issue.fields.summary
-        issue_field_status.text = 'Status: ' + issue.fields.status.name
+        issue_field_summary.text = "Summary: " + issue.fields.summary
+        issue_field_status.text = "Status: " + issue.fields.status.name
     }
 
     Component.onCompleted: root.visible = true
