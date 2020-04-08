@@ -1,5 +1,6 @@
 # Jira REST API plugin for Qt/QML
 A C++ plugin for QML with an easy to access Jira resources via REST API.
+Currently plugin has a limited functionality and is in phase of development.
 
 
 ## Vision
@@ -26,6 +27,9 @@ Following branches are used for releases and development:
 ### Versioning
 
 
+### Testing
+
+
 ## License
 This project developed under the MIT license.
-For more information, see [license](LICENSE.md).
+For more information, see LICENSE.md.
