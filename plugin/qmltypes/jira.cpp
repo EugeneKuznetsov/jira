@@ -81,14 +81,14 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
     connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
         QJSValue callbackCopy(callback);
         if (404 == statusCode) {
-            qCDebug(JIRA_API_DATA) << this << reply << "issue does not exists (or user is unauthorized)";
+            qCDebug(JIRA_API_DATA) << this << reply << "issue does not exist (or user is unauthorized)";
             callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(nullptr)});
         } else if (200 == statusCode) {
             qCDebug(JIRA_API_DATA) << this << reply << "successfuly received requested Issue";
-            Issue issue(QJsonDocument::fromJson(data));
-            qmlEngine(this)->setObjectOwnership(&issue, QQmlEngine::JavaScriptOwnership);   // now it is not our "headache" anymore ... ;-)
-            qCDebug(JIRA_API_DATA) << this << reply << "created new:" << &issue;
-            callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(&issue)});
+            Issue *issue = new Issue(QJsonDocument::fromJson(data));
+            qmlEngine(this)->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
+            qCDebug(JIRA_API_DATA) << this << reply << "created new:" << issue;
+            callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(issue)});
         }
     });
 }
