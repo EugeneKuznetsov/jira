@@ -6,6 +6,7 @@
 #include <QQmlEngine>
 #include "network/session.h"
 #include "network/reply.h"
+#include "logging.h"
 #include "jira.h"
 
 Jira::Jira(QObject *parent/* = nullptr*/)
@@ -13,6 +14,7 @@ Jira::Jira(QObject *parent/* = nullptr*/)
     , m_options(new Options(this))
     , m_session(nullptr)
 {
+    qDebug(JIRA_INTERNAL) << this << "was created";
 }
 
 Options *Jira::getOptions() const
@@ -37,39 +39,55 @@ void Jira::setOptions(Options *new_value)
 
 void Jira::login(const QJSValue &callback)
 {
-    if (!callback.isCallable()) // TODO: handle error case properly
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_API) << this << "callback is not callable";
         return;
+    }
 
     QJsonObject root;
     root.insert("username", m_options->property("username").toString());
     root.insert("password", m_options->property("password").toString());
     QJsonDocument payload(root);
     Reply *reply = activeSession()->post(QUrl("/rest/auth/1/session"), payload.toJson());
-    connect(reply, &Reply::destroy, this, [reply]() { reply->deleteLater(); });
+    qCDebug(JIRA_API) << this << "tracking:" << reply;
+    connect(reply, &Reply::destroy, this, [this, reply]() {
+        qCDebug(JIRA_API) << this << "destroying:" << reply;
+        reply->deleteLater();
+    });
     connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [callback](const int statusCode, const QByteArray &) {
+    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &) {
         bool success = (200 == statusCode);
         QJSValue callbackCopy(callback);
+        qCDebug(JIRA_API_DATA) << this << reply << "success:" << success;
         callbackCopy.call(QJSValueList{success});
     });
 }
 
 void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
 {
-    if (!callback.isCallable()) // TODO: handle error case properly
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_API) << this << "callback is not callable";
         return;
+    }
 
     QString path = "/rest/api/2/issue/" + issueIdOrKey;
     Reply *reply = activeSession()->get(QUrl(path));
-    connect(reply, &Reply::destroy, this, [reply]() { reply->deleteLater(); });
+    qCDebug(JIRA_API) << this << "tracking following:" << reply;
+    connect(reply, &Reply::destroy, this, [this, reply]() {
+        qCDebug(JIRA_API) << this << "destroying:" << reply;
+        reply->deleteLater();
+    });
     connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [this, callback](const int statusCode, const QByteArray &data) {
+    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
         QJSValue callbackCopy(callback);
         if (404 == statusCode) {
+            qCDebug(JIRA_API_DATA) << this << reply << "issue does not exists (or user is unauthorized)";
             callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(nullptr)});
         } else if (200 == statusCode) {
+            qCDebug(JIRA_API_DATA) << this << reply << "successfuly received requested Issue";
             Issue issue(QJsonDocument::fromJson(data));
             qmlEngine(this)->setObjectOwnership(&issue, QQmlEngine::JavaScriptOwnership);   // now it is not our "headache" anymore ... ;-)
+            qCDebug(JIRA_API_DATA) << this << reply << "created new:" << &issue;
             callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(&issue)});
         }
     });
@@ -78,6 +96,7 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
 Session *Jira::activeSession(bool createNewSession/* = false*/)
 {
     if (createNewSession) {
+        qCDebug(JIRA_INTERNAL) << "requesting creation of a new session. Old session will be deleted:" << m_session;
         delete m_session;
         m_session = nullptr;
     }
@@ -85,6 +104,7 @@ Session *Jira::activeSession(bool createNewSession/* = false*/)
     if (nullptr == m_session) {
         QQmlEngine *engine = qmlEngine(this);
         m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        qCDebug(JIRA_INTERNAL) << "New session was created:" << m_session;
         QObject::connect(m_options, &Options::serverChanged, m_session, &Session::setServer);
     }
 

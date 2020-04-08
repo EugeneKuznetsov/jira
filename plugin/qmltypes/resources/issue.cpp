@@ -1,7 +1,7 @@
 #include <QJsonObject>
 #include "issue.h"
-#include <QDebug>
-#include <QQmlPropertyMap>
+#include "logging.h"
+
 Issue::Issue(QObject *parent/* = nullptr*/)
     : QObject(parent)
     , m_self()
@@ -10,6 +10,7 @@ Issue::Issue(QObject *parent/* = nullptr*/)
     , m_expandFlags()
     , m_fields()
 {
+    qCDebug(RESOURCES) << "created:" << this;
 }
 
 Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
@@ -21,6 +22,8 @@ Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
     m_key = root["key"].toString();
     m_expandFlags = root["expand"].toString();
     m_fields = root["fields"].toObject().toVariantMap();
+    qCDebug(RESOURCES) << "created:" << this;
+    qCDebug(RESOURCES) << this << issueJson.toJson(QJsonDocument::Indented);
 }
 
 const QString &Issue::getId() const
@@ -58,5 +61,6 @@ const QVariantMap &Issue::getFields() const
 
 void Issue::setFields(const QVariantMap &newValue)
 {
+    qCDebug(RESOURCES) << this << newValue;
     m_fields = newValue;
 }

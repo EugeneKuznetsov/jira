@@ -43,7 +43,7 @@ Window {
             // default server is http://localhost:2990/jira
         }
 
-        onNetworkErrorDetails: console.log("Error occurred when trying to connect to server: '" + errorString + "'")
+        onNetworkErrorDetails: console.warn("Error occurred when trying to connect to server: '" + errorString + "'")
     }
 
     function onLogin(success) {
