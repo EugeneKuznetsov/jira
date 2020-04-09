@@ -1,5 +1,6 @@
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
 #include <QJSEngine>
 #include <QJSValueList>
 #include <QVariant>
@@ -89,6 +90,50 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
             qmlEngine(this)->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
             qCDebug(JIRA_API_DATA) << this << reply << "created new:" << issue;
             callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(issue)});
+        }
+    });
+}
+
+void Jira::search(const QString &jql, const QJSValue &callback, const int startAt/* = 0*/, const int maxResults/* = 50*/)
+{
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_API) << this << "callback is not callable";
+        return;
+    }
+
+    QJsonObject root;
+    root.insert("jql", jql);
+    root.insert("startAt", startAt);
+    root.insert("maxResults", maxResults);
+    QJsonDocument payload(root);
+    Reply *reply = activeSession()->post(QUrl("/rest/api/2/search"), payload.toJson());
+    qCDebug(JIRA_API) << this << "tracking:" << reply;
+    connect(reply, &Reply::destroy, this, [this, reply]() {
+        qCDebug(JIRA_API) << this << "destroying:" << reply;
+        reply->deleteLater();
+    });
+    connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
+    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
+        QJSValue callbackCopy(callback);
+        if (400 == statusCode) {
+            qCDebug(JIRA_API_DATA) << this << reply << "problem with JQL query:" << data;
+            callbackCopy.call(QJSValueList{
+                                  qjsEngine(this)->toScriptValue(nullptr),
+                                  qjsEngine(this)->toScriptValue(0)
+                              });
+        } else if (200 == statusCode) {
+            qCDebug(JIRA_API_DATA) << this << reply << "successfuly received list of Issues";
+            const QJsonDocument json = QJsonDocument::fromJson(data);
+            const QJsonObject &root = json.object();
+            const QJsonArray &issues = root["issues"].toArray();
+            const int total = root["total"].toInt();
+            QJSValueList resultIssues;
+            for (auto issue : issues)
+                resultIssues.push_back(qjsEngine(this)->toScriptValue(new Issue(issue.toObject())));
+            callbackCopy.call(QJSValueList{
+                                  qjsEngine(this)->toScriptValue(resultIssues),
+                                  qjsEngine(this)->toScriptValue(total)
+                              });
         }
     });
 }

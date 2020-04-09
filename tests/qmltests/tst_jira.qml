@@ -232,4 +232,75 @@ TestCase {
         tryVerify(function() { return visited === true }, 5000, "Issue callback was not invoked")
         verify(errorSpy.count === 0, "Connection to jira server produced network error")
     }
+
+    function test_search_with_invalid_jql() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+        jira.options.server = "https://bugreports.qt.io/"
+
+        var visited = false
+        var callback = function onSearchResults(issues, total) {
+            visited = true
+            verify(issues === null, "Issues are not null")
+            compare(total, 0, "Total is not 0")
+        }
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.search("key = QTBUG-0", callback)
+        tryVerify(function() { return visited === true }, 5000, "onSearchResults callback was not invoked")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
+    }
+
+    function test_search_with_invalid_callback() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+        jira.options.server = "https://bugreports.qt.io/"
+
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.search("QTBUG-0", null)
+        tryVerify(function() { return errorSpy.count === 0 }, 1000, "Search call produced a network error")
+    }
+
+    function test_search_with_valid_jql() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+        jira.options.server = "https://bugreports.qt.io/"
+
+        var visited = false
+        var callback = function onSearchResults(issues, total) {
+            visited = true
+            verify(issues !== null, "Issues are null")
+            compare(total, 2, "Expected total amount of 2 issues, received " + total + " instead")
+            compare(issues.length, 2, "Expected 2 issues, got " + issues.length + " instead")
+            compare(issues[0].key, "QTBUG-2", "First issue is not QTBUG-2")
+            compare(issues[1].key, "QTBUG-1", "Second issue is not QTBUG-1")
+        }
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.search("key in (QTBUG-1, QTBUG-2)", callback)
+        tryVerify(function() { return visited === true }, 5000, "onSearchResults callback was not invoked")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
+    }
+
+    function test_search_with_valid_jql_huge_results() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira { }", root)
+        jira.options.server = "https://bugreports.qt.io/"
+
+        var visited = false
+        var callback = function onSearchResults(issues, total) {
+            visited = true
+            verify(issues !== null, "Issues are null")
+            compare(total, 73, "Expected total amount of 73 issues, received " + total + " instead")
+            compare(issues.length, 10, "Expected 10 issues, got " + issues.length + " instead")
+            compare(issues[0].key, "QBS-160", "First issue is not QBS-160")
+            compare(issues[9].key, "QBS-145", "Last issue is not QBS-145")
+        }
+        errorSpy.clear()
+        errorSpy.target = jira
+        errorSpy.signalName = "networkErrorDetails"
+        jira.search("fixVersion in (0.2)", callback, 5, 10)
+        tryVerify(function() { return visited === true }, 5000, "onSearchResults callback was not invoked")
+        verify(errorSpy.count === 0, "Connection to jira server produced network error")
+    }
 }

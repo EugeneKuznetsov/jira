@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QJsonDocument>
+#include <QJsonObject>
 #include <QVariantMap>
 #include <QUrl>
 
@@ -31,6 +32,7 @@ public:
 public:
     explicit Issue(QObject *parent = nullptr);
     Issue(const QJsonDocument &issueJson, QObject *parent = nullptr);
+    Issue(const QJsonObject &issueJson, QObject *parent = nullptr);
 
     const QString &getId() const;
     const QString &getKey() const;

@@ -29,6 +29,7 @@ signals:
 public slots:
     void login(const QJSValue &callback);
     void issue(const QString &issueIdOrKey, const QJSValue &callback);
+    void search(const QString &jql, const QJSValue &callback, const int startAt = 0, const int maxResults = 50);
 
 private:
     Session *activeSession(bool createNewSession = false);

@@ -26,6 +26,18 @@ Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
     qCDebug(RESOURCES) << this << issueJson.toJson(QJsonDocument::Indented);
 }
 
+Issue::Issue(const QJsonObject &issueJson, QObject *parent)
+    : QObject(parent)
+{
+    m_self = issueJson["self"].toString();
+    m_id = issueJson["id"].toString();
+    m_key = issueJson["key"].toString();
+    m_expandFlags = issueJson["expand"].toString();
+    m_fields = issueJson["fields"].toObject().toVariantMap();
+    qCDebug(RESOURCES) << "created:" << this;
+    qCDebug(RESOURCES) << this << QJsonDocument(issueJson).toJson(QJsonDocument::Indented);
+}
+
 const QString &Issue::getId() const
 {
     return m_id;
