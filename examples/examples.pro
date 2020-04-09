@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-SUBDIRS = login issue
+SUBDIRS = login issue search
