@@ -2,11 +2,12 @@
 
 #include <QObject>
 #include <QUrl>
+#include "globals.h"
 
 class QNetworkAccessManager;
 class Reply;
 
-class Q_DECL_EXPORT Session : public QObject
+class SHARED_SYMBOL Session : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(Session)

@@ -5,8 +5,9 @@
 #include <QJsonObject>
 #include <QVariantMap>
 #include <QUrl>
+#include "globals.h"
 
-class Q_DECL_EXPORT Issue : public QObject
+class SHARED_SYMBOL Issue : public QObject
 {
     Q_OBJECT
 

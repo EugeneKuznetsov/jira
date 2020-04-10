@@ -6,7 +6,10 @@ QT = qml network
 
 CONFIG += qt plugin
 
+DEFINES += EXPORT_IMPORT_MAGIC
+
 HEADERS += \
+    globals.h \
     jiraqmlplugin.h \
     logging.h \
     network/reply.h \
