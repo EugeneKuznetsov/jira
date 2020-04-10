@@ -52,6 +52,18 @@ Reply *Session::post(const QUrl &uri, const QByteArray &payload)
     return reply;
 }
 
+const QUrl &Session::getServer() const
+{
+    return m_server;
+}
+
+void Session::setServer(const QUrl &newValue)
+{
+    qCDebug(NETWORK_SESSION) << this << "new server address:" << newValue;
+    m_server = newValue;
+    emit serverChanged(m_server);
+}
+
 QUrl Session::completeUri(const QUrl &uri) const
 {
     return QUrl(m_server.toString() + uri.toString());

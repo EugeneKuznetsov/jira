@@ -13,4 +13,4 @@ SOURCES = test_issue.cpp
 INCLUDEPATH += $$PWD/../../../plugin
 DEPENDPATH += $$PWD/../../../plugin
 
-unix:!macx: LIBS += -L$$OUT_PWD/../../../plugin/imports/Jira/ -lqmljiraplugin
+win32|unix:!macx: LIBS += -L$$OUT_PWD/../../../plugin/imports/Jira/ -lqmljiraplugin

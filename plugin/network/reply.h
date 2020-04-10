@@ -4,7 +4,7 @@
 
 class QNetworkReply;
 
-class Reply : public QObject
+class Q_DECL_EXPORT Reply : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(Reply)

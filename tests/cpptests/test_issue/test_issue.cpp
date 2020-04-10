@@ -43,7 +43,7 @@ void IssueTestCase::test_create_issue_from_json_object()
     QCOMPARE(issue.property("self").toString(), "http://localhost:2990/rest/api/2/issue/10002");
     QCOMPARE(issue.property("key").toString(), "TEST-2");
     QCOMPARE(issue.property("id").toString(), "10002");
-    QCOMPARE(issue.property("expand").toUInt(), Issue::Schema);
+    QCOMPARE(issue.property("expand").toInt(), Issue::Schema);
     QCOMPARE(issue.property("fields").toMap()["summary"].toString(), "Some summary2");
 }
 
@@ -56,7 +56,7 @@ void IssueTestCase::test_create_issue_from_empty_json_document()
     QCOMPARE(issue.property("self").toString(), "");
     QCOMPARE(issue.property("key").toString(), "");
     QCOMPARE(issue.property("id").toString(), "");
-    QCOMPARE(issue.property("expand").toUInt(), 0x00);
+    QCOMPARE(issue.property("expand").toInt(), 0x00);
     QCOMPARE(issue.property("fields").toMap().size(), 0);
 }
 
@@ -69,7 +69,7 @@ void IssueTestCase::test_create_issue_from_empty_json_object()
     QCOMPARE(issue.property("self").toString(), "");
     QCOMPARE(issue.property("key").toString(), "");
     QCOMPARE(issue.property("id").toString(), "");
-    QCOMPARE(issue.property("expand").toUInt(), 0x00);
+    QCOMPARE(issue.property("expand").toInt(), 0x00);
     QCOMPARE(issue.property("fields").toMap().size(), 0);
 }
 

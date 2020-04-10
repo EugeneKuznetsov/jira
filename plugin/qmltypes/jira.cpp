@@ -141,9 +141,12 @@ void Jira::search(const QString &jql, const QJSValue &callback, const int startA
 Session *Jira::activeSession(bool createNewSession/* = false*/)
 {
     if (createNewSession) {
-        qCDebug(JIRA_INTERNAL) << "requesting creation of a new session. Old session will be deleted:" << m_session;
-        delete m_session;
-        m_session = nullptr;
+        qCDebug(JIRA_INTERNAL) << this << "Requested creation of a new session";
+        if (nullptr != m_session) {
+            qCDebug(JIRA_INTERNAL) << this << "Old session will be deleted:" << m_session;
+            delete m_session;
+            m_session = nullptr;
+        }
     }
 
     if (nullptr == m_session) {

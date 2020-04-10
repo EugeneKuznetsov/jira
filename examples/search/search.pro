@@ -9,9 +9,8 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
-    Main.qml \
-    loader.js
+    Main.qml
 
 QML_IMPORT_PATH = $$OUT_PWD/../../plugin/imports
 
-unix:!macx: LIBS += -L$$OUT_PWD/../../plugin/imports/Jira/ -lqmljiraplugin
+win32|unix:!macx: LIBS += -L$$OUT_PWD/../../plugin/imports/Jira/ -lqmljiraplugin

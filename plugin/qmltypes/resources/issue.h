@@ -6,7 +6,7 @@
 #include <QVariantMap>
 #include <QUrl>
 
-class Issue : public QObject
+class Q_DECL_EXPORT Issue : public QObject
 {
     Q_OBJECT
 
