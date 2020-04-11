@@ -13,7 +13,7 @@ class SHARED_SYMBOL Reply : public QObject
     Reply();
 
 public:
-    explicit Reply(QNetworkReply *networkReply, QObject *parent);
+    Reply(QNetworkReply *networkReply, QObject *parent);
 
 signals:
     void ready(const int statusCode, const QByteArray &data);

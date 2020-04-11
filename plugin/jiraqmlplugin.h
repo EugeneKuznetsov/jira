@@ -6,10 +6,11 @@
 class JiraQmlPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
+    Q_DISABLE_COPY(JiraQmlPlugin)
     Q_PLUGIN_METADATA(IID QQmlExtensionInterface_iid)
 
 public:
-    JiraQmlPlugin(QObject *parent = nullptr);
+    explicit JiraQmlPlugin(QObject *parent = nullptr);
 
     void registerTypes(const char *uri) override;
 };
