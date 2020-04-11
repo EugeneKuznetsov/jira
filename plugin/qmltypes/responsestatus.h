@@ -1,16 +1,29 @@
-#ifndef RESPONSESTATUS_H
-#define RESPONSESTATUS_H
+#pragma once
 
 #include <QObject>
+#include <QStringList>
+#include <QMap>
+#include "globals.h"
 
-class ResponseStatus : public QObject
+typedef QMap<int, bool> StatusMap;  // statusCode : success/error
+
+class SHARED_SYMBOL ResponseStatus : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(bool success READ getSuccess CONSTANT)
+    Q_PROPERTY(int code READ getStatusCode CONSTANT)
+    Q_PROPERTY(QStringList errors READ getErrors CONSTANT)
+
 public:
-    explicit ResponseStatus(QObject *parent = nullptr);
+    ResponseStatus(const int statusCode, const QByteArray &data, const StatusMap &statuses);
 
-signals:
+    bool getSuccess() const;
+    int getStatusCode() const;
+    const QStringList &getErrors() const;
 
+private:
+    int         m_statusCode;
+    bool        m_success;
+    QStringList m_errors;
 };
-
-#endif // RESPONSESTATUS_H

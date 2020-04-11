@@ -16,6 +16,7 @@ HEADERS += \
     network/session.h \
     qmltypes/jira.h \
     qmltypes/options.h \
+    qmltypes/responsestatus.h \
     qmltypes/resources/issue.h
 
 SOURCES += \
@@ -25,6 +26,7 @@ SOURCES += \
     network/session.cpp \
     qmltypes/jira.cpp \
     qmltypes/options.cpp \
+    qmltypes/responsestatus.cpp \
     qmltypes/resources/issue.cpp
 
 DISTFILES += \
