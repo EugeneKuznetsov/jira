@@ -25,7 +25,6 @@ Window {
             verticalAlignment: TextInput.AlignVCenter
 
             text: "https://bugreports.qt.io"
-
         }
 
         TextField {
@@ -54,7 +53,8 @@ Window {
                 searchInProgress = true
                 currentPage = 0
                 total = 0
-                jira.search(issue_search_input.text, onSearchResults, 0, root.maxResults)
+                jira.search(issue_search_input.text, onSearchResults, 0,
+                            root.maxResults)
             }
         }
 
@@ -102,14 +102,16 @@ Window {
                 anchors.margins: 5
                 width: 150
 
-                enabled: (!searchInProgress && total !== 0 && root.currentPage > 0)
+                enabled: (!searchInProgress && total !== 0
+                          && root.currentPage > 0)
 
                 text: "Prev " + maxResults
 
                 onClicked: {
                     searchInProgress = true
                     currentPage -= maxResults
-                    jira.search(issue_search_input.text, onSearchResults, currentPage, root.maxResults)
+                    jira.search(issue_search_input.text, onSearchResults,
+                                currentPage, root.maxResults)
                 }
             }
 
@@ -121,14 +123,16 @@ Window {
                 anchors.margins: 5
                 width: 150
 
-                enabled: (!searchInProgress && total !== 0 && currentPage + maxResults < total)
+                enabled: (!searchInProgress && total !== 0
+                          && currentPage + maxResults < total)
 
                 text: "Next " + maxResults
 
                 onClicked: {
                     searchInProgress = true
                     currentPage += maxResults
-                    jira.search(issue_search_input.text, onSearchResults, currentPage, root.maxResults)
+                    jira.search(issue_search_input.text, onSearchResults,
+                                currentPage, root.maxResults)
                 }
             }
         }
@@ -183,15 +187,22 @@ Window {
     property int total: 0
     property bool searchInProgress: false
 
-    function onSearchResults(issues, total) {
-        console.log("onSearchResults(issues.length="+issues.length+", total="+total+")")
+    function onSearchResults(status, issues, total) {
+        console.log("onSearchResults(issues.length=" + issues.length + ", total=" + total + ")")
         root.total = total
         searchModel.clear()
         for (var i = 0; i < issues.length; i++) {
             var issue = issues[i]
-            searchModel.append({"issueKey": issue.key, "issueSummary": issue.fields.summary, "issueStatus": issue.fields.status.name})
+            searchModel.append({
+                                   "issueKey": issue.key,
+                                   "issueSummary": issue.fields.summary,
+                                   "issueStatus": issue.fields.status.name
+                               })
         }
         root.searchInProgress = false
+
+        if (!status.success)
+            console.log(status.errors)
     }
 
     Component.onCompleted: root.visible = true

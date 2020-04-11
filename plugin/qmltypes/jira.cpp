@@ -7,6 +7,7 @@
 #include <QQmlEngine>
 #include "network/session.h"
 #include "network/reply.h"
+#include "responsestatus.h"
 #include "logging.h"
 #include "jira.h"
 
@@ -56,11 +57,11 @@ void Jira::login(const QJSValue &callback)
         reply->deleteLater();
     });
     connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &) {
-        bool success = (200 == statusCode);
+    connect(reply, &Reply::ready, this, [this, callback](const int statusCode, const QByteArray &data) {
+        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {401, false}, {403, false}});
+        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
         QJSValue callbackCopy(callback);
-        qCDebug(JIRA_API_DATA) << this << reply << "success:" << success;
-        callbackCopy.call(QJSValueList{success});
+        callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(status)});
     });
 }
 
@@ -80,17 +81,17 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
     });
     connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
     connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
-        QJSValue callbackCopy(callback);
-        if (404 == statusCode) {
-            qCDebug(JIRA_API_DATA) << this << reply << "issue does not exist (or user is unauthorized)";
-            callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(nullptr)});
-        } else if (200 == statusCode) {
+        Issue *issue = nullptr;
+        if (200 == statusCode) {
             qCDebug(JIRA_API_DATA) << this << reply << "successfuly received requested Issue";
-            Issue *issue = new Issue(QJsonDocument::fromJson(data));
+            issue = new Issue(QJsonDocument::fromJson(data));
             qmlEngine(this)->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
             qCDebug(JIRA_API_DATA) << this << reply << "created new:" << issue;
-            callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(issue)});
         }
+        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {404, false}});
+        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
+        QJSValue callbackCopy(callback);
+        callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(status), qjsEngine(this)->toScriptValue(issue)});
     });
 }
 
@@ -114,27 +115,25 @@ void Jira::search(const QString &jql, const QJSValue &callback, const int startA
     });
     connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
     connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
-        QJSValue callbackCopy(callback);
-        if (400 == statusCode) {
-            qCDebug(JIRA_API_DATA) << this << reply << "problem with JQL query:" << data;
-            callbackCopy.call(QJSValueList{
-                                  qjsEngine(this)->toScriptValue(nullptr),
-                                  qjsEngine(this)->toScriptValue(0)
-                              });
-        } else if (200 == statusCode) {
+        QJSValueList resultIssues;
+        int total = 0;
+        if (200 == statusCode) {
             qCDebug(JIRA_API_DATA) << this << reply << "successfuly received list of Issues";
             const QJsonDocument json = QJsonDocument::fromJson(data);
             const QJsonObject &root = json.object();
             const QJsonArray &issues = root["issues"].toArray();
-            const int total = root["total"].toInt();
-            QJSValueList resultIssues;
+            total = root["total"].toInt();
             for (auto issue : issues)
                 resultIssues.push_back(qjsEngine(this)->toScriptValue(new Issue(issue.toObject())));
-            callbackCopy.call(QJSValueList{
-                                  qjsEngine(this)->toScriptValue(resultIssues),
-                                  qjsEngine(this)->toScriptValue(total)
-                              });
         }
+        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {400, false}});
+        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
+        QJSValue callbackCopy(callback);
+        callbackCopy.call(QJSValueList{
+                              qjsEngine(this)->toScriptValue(status),
+                              qjsEngine(this)->toScriptValue(resultIssues),
+                              qjsEngine(this)->toScriptValue(total)
+                          });
     });
 }
 

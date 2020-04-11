@@ -4,6 +4,7 @@
 #include "logging.h"
 #include "qmltypes/jira.h"
 #include "qmltypes/options.h"
+#include "qmltypes/responsestatus.h"
 #include "qmltypes/resources/issue.h"
 
 JiraQmlPlugin::JiraQmlPlugin(QObject *parent/* = nullptr*/)
@@ -33,6 +34,8 @@ void JiraQmlPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("Jira"));
     qmlRegisterType<Issue>(uri, 1, 0, "Issue");
+    qmlRegisterUncreatableType<ResponseStatus>(uri, 1, 0, "ResponseStatus",
+                                               "ResposeStatus is specific for Jira calls only and cannot be created separately");
     qmlRegisterType<Options>(uri, 1, 0, "Options");
     qmlRegisterType<Jira>(uri, 1, 0, "Jira");
 }

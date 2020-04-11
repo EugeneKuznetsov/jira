@@ -23,7 +23,6 @@ Window {
             verticalAlignment: TextInput.AlignVCenter
 
             text: "https://bugreports.qt.io"
-
         }
 
         TextField {
@@ -41,7 +40,6 @@ Window {
 
         Button {
             id: issue_open_button
-
 
             text: "Open Issue"
             anchors.right: parent.right
@@ -87,9 +85,14 @@ Window {
         }
     }
 
-    function onIssueData(issue) {
-        issue_field_summary.text = "Summary: " + issue.fields.summary
-        issue_field_status.text = "Status: " + issue.fields.status.name
+    function onIssueData(status, issue) {
+        if (status.success) {
+            issue_field_summary.text = "Summary: " + issue.fields.summary
+            issue_field_status.text = "Status: " + issue.fields.status.name
+        } else {
+            issue_field_summary.text = status.errors[0]
+            issue_field_status.text = ""
+        }
     }
 
     Component.onCompleted: root.visible = true

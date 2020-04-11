@@ -43,11 +43,13 @@ Window {
             // default server is http://localhost:2990/jira
         }
 
-        onNetworkErrorDetails: console.warn("Error occurred when trying to connect to server: '" + errorString + "'")
+        onNetworkErrorDetails: console.warn(
+                                   "Error occurred when trying to connect to server: '"
+                                   + errorString + "'")
     }
 
-    function onLogin(success) {
-        login_result_text.text = (success) ? "Welcome!" : "Authentication was not successful."
+    function onLogin(status) {
+        login_result_text.text = (status.success) ? "Welcome!" : status.errors[0]
         login_button.visible = false
         login_result_area.visible = true
     }
