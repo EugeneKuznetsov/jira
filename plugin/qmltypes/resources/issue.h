@@ -32,8 +32,8 @@ public:
 
 public:
     explicit Issue(QObject *parent = nullptr);
-    Issue(const QJsonDocument &issueJson, QObject *parent = nullptr);
-    Issue(const QJsonObject &issueJson, QObject *parent = nullptr);
+    Issue(const QJsonDocument &issueJson);
+    Issue(const QJsonObject &issueJson);
 
     const QString &getId() const;
     const QString &getKey() const;

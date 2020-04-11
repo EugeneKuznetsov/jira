@@ -13,8 +13,8 @@ Issue::Issue(QObject *parent/* = nullptr*/)
     qCDebug(RESOURCES) << "created:" << this;
 }
 
-Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
-    : QObject(parent)
+Issue::Issue(const QJsonDocument &issueJson)
+    : QObject(nullptr)
 {
     QJsonObject root = issueJson.object();
     m_self = root["self"].toString();
@@ -26,8 +26,8 @@ Issue::Issue(const QJsonDocument &issueJson, QObject *parent/* = nullptr*/)
     qCDebug(RESOURCES) << this << issueJson.toJson(QJsonDocument::Indented);
 }
 
-Issue::Issue(const QJsonObject &issueJson, QObject *parent)
-    : QObject(parent)
+Issue::Issue(const QJsonObject &issueJson)
+    : QObject(nullptr)
 {
     m_self = issueJson["self"].toString();
     m_id = issueJson["id"].toString();
