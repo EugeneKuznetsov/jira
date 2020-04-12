@@ -53,7 +53,7 @@ Window {
                 searchInProgress = true
                 currentPage = 0
                 total = 0
-                jira.search(issue_search_input.text, onSearchResults, 0,
+                jira.search(onSearchResults, issue_search_input.text, 0,
                             root.maxResults)
             }
         }
@@ -110,7 +110,7 @@ Window {
                 onClicked: {
                     searchInProgress = true
                     currentPage -= maxResults
-                    jira.search(issue_search_input.text, onSearchResults,
+                    jira.search(onSearchResults, issue_search_input.text,
                                 currentPage, root.maxResults)
                 }
             }
@@ -131,7 +131,7 @@ Window {
                 onClicked: {
                     searchInProgress = true
                     currentPage += maxResults
-                    jira.search(issue_search_input.text, onSearchResults,
+                    jira.search(onSearchResults, issue_search_input.text,
                                 currentPage, root.maxResults)
                 }
             }

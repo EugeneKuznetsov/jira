@@ -225,7 +225,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.issue("QTBUG-0", null)
+        jira.issue(null, "QTBUG-0")
         tryVerify(function () {
             return errorSpy.count === 0
         }, 1000, "Issue call produced a network error")
@@ -242,7 +242,7 @@ TestCase {
         var callback = function cb(status, issue) {
             fail("Issue callback was invoked when trying to connect to offline server")
         }
-        jira.issue("SANDBOX-1", callback)
+        jira.issue(callback, "SANDBOX-1")
         errorSpy.wait(5000)
         verify(errorSpy.count === 1,
                "Connection to offline server did not produce network error")
@@ -265,7 +265,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.issue("QTBUG-0", callback)
+        jira.issue(callback, "QTBUG-0")
         tryVerify(function () {
             return visited === true
         }, 5000, "Issue callback was not invoked")
@@ -305,7 +305,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.issue("QTBUG-1", callback)
+        jira.issue(callback, "QTBUG-1")
         tryVerify(function () {
             return visited === true
         }, 5000, "Issue callback was not invoked")
@@ -329,7 +329,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.search("key = QTBUG-0", callback)
+        jira.search(callback, "key = QTBUG-0")
         tryVerify(function () {
             return visited === true
         }, 5000, "onSearchResults callback was not invoked")
@@ -344,7 +344,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.search("QTBUG-0", null)
+        jira.search(null, "QTBUG-0")
         tryVerify(function () {
             return errorSpy.count === 0
         }, 1000, "Search call produced a network error")
@@ -369,7 +369,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.search("key in (QTBUG-1, QTBUG-2)", callback)
+        jira.search(callback, "key in (QTBUG-1, QTBUG-2)")
         tryVerify(function () {
             return visited === true
         }, 5000, "onSearchResults callback was not invoked")
@@ -396,7 +396,7 @@ TestCase {
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.search("fixVersion in (0.2)", callback, 5, 10)
+        jira.search(callback, "fixVersion in (0.2)", 5, 10)
         tryVerify(function () {
             return visited === true
         }, 5000, "onSearchResults callback was not invoked")
