@@ -9,6 +9,7 @@
 #include "network/reply.h"
 #include "responsestatus.h"
 #include "endpoints/sessionendpoint.h"
+#include "endpoints/issueendpoint.h"
 #include "logging.h"
 #include "jira.h"
 
@@ -48,32 +49,8 @@ void Jira::login(const QJSValue &callback)
 
 void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_API) << this << "callback is not callable";
-        return;
-    }
-
-    QString path = "/rest/api/2/issue/" + issueIdOrKey;
-    Reply *reply = activeSession()->get(QUrl(path));
-    qCDebug(JIRA_API) << this << "tracking following:" << reply;
-    connect(reply, &Reply::destroy, this, [this, reply]() {
-        qCDebug(JIRA_API) << this << "destroying:" << reply;
-        reply->deleteLater();
-    });
-    connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
-        Issue *issue = nullptr;
-        if (200 == statusCode) {
-            qCDebug(JIRA_API_DATA) << this << reply << "successfuly received requested Issue";
-            issue = new Issue(QJsonDocument::fromJson(data));
-            qmlEngine(this)->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
-            qCDebug(JIRA_API_DATA) << this << reply << "created new:" << issue;
-        }
-        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {404, false}});
-        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
-        QJSValue callbackCopy(callback);
-        callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(status), qjsEngine(this)->toScriptValue(issue)});
-    });
+    IssueEndpoint *endpoint = new IssueEndpoint(activeSession(), callback, this);
+    endpoint->getIssue(issueIdOrKey);
 }
 
 void Jira::search(const QString &jql, const QJSValue &callback, const int startAt/* = 0*/, const int maxResults/* = 50*/)

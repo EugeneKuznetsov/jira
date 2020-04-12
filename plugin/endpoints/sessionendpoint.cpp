@@ -38,8 +38,8 @@ void SessionEndpoint::login(const QString &username, const QString &password)
     });
     connect(reply, &Reply::networkError, qobject_cast<Jira*>(parent()), &Jira::networkErrorDetails);
     connect(reply, &Reply::ready, this, [this](const int statusCode, const QByteArray &data) {
-        StatusMap codes = {
-            {200, true},    // success
+        const StatusMap codes = {
+            {200, true},    // information about the caller's session if the caller is authenticated
             {401, false},   // login fails due to invalid credentials
             {403, false}    // login is denied due to a CAPTCHA requirement, throtting, or any other reason
         };
