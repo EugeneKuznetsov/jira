@@ -9,6 +9,7 @@ CONFIG += qt plugin
 DEFINES += EXPORT_IMPORT_MAGIC
 
 HEADERS += \
+    endpoints/authsession.h \
     globals.h \
     jiraqmlplugin.h \
     logging.h \
@@ -20,6 +21,7 @@ HEADERS += \
     qmltypes/resources/issue.h
 
 SOURCES += \
+    endpoints/authsession.cpp \
     jiraqmlplugin.cpp \
     logging.cpp \
     network/reply.cpp \

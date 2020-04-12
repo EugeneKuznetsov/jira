@@ -8,6 +8,7 @@
 #include "network/session.h"
 #include "network/reply.h"
 #include "responsestatus.h"
+#include "endpoints/authsession.h"
 #include "logging.h"
 #include "jira.h"
 
@@ -41,28 +42,8 @@ void Jira::setOptions(Options *new_value)
 
 void Jira::login(const QJSValue &callback)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_API) << this << "callback is not callable";
-        return;
-    }
-
-    QJsonObject root;
-    root.insert("username", m_options->property("username").toString());
-    root.insert("password", m_options->property("password").toString());
-    QJsonDocument payload(root);
-    Reply *reply = activeSession()->post(QUrl("/rest/auth/1/session"), payload.toJson());
-    qCDebug(JIRA_API) << this << "tracking:" << reply;
-    connect(reply, &Reply::destroy, this, [this, reply]() {
-        qCDebug(JIRA_API) << this << "destroying:" << reply;
-        reply->deleteLater();
-    });
-    connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [this, callback](const int statusCode, const QByteArray &data) {
-        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {401, false}, {403, false}});
-        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
-        QJSValue callbackCopy(callback);
-        callbackCopy.call(QJSValueList{qjsEngine(this)->toScriptValue(status)});
-    });
+    AuthSession *endpoint = new AuthSession(activeSession(), callback, this);
+    endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
 }
 
 void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
