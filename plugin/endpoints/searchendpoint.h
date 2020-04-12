@@ -18,7 +18,7 @@ public:
     SearchEndpoint(Session *session, const QJSValue &callback, Jira *parent);
 
 public slots:
-    void search(const QString &jql, const int startAt = 0, const int maxResults = 50);
+    void search(const QString &jql, const int startAt, const int maxResults, const QString &fields, const QString &expand);
 
 private:
     Session     *m_session;

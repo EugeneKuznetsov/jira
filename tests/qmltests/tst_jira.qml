@@ -401,13 +401,27 @@ TestCase {
                     "Expected total amount of 73 issues, received " + total + " instead")
             compare(issues.length, 10,
                     "Expected 10 issues, got " + issues.length + " instead")
+
             compare(issues[0].key, "QBS-160", "First issue is not QBS-160")
+            compare(issues[0].fields.summary, undefined,
+                    "Received summary text without requesting field summary")
+            verify(issues[0].expandedFields.changelog !== undefined,
+                   "Requested changelog expanded field was not received")
+            compare(issues[0].expandedFields.changelog.total, 8,
+                    "Total amount of changelog items should be 6")
+
             compare(issues[9].key, "QBS-145", "Last issue is not QBS-145")
+            compare(issues[9].fields.summary, undefined,
+                    "Received summary text without requesting field summary")
+            verify(issues[9].expandedFields.changelog !== undefined,
+                   "Requested changelog expanded field was not received")
+            compare(issues[9].expandedFields.changelog.total, 9,
+                    "Total amount of changelog items should be 9")
         }
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.search(callback, "fixVersion in (0.2)", 5, 10)
+        jira.search(callback, "fixVersion in (0.2)", 5, 10, "key", "changelog")
         tryVerify(function () {
             return visited === true
         }, 5000, "onSearchResults callback was not invoked")

@@ -21,14 +21,24 @@ SearchEndpoint::SearchEndpoint(Session *session, const QJSValue &callback, Jira 
         qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
 }
 
-void SearchEndpoint::search(const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/)
+void SearchEndpoint::search(const QString &jql, const int startAt, const int maxResults,
+                            const QString &fields, const QString &expand)
 {
-    qCDebug(JIRA_API) << this << "jql:" << jql << "startAt:" << startAt << "maxResults:" << maxResults;
+    qCDebug(JIRA_API) << this << "jql:" << jql << "startAt:" << startAt << "maxResults:" << maxResults
+                      << "fields:" << fields << "expand:" << expand;
 
     QJsonObject root;
     root.insert("jql", jql);
     root.insert("startAt", startAt);
     root.insert("maxResults", maxResults);
+    QJsonArray fieldsArray;
+    for (auto field : fields.split(","))
+        fieldsArray.push_back(field);
+    root.insert("fields", fieldsArray);
+    QJsonArray expandArray;
+    for (auto expandField : expand.split(","))
+        expandArray.push_back(expandField);
+    root.insert("expand", expandArray);
     QJsonDocument payload(root);
 
     Reply *reply = m_session->post(m_baseUri, payload.toJson());
