@@ -5,8 +5,6 @@
 
 #include "options.h"
 
-#include "resources/issue.h"
-
 class Session;
 
 class Jira : public QObject

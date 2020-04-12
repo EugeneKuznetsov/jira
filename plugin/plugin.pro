@@ -10,6 +10,7 @@ DEFINES += EXPORT_IMPORT_MAGIC
 
 HEADERS += \
     endpoints/issueendpoint.h \
+    endpoints/searchendpoint.h \
     endpoints/sessionendpoint.h \
     globals.h \
     jiraqmlplugin.h \
@@ -23,6 +24,7 @@ HEADERS += \
 
 SOURCES += \
     endpoints/issueendpoint.cpp \
+    endpoints/searchendpoint.cpp \
     endpoints/sessionendpoint.cpp \
     jiraqmlplugin.cpp \
     logging.cpp \

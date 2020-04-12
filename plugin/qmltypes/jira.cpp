@@ -1,17 +1,11 @@
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJSEngine>
-#include <QJSValueList>
-#include <QVariant>
 #include <QQmlEngine>
+#include "jira.h"
+#include "logging.h"
 #include "network/session.h"
 #include "network/reply.h"
-#include "responsestatus.h"
 #include "endpoints/sessionendpoint.h"
 #include "endpoints/issueendpoint.h"
-#include "logging.h"
-#include "jira.h"
+#include "endpoints/searchendpoint.h"
 
 Jira::Jira(QObject *parent/* = nullptr*/)
     : QObject(parent)
@@ -55,44 +49,8 @@ void Jira::issue(const QString &issueIdOrKey, const QJSValue &callback)
 
 void Jira::search(const QString &jql, const QJSValue &callback, const int startAt/* = 0*/, const int maxResults/* = 50*/)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_API) << this << "callback is not callable";
-        return;
-    }
-
-    QJsonObject root;
-    root.insert("jql", jql);
-    root.insert("startAt", startAt);
-    root.insert("maxResults", maxResults);
-    QJsonDocument payload(root);
-    Reply *reply = activeSession()->post(QUrl("/rest/api/2/search"), payload.toJson());
-    qCDebug(JIRA_API) << this << "tracking:" << reply;
-    connect(reply, &Reply::destroy, this, [this, reply]() {
-        qCDebug(JIRA_API) << this << "destroying:" << reply;
-        reply->deleteLater();
-    });
-    connect(reply, &Reply::networkError, this, &Jira::networkErrorDetails);
-    connect(reply, &Reply::ready, this, [this, reply, callback](const int statusCode, const QByteArray &data) {
-        QJSValueList resultIssues;
-        int total = 0;
-        if (200 == statusCode) {
-            qCDebug(JIRA_API_DATA) << this << reply << "successfuly received list of Issues";
-            const QJsonDocument json = QJsonDocument::fromJson(data);
-            const QJsonObject &root = json.object();
-            const QJsonArray &issues = root["issues"].toArray();
-            total = root["total"].toInt();
-            for (auto issue : issues)
-                resultIssues.push_back(qjsEngine(this)->toScriptValue(new Issue(issue.toObject())));
-        }
-        ResponseStatus *status = new ResponseStatus(statusCode, data, {{200, true}, {400, false}});
-        qmlEngine(this)->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
-        QJSValue callbackCopy(callback);
-        callbackCopy.call(QJSValueList{
-                              qjsEngine(this)->toScriptValue(status),
-                              qjsEngine(this)->toScriptValue(resultIssues),
-                              qjsEngine(this)->toScriptValue(total)
-                          });
-    });
+    SearchEndpoint *endpoint = new SearchEndpoint(activeSession(), callback, this);
+    endpoint->search(jql, startAt, maxResults);
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)
