@@ -4,60 +4,54 @@
 #include "qmltypes/resources/issue.h"
 #include "test_issue.h"
 
-void IssueTestCase::test_create_issue_from_json_document()
-{
-    QJsonObject issueObject;
-    issueObject.insert("self", "http://localhost:2990/rest/api/2/issue/10001");
-    issueObject.insert("key", "TEST-1");
-    issueObject.insert("id", "10001");
-    issueObject.insert("expand", "changelog");
-    QJsonObject fieldsObject;
-    QJsonObject fieldSummary;
-    fieldsObject.insert("summary", "Some summary");
-    issueObject.insert("fields", fieldsObject);
-    QJsonDocument testData(issueObject);
-
-    Issue issue(testData);
-
-    QCOMPARE(issue.property("self").toString(), "http://localhost:2990/rest/api/2/issue/10001");
-    QCOMPARE(issue.property("key").toString(), "TEST-1");
-    QCOMPARE(issue.property("id").toString(), "10001");
-    QCOMPARE(issue.property("expand").toUInt(), Issue::Changelog);
-    QCOMPARE(issue.property("fields").toMap()["summary"].toString(), "Some summary");
-}
-
 void IssueTestCase::test_create_issue_from_json_object()
 {
-    QJsonObject testData;
-    testData.insert("self", "http://localhost:2990/rest/api/2/issue/10002");
-    testData.insert("key", "TEST-2");
-    testData.insert("id", "10002");
-    testData.insert("expand", "schema");
-    QJsonObject fieldsObject;
-    QJsonObject fieldSummary;
-    fieldsObject.insert("summary", "Some summary2");
-    testData.insert("fields", fieldsObject);
+    QByteArray data = "{"
+                          "\"expand\":\"schema\","
+                          "\"id\":\"10101\","
+                          "\"self\":\"http://localhost:2990/rest/api/2/issue/10101\","
+                          "\"key\":\"TEST-1\","
+                          "\"fields\":{"
+                              "\"summary\":\"Test Summary\""
+                          "},"
+                          "\"changelog\":{"
+                              "\"startAt\":0,"
+                              "\"maxResults\":0,"
+                              "\"total\":0,"
+                              "\"histories\":[]"
+                          "},"
+                          "\"editmeta\":{"
+                              "\"fields\":{}"
+                          "}"
+                      "}";
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+    Issue issue(jsonDoc.object());
 
-    Issue issue(testData);
-
-    QCOMPARE(issue.property("self").toString(), "http://localhost:2990/rest/api/2/issue/10002");
-    QCOMPARE(issue.property("key").toString(), "TEST-2");
-    QCOMPARE(issue.property("id").toString(), "10002");
-    QCOMPARE(issue.property("expand").toInt(), Issue::Schema);
-    QCOMPARE(issue.property("fields").toMap()["summary"].toString(), "Some summary2");
+    QCOMPARE(issue.property("self").toString(), "http://localhost:2990/rest/api/2/issue/10101");
+    QCOMPARE(issue.property("key").toString(), "TEST-1");
+    QCOMPARE(issue.property("id").toString(), "10101");
+    QCOMPARE(issue.property("expandFlags").toInt(), Issue::Schema);
+    QCOMPARE(issue.property("fields").toMap()["summary"].toString(), "Test Summary");
+    QCOMPARE(issue.property("expandedFields").toMap()["changelog"].toMap()["histories"].toList().size(), 0);
 }
 
-void IssueTestCase::test_create_issue_from_empty_json_document()
+void IssueTestCase::test_create_issue_from_json_object_without_fields()
 {
-    QJsonDocument testData;
+    QByteArray data = "{"
+                          "\"expand\":\"schema,names\","
+                          "\"id\":\"10102\","
+                          "\"self\":\"http://localhost:2990/rest/api/2/issue/10102\","
+                          "\"key\":\"TEST-2\""
+                      "}";
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(data);
+    Issue issue(jsonDoc.object());
 
-    Issue issue(testData);
-
-    QCOMPARE(issue.property("self").toString(), "");
-    QCOMPARE(issue.property("key").toString(), "");
-    QCOMPARE(issue.property("id").toString(), "");
-    QCOMPARE(issue.property("expand").toInt(), 0x00);
+    QCOMPARE(issue.property("self").toString(), "http://localhost:2990/rest/api/2/issue/10102");
+    QCOMPARE(issue.property("key").toString(), "TEST-2");
+    QCOMPARE(issue.property("id").toString(), "10102");
+    QCOMPARE(issue.property("expandFlags").toInt(), Issue::Schema | Issue::Names);
     QCOMPARE(issue.property("fields").toMap().size(), 0);
+    QCOMPARE(issue.property("expandedFields").toMap().size(), 0);
 }
 
 void IssueTestCase::test_create_issue_from_empty_json_object()
@@ -69,8 +63,9 @@ void IssueTestCase::test_create_issue_from_empty_json_object()
     QCOMPARE(issue.property("self").toString(), "");
     QCOMPARE(issue.property("key").toString(), "");
     QCOMPARE(issue.property("id").toString(), "");
-    QCOMPARE(issue.property("expand").toInt(), 0x00);
+    QCOMPARE(issue.property("expandFlags").toInt(), 0x00);
     QCOMPARE(issue.property("fields").toMap().size(), 0);
+    QCOMPARE(issue.property("expandedFields").toMap().size(), 0);
 }
 
 QTEST_GUILESS_MAIN(IssueTestCase)

@@ -14,8 +14,9 @@ class SHARED_SYMBOL Issue : public QObject
     Q_PROPERTY(QString id READ getId)
     Q_PROPERTY(QString key READ getKey)
     Q_PROPERTY(QUrl self READ getSelf)
-    Q_PROPERTY(quint8 expand READ getExpand)
-    Q_PROPERTY(QVariantMap fields READ getFields WRITE setFields)
+    Q_PROPERTY(quint8 expandFlags READ getExpandFlags)
+    Q_PROPERTY(QVariantMap fields READ getFields)
+    Q_PROPERTY(QVariantMap expandedFields READ getExpandedFields)
 
 public:
     enum ExpandFlag {
@@ -32,19 +33,17 @@ public:
 
 public:
     explicit Issue(QObject *parent = nullptr);
-    Issue(const QJsonDocument &issueJson);
     Issue(const QJsonObject &issueJson);
 
     const QString &getId() const;
     const QString &getKey() const;
     const QUrl &getSelf() const;
-    quint8 getExpand() const;
+    unsigned char getExpandFlags() const;
     const QVariantMap &getFields() const;
+    const QVariantMap &getExpandedFields() const;
 
-    void setFields(const QVariantMap &newValue);
-
-signals:
-    void onFieldsChanged();
+private:
+    void parseExpandedJson(const QJsonObject &issueJson);
 
 private:
     QUrl        m_self;
@@ -52,4 +51,5 @@ private:
     QString     m_key;
     QString     m_expandFlags;
     QVariantMap m_fields;
+    QVariantMap m_expandedFields;
 };

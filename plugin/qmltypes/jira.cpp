@@ -41,10 +41,10 @@ void Jira::login(const QJSValue &callback)
     endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
 }
 
-void Jira::issue(const QJSValue &callback, const QString &issueIdOrKey)
+void Jira::issue(const QJSValue &callback, const QString &issueIdOrKey, const QString &fields/* = "*all"*/, const QString &expand/* = ""*/)
 {
     IssueEndpoint *endpoint = new IssueEndpoint(activeSession(), callback, this);
-    endpoint->getIssue(issueIdOrKey);
+    endpoint->getIssue(issueIdOrKey, fields, expand);
 }
 
 void Jira::search(const QJSValue &callback, const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/)

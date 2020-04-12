@@ -45,7 +45,8 @@ Window {
             anchors.right: parent.right
             anchors.top: parent.top
 
-            onClicked: jira.issue(onIssueData, issue_key_input.text)
+            onClicked: jira.issue(onIssueData, issue_key_input.text,
+                                  "summary,status")
         }
 
         Rectangle {

@@ -18,7 +18,7 @@ public:
     IssueEndpoint(Session *session, const QJSValue &callback, Jira *parent);
 
 public slots:
-    void getIssue(const QString &issueIdOrKey);
+    void getIssue(const QString &issueIdOrKey, const QString &fields, const QString &expand);
 
 private:
     Session     *m_session;

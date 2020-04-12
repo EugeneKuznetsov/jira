@@ -1,6 +1,7 @@
 #include <QQmlEngine>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QUrlQuery>
 #include "issueendpoint.h"
 #include "logging.h"
 #include "network/session.h"
@@ -20,11 +21,12 @@ IssueEndpoint::IssueEndpoint(Session *session, const QJSValue &callback, Jira *p
         qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
 }
 
-void IssueEndpoint::getIssue(const QString &issueIdOrKey)
+void IssueEndpoint::getIssue(const QString &issueIdOrKey, const QString &fields, const QString &expand)
 {
-    qCDebug(JIRA_API) << this << "issue or key:" << issueIdOrKey;
+    qCDebug(JIRA_API) << this << "issue or key:" << issueIdOrKey << "fields:" << fields << "expand:" << expand;
 
-    const QString path = m_baseUri.toString() + "/" + issueIdOrKey;
+    QUrl path(m_baseUri.toString() + "/" + issueIdOrKey);
+    path.setQuery(QUrlQuery({{"fields", fields}, {"expand", expand}}));
     Reply *reply = m_session->get(QUrl(path));
     qCDebug(JIRA_API) << this << "tracking:" << reply;
     connect(reply, &Reply::destroy, this, [this, reply]() {
@@ -38,7 +40,7 @@ void IssueEndpoint::getIssue(const QString &issueIdOrKey)
         Issue *issue = nullptr;
         if (200 == statusCode) {
             qCDebug(JIRA_API_DATA) << this << reply << "successfuly received requested Issue";
-            issue = new Issue(QJsonDocument::fromJson(data));
+            issue = new Issue(QJsonDocument::fromJson(data).object());
             qmlEngine(parent())->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
             qCDebug(JIRA_API_DATA) << this << reply << "created new:" << issue;
         }

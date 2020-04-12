@@ -261,11 +261,16 @@ TestCase {
             compare(status.errors.length, 1)
             compare(issue, null,
                     "Received a valid Issue object instead of null")
+            var valuesCount = 0
+            for (var value in issue.expandedFields)
+                valuesCount++
+            compare(valuesCount, 0,
+                    "Received a non-empty list of expanded fields")
         }
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.issue(callback, "QTBUG-0")
+        jira.issue(callback, "QTBUG-0", "key", "changelog")
         tryVerify(function () {
             return visited === true
         }, 5000, "Issue callback was not invoked")
@@ -285,27 +290,33 @@ TestCase {
             verify(issue !== null, "Received null insted of valid Issue object")
             compare(issue.key, "QTBUG-1",
                     "Requested QTBUG-1, but received something else")
-            verify(issue.expand & Issue.RenderedFields,
+            verify(issue.expandFlags & Issue.RenderedFields,
                    "Issue QTBUG-1 cannot be expanded with changelog")
-            verify(issue.expand & Issue.Names,
+            verify(issue.expandFlags & Issue.Names,
                    "Issue QTBUG-1 cannot be expanded with names")
-            verify(issue.expand & Issue.Schema,
+            verify(issue.expandFlags & Issue.Schema,
                    "Issue QTBUG-1 cannot be expanded with schema")
-            verify(issue.expand & Issue.Operations,
+            verify(issue.expandFlags & Issue.Operations,
                    "Issue QTBUG-1 cannot be expanded with operations")
-            verify(issue.expand & Issue.EditMeta,
+            verify(issue.expandFlags & Issue.EditMeta,
                    "Issue QTBUG-1 cannot be expanded with editmeta")
-            verify(issue.expand & Issue.Changelog,
+            verify(issue.expandFlags & Issue.Changelog,
                    "Issue QTBUG-1 cannot be expanded with changelog")
-            verify(issue.expand & Issue.VersionedRepresentations,
+            verify(issue.expandFlags & Issue.VersionedRepresentations,
                    "Issue QTBUG-1 cannot be expanded with versioned representations")
             compare(issue.fields.status.name, "Closed",
                     "Status of issue QTBUG-1 is not Closed")
+            compare(issue.fields.summary, undefined,
+                    "Received summary text without requesting field summary")
+            verify(issue.expandedFields.changelog !== undefined,
+                   "Requested changelog expanded field was not received")
+            compare(issue.expandedFields.changelog.total, 6,
+                    "Total amount of changelog items should be")
         }
         errorSpy.clear()
         errorSpy.target = jira
         errorSpy.signalName = "networkErrorDetails"
-        jira.issue(callback, "QTBUG-1")
+        jira.issue(callback, "QTBUG-1", "key,status", "changelog")
         tryVerify(function () {
             return visited === true
         }, 5000, "Issue callback was not invoked")

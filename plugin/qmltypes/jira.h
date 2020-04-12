@@ -26,7 +26,7 @@ signals:
 
 public slots:
     void login(const QJSValue &callback);
-    void issue(const QJSValue &callback, const QString &issueIdOrKey);
+    void issue(const QJSValue &callback, const QString &issueIdOrKey, const QString &fields = "*all", const QString &expand = "");
     void search(const QJSValue &callback, const QString &jql, const int startAt = 0, const int maxResults = 50);
 
 private:
