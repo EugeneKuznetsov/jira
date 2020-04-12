@@ -8,7 +8,7 @@
 #include "network/session.h"
 #include "network/reply.h"
 #include "responsestatus.h"
-#include "endpoints/authsession.h"
+#include "endpoints/sessionendpoint.h"
 #include "logging.h"
 #include "jira.h"
 
@@ -42,7 +42,7 @@ void Jira::setOptions(Options *new_value)
 
 void Jira::login(const QJSValue &callback)
 {
-    AuthSession *endpoint = new AuthSession(activeSession(), callback, this);
+    SessionEndpoint *endpoint = new SessionEndpoint(activeSession(), callback, this);
     endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
 }
 

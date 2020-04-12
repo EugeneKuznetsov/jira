@@ -2,19 +2,20 @@
 
 #include <QObject>
 #include <QJSValue>
+#include <QUrl>
 
 class Session;
 class Jira;
 
-class AuthSession : public QObject
+class SessionEndpoint : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(AuthSession)
+    Q_DISABLE_COPY(SessionEndpoint)
 
-    AuthSession();
+    SessionEndpoint();
 
 public:
-    AuthSession(Session *session, const QJSValue &callback, Jira *parent);
+    SessionEndpoint(Session *session, const QJSValue &callback, Jira *parent);
 
 public slots:
     void login(const QString &username, const QString &password);
@@ -24,4 +25,5 @@ public slots:
 private:
     Session     *m_session;
     QJSValue    m_callback;
+    const QUrl  m_baseUri;
 };

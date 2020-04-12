@@ -1,24 +1,25 @@
 #include <QQmlEngine>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "authsession.h"
+#include "sessionendpoint.h"
 #include "logging.h"
 #include "network/session.h"
 #include "network/reply.h"
 #include "qmltypes/responsestatus.h"
 #include "qmltypes/jira.h"
 
-AuthSession::AuthSession(Session *session, const QJSValue &callback, Jira *parent)
+SessionEndpoint::SessionEndpoint(Session *session, const QJSValue &callback, Jira *parent)
     : QObject(parent)
     , m_session(session)
     , m_callback(callback)
+    , m_baseUri("/rest/auth/1/session")
 {
     qCDebug(JIRA_INTERNAL) << "created new endpoint:" << this << "with session:" << session;
     if (!callback.isCallable())
         qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
 }
 
-void AuthSession::login(const QString &username, const QString &password)
+void SessionEndpoint::login(const QString &username, const QString &password)
 {
     qCDebug(JIRA_API) << this << "username:" << username << "password:" << password;
 
@@ -27,7 +28,7 @@ void AuthSession::login(const QString &username, const QString &password)
     root.insert("password", password);
     QJsonDocument payload(root);
 
-    Reply *reply = m_session->post(QUrl("/rest/auth/1/session"), payload.toJson());
+    Reply *reply = m_session->post(m_baseUri, payload.toJson());
     qCDebug(JIRA_API) << this << "tracking:" << reply;
     connect(reply, &Reply::destroy, this, [this, reply]() {
         qCDebug(JIRA_API) << this << "destroying later:" << reply;
@@ -44,16 +45,16 @@ void AuthSession::login(const QString &username, const QString &password)
         };
         ResponseStatus *status = new ResponseStatus(statusCode, data, codes);
         qmlEngine(parent())->setObjectOwnership(status, QQmlEngine::JavaScriptOwnership);
-        this->m_callback.call(QJSValueList{qjsEngine(parent())->toScriptValue(status)});
+        m_callback.call(QJSValueList{qjsEngine(parent())->toScriptValue(status)});
     });
 }
 
-void AuthSession::logout()
+void SessionEndpoint::logout()
 {
     qCWarning(JIRA_API) << "Not implemented";
 }
 
-void AuthSession::currentUser()
+void SessionEndpoint::currentUser()
 {
     qCWarning(JIRA_API) << "Not implemented";
 }
