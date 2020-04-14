@@ -9,7 +9,11 @@ RESOURCES += \
     resources.qrc
 
 DISTFILES += \
-    Main.qml
+    CredentialsButton.qml \
+    CredentialsLayout.qml \
+    Main.qml \
+    UserInputField.qml \
+    UserInputLabel.qml
 
 QML_IMPORT_PATH = $$OUT_PWD/../../plugin/imports
 
