@@ -6,6 +6,7 @@
 #include "endpoints/sessionendpoint.h"
 #include "endpoints/issueendpoint.h"
 #include "endpoints/searchendpoint.h"
+#include "endpoints/userendpoint.h"
 
 Jira::Jira(QObject *parent/* = nullptr*/)
     : QObject(parent)
@@ -53,6 +54,18 @@ void Jira::search(const QJSValue &callback, const QString &jql, const int startA
 {
     SearchEndpoint *endpoint = new SearchEndpoint(activeSession(), callback, this);
     endpoint->search(jql, startAt, maxResults, fields, expand);
+}
+
+void Jira::userByKey(const QJSValue &callback, const QString &key)
+{
+    UserEndpoint *endpoint = new UserEndpoint(activeSession(), callback, this);
+    endpoint->getUserByKey(key);
+}
+
+void Jira::userByUsername(const QJSValue &callback, const QString &username)
+{
+    UserEndpoint *endpoint = new UserEndpoint(activeSession(), callback, this);
+    endpoint->getUserByUsername(username);
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)

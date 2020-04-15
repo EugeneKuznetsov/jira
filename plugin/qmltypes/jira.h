@@ -30,6 +30,8 @@ public slots:
                const QString &fields = "*all", const QString &expand = "");
     void search(const QJSValue &callback, const QString &jql, const int startAt = 0, const int maxResults = 50,
                 const QString &fields = "*navigable", const QString &expand = "");
+    void userByKey(const QJSValue &callback, const QString &key);
+    void userByUsername(const QJSValue &callback, const QString &username);
 
 private:
     Session *activeSession(bool createNewSession = false);
