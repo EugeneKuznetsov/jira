@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-!android: SUBDIRS = cpptests qmltests
+SUBDIRS = cpptests qmltests
