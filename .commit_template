@@ -1,0 +1,24 @@
+# int main() {  // commit template
+#    QString subj(/* your_subject */);
+#    if (subj.isEmpty() || subj.endsWith('.') || subj.length() > 50)
+#       exit(BAD_SUBJECT);
+#    sibj[0] = subj[0].toUpper();
+If applied, this commit will _______
+
+#    QString body(/* your body */);
+#    for (int i = 72; i < body.length(); i += 72)
+#       body.insert(i, '\n');
+#    if (!body.contains("what", Qt::CaseInsensitive))
+#       exit(BAD_BODY);
+What exactly was solved or changed?
+
+#    if (!body.contains("why", Qt::CaseInsensitive))
+#       qWarn() << "commit? why?";
+#    // Why it was solved or changed?
+
+#    if (!body.contains("how", Qt::CaseInsensitive))
+#       qInfo() << "nice!";
+#    // Notes and details if necessary
+
+#    exit(0);
+# }
