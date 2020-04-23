@@ -12,9 +12,9 @@ HEADERS += \
     endpoints/issueendpoint.h \
     endpoints/searchendpoint.h \
     endpoints/sessionendpoint.h \
-    globals.h \
+    utils/globals.h \
     jiraqmlplugin.h \
-    logging.h \
+    utils/logging.h \
     network/reply.h \
     network/session.h \
     qmltypes/jira.h \
@@ -27,7 +27,7 @@ SOURCES += \
     endpoints/searchendpoint.cpp \
     endpoints/sessionendpoint.cpp \
     jiraqmlplugin.cpp \
-    logging.cpp \
+    utils/logging.cpp \
     network/reply.cpp \
     network/session.cpp \
     qmltypes/jira.cpp \
@@ -38,7 +38,7 @@ SOURCES += \
 DISTFILES += \
     imports/qmldir
 
-DESTDIR = $$OUT_PWD/imports/Jira
+DESTDIR = ../bin/imports/Jira
 
 cp_qmldir.files = $$DISTFILES
 cp_qmldir.path = $$DESTDIR

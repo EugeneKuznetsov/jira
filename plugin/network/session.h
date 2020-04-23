@@ -2,7 +2,7 @@
 
 #include <QObject>
 #include <QUrl>
-#include "globals.h"
+#include "utils/globals.h"
 
 class QNetworkAccessManager;
 class Reply;

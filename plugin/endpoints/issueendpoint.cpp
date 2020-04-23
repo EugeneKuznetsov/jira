@@ -3,7 +3,7 @@
 #include <QJsonObject>
 #include <QUrlQuery>
 #include "issueendpoint.h"
-#include "logging.h"
+#include "utils/logging.h"
 #include "network/session.h"
 #include "network/reply.h"
 #include "qmltypes/responsestatus.h"

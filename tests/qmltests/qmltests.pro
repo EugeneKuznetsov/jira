@@ -12,4 +12,6 @@ DISTFILES += \
     tst_jira.qml \
     tst_options.qml
 
-QML_IMPORT_PATH = $$OUT_PWD/../../plugin/imports
+DESTDIR = ../../bin
+
+QML_IMPORT_PATH = $$OUT_PWD/../../bin/imports

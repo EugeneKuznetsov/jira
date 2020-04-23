@@ -6,7 +6,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
-    engine.addImportPath("../../plugin/imports");
+    engine.addImportPath("./imports");
     engine.load("qrc:/qml/Main.qml");
 
     return app.exec();

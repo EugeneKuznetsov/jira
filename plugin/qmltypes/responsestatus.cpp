@@ -2,7 +2,7 @@
 #include <QJsonObject>
 #include <QVariant>
 #include "responsestatus.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 ResponseStatus::ResponseStatus(const qint32 statusCode, const QByteArray &data, const StatusMap &statuses)
     : QObject(nullptr)

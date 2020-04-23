@@ -3,7 +3,7 @@
 #include <QObject>
 #include <QStringList>
 #include <QMap>
-#include "globals.h"
+#include "utils/globals.h"
 
 typedef QMap<int, bool> StatusMap;  // statusCode : success/error
 

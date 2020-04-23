@@ -1,5 +1,5 @@
 #include "options.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 Options::Options(QObject *parent/* = nullptr*/)
     : QObject(parent)

@@ -1,6 +1,6 @@
 #include <QJsonObject>
 #include "issue.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 Issue::Issue(QObject *parent/* = nullptr*/)
     : QObject(parent)

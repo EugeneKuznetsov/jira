@@ -3,7 +3,7 @@
 #include <QNetworkReply>
 #include "reply.h"
 #include "session.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent)
     : QObject(parent)

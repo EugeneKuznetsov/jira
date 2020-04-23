@@ -1,6 +1,6 @@
 #include <QQmlEngine>
 #include "jira.h"
-#include "logging.h"
+#include "utils/logging.h"
 #include "network/session.h"
 #include "network/reply.h"
 #include "endpoints/sessionendpoint.h"

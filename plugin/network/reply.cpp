@@ -1,6 +1,6 @@
 #include <QNetworkReply>
 #include "reply.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 Reply::Reply(QNetworkReply *networkReply, QObject *parent)
     : QObject(parent)

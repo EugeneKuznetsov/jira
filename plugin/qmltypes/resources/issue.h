@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include <QVariantMap>
 #include <QUrl>
-#include "globals.h"
+#include "utils/globals.h"
 
 class SHARED_SYMBOL Issue : public QObject
 {

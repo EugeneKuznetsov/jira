@@ -11,6 +11,8 @@ RESOURCES += \
 DISTFILES += \
     Main.qml
 
-QML_IMPORT_PATH = $$OUT_PWD/../../plugin/imports
+DESTDIR = ../../bin
 
-win32|unix:!macx: LIBS += -L$$OUT_PWD/../../plugin/imports/Jira/ -lqmljiraplugin
+QML_IMPORT_PATH = $$OUT_PWD/../../bin/imports
+
+win32|unix:!macx: LIBS += -L$$DESTDIR/imports/Jira/ -lqmljiraplugin

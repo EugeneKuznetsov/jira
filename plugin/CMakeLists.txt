@@ -1,55 +1,29 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(qmljiraplugin VERSION 0.4.3)
-
-find_package(Qt5 COMPONENTS Qml Network REQUIRED)
-
 set(target ${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/imports/Jira)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jira)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_definitions(-DEXPORT_IMPORT_MAGIC)
+add_subdirectory(utils)
+add_subdirectory(network)
+add_subdirectory(qmltypes)
+add_subdirectory(endpoints)
 
-set(imports
-    imports/qmldir)
-set(headers
-    jiraqmlplugin.h
-    logging.h
-    globals.h
-    network/session.h
-    network/reply.h
-    qmltypes/jira.h
-    qmltypes/options.h
-    qmltypes/responsestatus.h
-    qmltypes/resources/issue.h
-    endpoints/issueendpoint.h
-    endpoints/searchendpoint.h
-    endpoints/sessionendpoint.h)
-set(sources
-    jiraqmlplugin.cpp
-    logging.cpp
-    network/session.cpp
-    network/reply.cpp
-    qmltypes/jira.cpp
-    qmltypes/options.cpp
-    qmltypes/responsestatus.cpp
-    qmltypes/resources/issue.cpp
-    endpoints/issueendpoint.cpp
-    endpoints/searchendpoint.cpp
-    endpoints/sessionendpoint.cpp)
+# it seems the following definition is not necessary
+# because CMake adds already -D${PROJECT_NAME}_EXPORTS
+add_compile_definitions(EXPORT_IMPORT_MAGIC)
 
-add_library(${target}
-    SHARED ${sources} ${headers} ${imports})
+set(imports imports/qmldir)
+set(headers jiraqmlplugin.h )
+set(sources jiraqmlplugin.cpp)
 
-target_include_directories(${target}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(${target} SHARED ${sources} ${headers} ${imports})
 
-target_link_libraries(${target}
-    PRIVATE Qt5::Qml
-    PRIVATE Qt5::Network)
+set_target_properties(${target} PROPERTIES PREFIX "")
+
+target_link_libraries(${target} plugin_qmltypes plugin_network plugin_endpoints plugin_utils)
 
 foreach(import ${imports})
     add_custom_command(TARGET ${target}

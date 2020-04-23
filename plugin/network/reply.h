@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include "globals.h"
+#include "utils/globals.h"
 
 class QNetworkReply;
 

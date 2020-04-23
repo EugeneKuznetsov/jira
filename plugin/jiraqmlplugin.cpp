@@ -1,7 +1,7 @@
 #include <qqml.h>
 
 #include "jiraqmlplugin.h"
-#include "logging.h"
+#include "utils/logging.h"
 #include "qmltypes/jira.h"
 #include "qmltypes/options.h"
 #include "qmltypes/responsestatus.h"

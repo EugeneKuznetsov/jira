@@ -13,4 +13,6 @@ SOURCES = test_response_status.cpp
 INCLUDEPATH += $$PWD/../../../plugin
 DEPENDPATH += $$PWD/../../../plugin
 
-win32|unix:!macx: LIBS += -L$$OUT_PWD/../../../plugin/imports/Jira/ -lqmljiraplugin
+DESTDIR = ../../../bin
+
+win32|unix:!macx: LIBS += -L$$DESTDIR/imports/Jira/ -lqmljiraplugin
