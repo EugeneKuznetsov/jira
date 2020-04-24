@@ -22,7 +22,7 @@ HEADERS += \
     qmltypes/options.h \
     qmltypes/resources/user.h \
     qmltypes/responsestatus.h \
-    qmltypes/resources/iss+ue.h
+    qmltypes/resources/issue.h
 
 SOURCES += \
     endpoints/issueendpoint.cpp \

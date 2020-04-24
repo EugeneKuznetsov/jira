@@ -1,5 +1,5 @@
 #include "user.h"
-#include "logging.h"
+#include "utils/logging.h"
 
 User::User(QObject *parent/* = nullptr*/)
     : QObject(parent)

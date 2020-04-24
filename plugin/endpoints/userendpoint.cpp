@@ -1,7 +1,7 @@
 #include <QQmlEngine>
 #include <QJsonDocument>
 #include "userendpoint.h"
-#include "logging.h"
+#include "utils/logging.h"
 #include "network/session.h"
 #include "network/reply.h"
 #include "qmltypes/jira.h"
