@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(target test_session)
+set(target test_reply)
 
 # it seems the following definition is not necessary
 # because CMake adds already -D${PROJECT_NAME}_EXPORTS
 add_compile_definitions(EXPORT_IMPORT_MAGIC)
 
-set(headers test_session.h)
-set(sources test_session.cpp)
+set(headers test_reply.h)
+set(sources test_reply.cpp)
 
 add_executable(${target} ${headers} ${sources})
 target_include_directories(${target} PRIVATE "${PROJECT_SOURCE_DIR}/plugin")

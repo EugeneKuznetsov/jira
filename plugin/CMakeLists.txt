@@ -6,14 +6,14 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jir
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
+# it seems the following definition is not necessary
+# because CMake adds already -D${PROJECT_NAME}_EXPORTS
+add_compile_definitions(EXPORT_IMPORT_MAGIC)
+
 add_subdirectory(utils)
 add_subdirectory(network)
 add_subdirectory(qmltypes)
 add_subdirectory(endpoints)
-
-# it seems the following definition is not necessary
-# because CMake adds already -D${PROJECT_NAME}_EXPORTS
-add_compile_definitions(EXPORT_IMPORT_MAGIC)
 
 set(imports imports/qmldir)
 set(headers jiraqmlplugin.h )
@@ -23,7 +23,7 @@ add_library(${target} SHARED ${sources} ${headers} ${imports})
 
 set_target_properties(${target} PROPERTIES PREFIX "")
 
-target_link_libraries(${target} plugin_qmltypes plugin_network plugin_endpoints plugin_utils)
+target_link_libraries(${target} PRIVATE plugin_qmltypes PRIVATE plugin_utils PRIVATE plugin_network PRIVATE plugin_endpoints)
 
 foreach(import ${imports})
     add_custom_command(TARGET ${target}

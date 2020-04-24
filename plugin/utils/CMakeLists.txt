@@ -7,4 +7,4 @@ set(sources logging.cpp)
 
 add_library(${target} STATIC ${headers} ${sources})
 target_include_directories(${target} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../")
-target_link_libraries(${target} Qt5::Core)
+target_link_libraries(${target} PUBLIC Qt5::Core)
