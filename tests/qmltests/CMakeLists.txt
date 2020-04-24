@@ -10,4 +10,4 @@ set(sources main.cpp)
 
 add_definitions(-DQUICK_TEST_SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}")
 add_executable(${target} ${headers} ${sources} ${qmltests})
-target_link_libraries(${target} PRIVATE Qt5::QuickTest PRIVATE Qt5::Gui PRIVATE Qt5::Qml PRIVATE libqmljiraplugin)
+target_link_libraries(${target} PRIVATE Qt5::QuickTest PRIVATE Qt5::Gui PRIVATE Qt5::Qml PRIVATE qmljiraplugin)

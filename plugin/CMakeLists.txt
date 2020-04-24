@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-set(target "lib${PROJECT_NAME}")
+set(target ${PROJECT_NAME})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jira)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
@@ -21,7 +21,11 @@ set(sources jiraqmlplugin.cpp)
 
 add_library(${target} SHARED ${sources} ${headers} ${imports})
 
-set_target_properties(${target} PROPERTIES PREFIX "")
+if(WIN32)
+    set_target_properties(${target} PROPERTIES PREFIX "")
+endif()
+set_target_properties(${target} PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(${target} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
 target_link_libraries(${target} PRIVATE plugin_qmltypes PRIVATE plugin_utils PRIVATE plugin_network PRIVATE plugin_endpoints)
 
