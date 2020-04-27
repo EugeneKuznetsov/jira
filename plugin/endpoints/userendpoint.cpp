@@ -19,18 +19,11 @@ UserEndpoint::UserEndpoint(Session *session, const QJSValue &callback, Jira *par
         qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
 }
 
-void UserEndpoint::getUserByUsername(const QString &username)
+void UserEndpoint::getUserResource(const QString &username)
 {
     qCDebug(JIRA_API) << this << "username:" << username;
 
     getUser({{"username", username}});
-}
-
-void UserEndpoint::getUserByKey(const QString &key)
-{
-    qCDebug(JIRA_API) << this << "key:" << key;
-
-    getUser({{"key", key}});
 }
 
 void UserEndpoint::getUser(const QUrlQuery &query)

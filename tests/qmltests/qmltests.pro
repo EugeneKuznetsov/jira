@@ -10,7 +10,8 @@ SOURCES = main.cpp
 DISTFILES += \
     tst_issue.qml \
     tst_jira.qml \
-    tst_options.qml
+    tst_options.qml \
+    tst_user.qml
 
 DESTDIR = ../../bin
 

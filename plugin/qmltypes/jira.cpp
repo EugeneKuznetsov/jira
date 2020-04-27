@@ -56,16 +56,10 @@ void Jira::search(const QJSValue &callback, const QString &jql, const int startA
     endpoint->search(jql, startAt, maxResults, fields, expand);
 }
 
-void Jira::userByKey(const QJSValue &callback, const QString &key)
+void Jira::user(const QJSValue &callback, const QString &username)
 {
     UserEndpoint *endpoint = new UserEndpoint(activeSession(), callback, this);
-    endpoint->getUserByKey(key);
-}
-
-void Jira::userByUsername(const QJSValue &callback, const QString &username)
-{
-    UserEndpoint *endpoint = new UserEndpoint(activeSession(), callback, this);
-    endpoint->getUserByUsername(username);
+    endpoint->getUserResource(username);
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)

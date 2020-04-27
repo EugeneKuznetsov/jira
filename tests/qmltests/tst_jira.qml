@@ -428,4 +428,62 @@ TestCase {
         verify(errorSpy.count === 0,
                "Connection to jira server produced network error")
     }
+
+    function test_user_with_valid_username() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira {  }", root)
+
+        var loginVisited = false
+        var callback = function cb(status) {
+            loginVisited = true
+            var userVisited = false
+            if (status.success) {
+                userVisited = true
+                jira.user(function (userCbStatus, user) {
+                    compare(userCbStatus.success, true, "User response status was not successful")
+                    compare(user.name, "admin")
+                    compare(user.displayName, "admin")
+                    var valuesCount = 0
+                    for (var value in user.avatarUrls)
+                        valuesCount++
+                    compare(valuesCount, 4)
+                }, "admin")
+                tryVerify(function () {
+                    return userVisited === true
+                }, 5000, "callback provided for a 'user' call was not invoked")
+            }
+        }
+        jira.options.username = "admin"
+        jira.options.password = "admin"
+        jira.login(callback)
+        tryVerify(function () {
+            return loginVisited === true
+        }, 5000, "onSearchResults callback was not invoked")
+    }
+
+    function test_user_with_invalid_username() {
+        var jira = Qt.createQmlObject("import Jira 1.0; Jira {  }", root)
+
+        var loginVisited = false
+        var callback = function cb(status) {
+            loginVisited = true
+            var userVisited = false
+            if (status.success) {
+                userVisited = true
+                jira.user(function (userCbStatus, user) {
+                    compare(userCbStatus.success, false, "User response status was successful")
+                    compare(userCbStatus.code, 404, "Returned code was incorrect")
+                    compare(user, null, "User object was created")
+                }, "admin_x_y_z")
+                tryVerify(function () {
+                    return userVisited === true
+                }, 5000, "callback provided for a 'user' call was not invoked")
+            }
+        }
+        jira.options.username = "admin"
+        jira.options.password = "admin"
+        jira.login(callback)
+        tryVerify(function () {
+            return loginVisited === true
+        }, 5000, "onSearchResults callback was not invoked")
+    }
 }

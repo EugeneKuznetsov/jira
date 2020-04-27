@@ -18,8 +18,7 @@ class UserEndpoint : public QObject
 public:
     explicit UserEndpoint(Session *session, const QJSValue &callback, Jira *parent);
 
-    void getUserByUsername(const QString &username);
-    void getUserByKey(const QString &key);
+    void getUserResource(const QString &username);
 
 private:
     void getUser(const QUrlQuery &query);
