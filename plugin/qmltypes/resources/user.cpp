@@ -6,6 +6,7 @@ User::User(QObject *parent/* = nullptr*/)
     , m_self()
     , m_name()
     , m_displayName()
+    , m_avatarUrls()
 {   
 }
 
@@ -15,6 +16,7 @@ User::User(const QJsonObject &userJson)
     m_self = userJson["self"].toString();
     m_name = userJson["name"].toString();
     m_displayName = userJson["displayName"].toString();
+    m_avatarUrls = userJson["avatarUrls"].toVariant().toMap();
     qCDebug(RESOURCES) << "created:" << this;
     qCDebug(RESOURCES) << this << QJsonDocument(userJson).toJson(QJsonDocument::Indented);
 }
@@ -32,4 +34,9 @@ const QString &User::getName() const
 const QString &User::getDisplayName() const
 {
     return m_displayName;
+}
+
+const QVariantMap &User::getAvatarUrls() const
+{
+    return m_avatarUrls;
 }
