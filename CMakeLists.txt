@@ -1,8 +1,15 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(qmljiraplugin VERSION 0.4.3 LANGUAGES CXX)
+project(qmljiraplugin VERSION 0.5.1 LANGUAGES CXX)
 
 find_package(Qt5 COMPONENTS Core Gui Qml Network Test QuickTest REQUIRED)
+
+if(NOT DEFINED QML_JIRA_PLUGIN_BUILD_TESTS)
+    set(QML_JIRA_PLUGIN_BUILD_TESTS ON)
+endif()
+if(NOT DEFINED QML_JIRA_PLUGIN_BUILD_EXAMPLES)
+    set(QML_JIRA_PLUGIN_BUILD_EXAMPLES ON)
+endif()
 
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -13,5 +20,9 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(plugin)
-add_subdirectory(tests)
-add_subdirectory(examples)
+if(QML_JIRA_PLUGIN_BUILD_TESTS)
+    add_subdirectory(tests)
+endif()
+if(QML_JIRA_PLUGIN_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
