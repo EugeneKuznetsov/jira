@@ -2,7 +2,6 @@
 #include "jira.h"
 #include "utils/logging.h"
 #include "network/session.h"
-#include "network/reply.h"
 #include "endpoints/sessionendpoint.h"
 #include "endpoints/issueendpoint.h"
 #include "endpoints/searchendpoint.h"
@@ -13,7 +12,7 @@ Jira::Jira(QObject *parent/* = nullptr*/)
     , m_options(new Options(this))
     , m_session(nullptr)
 {
-    qDebug(JIRA_INTERNAL) << this << "was created";
+    qCDebug(JIRA_INTERNAL) << this << "was created";
 }
 
 Options *Jira::getOptions() const

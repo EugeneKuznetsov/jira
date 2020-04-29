@@ -4,9 +4,9 @@
 #include "utils/logging.h"
 #include "qmltypes/jira.h"
 #include "qmltypes/options.h"
-#include "qmltypes/responsestatus.h"
-#include "qmltypes/resources/issue.h"
-#include "qmltypes/resources/user.h"
+#include "qmltypes/internal/responsestatus.h"
+#include "qmltypes/external/issue.h"
+#include "qmltypes/external/user.h"
 
 JiraQmlPlugin::JiraQmlPlugin(QObject *parent/* = nullptr*/)
     : QQmlExtensionPlugin(parent)

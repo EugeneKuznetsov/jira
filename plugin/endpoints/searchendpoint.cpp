@@ -6,9 +6,9 @@
 #include "utils/logging.h"
 #include "network/session.h"
 #include "network/reply.h"
-#include "qmltypes/responsestatus.h"
 #include "qmltypes/jira.h"
-#include "qmltypes/resources/issue.h"
+#include "qmltypes/internal/responsestatus.h"
+#include "qmltypes/external/issue.h"
 
 SearchEndpoint::SearchEndpoint(Session *session, const QJSValue &callback, Jira *parent)
     : QObject(parent)

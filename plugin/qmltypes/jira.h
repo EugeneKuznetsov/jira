@@ -2,7 +2,6 @@
 
 #include <QObject>
 #include <QJSValue>
-
 #include "options.h"
 
 class Session;

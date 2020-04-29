@@ -1,11 +1,10 @@
 #pragma once
 
 #include <QObject>
-#include "utils/globals.h"
 
 class QNetworkReply;
 
-class SHARED_SYMBOL Reply : public QObject
+class Reply : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(Reply)

@@ -5,9 +5,8 @@
 #include <QJsonObject>
 #include <QVariantMap>
 #include <QUrl>
-#include "utils/globals.h"
 
-class SHARED_SYMBOL User : public QObject
+class User : public QObject
 {
     Q_OBJECT
 

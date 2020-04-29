@@ -5,8 +5,8 @@
 #include "network/session.h"
 #include "network/reply.h"
 #include "qmltypes/jira.h"
-#include "qmltypes/responsestatus.h"
-#include "qmltypes/resources/user.h"
+#include "qmltypes/internal/responsestatus.h"
+#include "qmltypes/external/user.h"
 
 UserEndpoint::UserEndpoint(Session *session, const QJSValue &callback, Jira *parent)
     : QObject(parent)

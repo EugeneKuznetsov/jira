@@ -6,13 +6,10 @@ QT = qml network
 
 CONFIG += qt plugin
 
-DEFINES += EXPORT_IMPORT_MAGIC
-
 HEADERS += \
     endpoints/issueendpoint.h \
     endpoints/searchendpoint.h \
     endpoints/sessionendpoint.h \
-    utils/globals.h \
     endpoints/userendpoint.h \
     jiraqmlplugin.h \
     utils/logging.h \
@@ -20,9 +17,9 @@ HEADERS += \
     network/session.h \
     qmltypes/jira.h \
     qmltypes/options.h \
-    qmltypes/resources/user.h \
-    qmltypes/responsestatus.h \
-    qmltypes/resources/issue.h
+    qmltypes/external/user.h \
+    qmltypes/internal/responsestatus.h \
+    qmltypes/external/issue.h
 
 SOURCES += \
     endpoints/issueendpoint.cpp \
@@ -35,9 +32,9 @@ SOURCES += \
     network/session.cpp \
     qmltypes/jira.cpp \
     qmltypes/options.cpp \
-    qmltypes/resources/user.cpp \
-    qmltypes/responsestatus.cpp \
-    qmltypes/resources/issue.cpp
+    qmltypes/external/user.cpp \
+    qmltypes/internal/responsestatus.cpp \
+    qmltypes/external/issue.cpp
 
 DISTFILES += \
     imports/qmldir

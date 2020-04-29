@@ -1,5 +1,5 @@
 #include <QTest>
-#include "qmltypes/responsestatus.h"
+#include "qmltypes/internal/responsestatus.h"
 #include "test_response_status.h"
 
 void ResponseStatusTestCase::test_invalid_status_code_and_simple_error()

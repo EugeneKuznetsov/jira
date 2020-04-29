@@ -1,7 +1,7 @@
 #include <QTest>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "qmltypes/resources/issue.h"
+#include "qmltypes/external/issue.h"
 #include "test_issue.h"
 
 void IssueTestCase::test_create_issue_from_json_object()

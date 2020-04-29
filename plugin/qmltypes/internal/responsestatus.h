@@ -3,11 +3,10 @@
 #include <QObject>
 #include <QStringList>
 #include <QMap>
-#include "utils/globals.h"
 
 typedef QMap<int, bool> StatusMap;  // statusCode : success/error
 
-class SHARED_SYMBOL ResponseStatus : public QObject
+class ResponseStatus : public QObject
 {
     Q_OBJECT
 

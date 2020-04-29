@@ -6,10 +6,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jir
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-# it seems the following definition is not necessary
-# because CMake adds already -D${PROJECT_NAME}_EXPORTS
-add_compile_definitions(EXPORT_IMPORT_MAGIC)
-
 add_subdirectory(utils)
 add_subdirectory(network)
 add_subdirectory(qmltypes)
@@ -27,7 +23,13 @@ endif()
 set_target_properties(${target} PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(${target} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
-target_link_libraries(${target} PRIVATE plugin_qmltypes PRIVATE plugin_utils PRIVATE plugin_network PRIVATE plugin_endpoints)
+target_link_libraries(${target}
+    PRIVATE plugin_network
+    PRIVATE plugin_endpoints
+    PRIVATE plugin_qmltypes_internal
+    PRIVATE plugin_qmltypes_external
+    PRIVATE plugin_qmltypes
+    PRIVATE plugin_utils)
 
 foreach(import ${imports})
     add_custom_command(TARGET ${target}

@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 set(target test_reply)
 
-# it seems the following definition is not necessary
-# because CMake adds already -D${PROJECT_NAME}_EXPORTS
-add_compile_definitions(EXPORT_IMPORT_MAGIC)
-
 set(headers test_reply.h)
 set(sources test_reply.cpp)
 

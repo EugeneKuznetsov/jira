@@ -6,15 +6,13 @@ QT += qml testlib
 
 CONFIG += warn_on testcase
 
-HEADERS = test_issue.h
+HEADERS = test_issue.h \
+    ../../../plugin/qmltypes/external/issue.h \
 
-SOURCES = test_issue.cpp
+SOURCES = test_issue.cpp \
+    ../../../plugin/qmltypes/external/issue.cpp \
+    ../../../plugin/utils/logging.cpp
 
-INCLUDEPATH += $$PWD/../../../plugin
-DEPENDPATH += $$PWD/../../../plugin
+INCLUDEPATH = ../../../plugin
 
 DESTDIR = ../../../bin
-
-QMAKE_RPATHDIR += ./imports/Jira
-
-win32|unix:!macx: LIBS += -L$$DESTDIR/imports/Jira/ -lqmljiraplugin
