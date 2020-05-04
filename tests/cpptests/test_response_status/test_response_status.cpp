@@ -2,7 +2,7 @@
 #include "qmltypes/internal/responsestatus.h"
 #include "test_response_status.h"
 
-void ResponseStatusTestCase::test_invalid_status_code_and_simple_error()
+void ResponseStatusTestCase::invalidStatusCodeAndSimpleError()
 {
     ResponseStatus status(-1, "no-json-error-text", {{200, true}, {404, false}});
     QCOMPARE(status.property("success").toBool(), false);
@@ -10,7 +10,7 @@ void ResponseStatusTestCase::test_invalid_status_code_and_simple_error()
     QVERIFY(status.property("errors").toStringList().empty());
 }
 
-void ResponseStatusTestCase::test_invalid_status_code_and_json_error()
+void ResponseStatusTestCase::invalidStatusCodeAndJsonError()
 {
     ResponseStatus status(20000, "{\"errorMessages\":[\"Some error\"],\"errors\":{}}", {{200, true}, {404, false}});
     QCOMPARE(status.property("success").toBool(), false);
@@ -18,7 +18,7 @@ void ResponseStatusTestCase::test_invalid_status_code_and_json_error()
     QVERIFY(status.property("errors").toStringList().empty());
 }
 
-void ResponseStatusTestCase::test_valid_successful_status_code_and_invalid_status_map()
+void ResponseStatusTestCase::validSuccessfulStatusCodeAndInvalidStatusMap()
 {
     ResponseStatus status(200, "Some successful json data", {});
     QCOMPARE(status.property("success").toBool(), false);
@@ -26,7 +26,7 @@ void ResponseStatusTestCase::test_valid_successful_status_code_and_invalid_statu
     QVERIFY(status.property("errors").toStringList().empty());
 }
 
-void ResponseStatusTestCase::test_valid_successful_status_code_and_valid_status_map()
+void ResponseStatusTestCase::validSuccessfulStatusCodeAndValidStatusMap()
 {
     ResponseStatus status(200, "Some successful json data", {{200, true}, {404, false}});
     QCOMPARE(status.property("success").toBool(), true);
@@ -34,7 +34,7 @@ void ResponseStatusTestCase::test_valid_successful_status_code_and_valid_status_
     QVERIFY(status.property("errors").toStringList().empty());
 }
 
-void ResponseStatusTestCase::test_valid_error_status_code_and_valid_status_map()
+void ResponseStatusTestCase::validErrorStatusCodeAndValidStatusMap()
 {
     ResponseStatus status(400, "{\"errorMessages\":[\"Some error 1\", \"Some error 2\"],\"errors\":{}}", {{200, true}, {400, false}});
     QCOMPARE(status.property("success").toBool(), false);

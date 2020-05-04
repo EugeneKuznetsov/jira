@@ -4,7 +4,7 @@
 #include "qmltypes/external/issue.h"
 #include "test_issue.h"
 
-void IssueTestCase::test_create_issue_from_json_object()
+void IssueTestCase::createIssueFromJsonObject()
 {
     QByteArray data = "{"
                           "\"expand\":\"schema\","
@@ -35,7 +35,7 @@ void IssueTestCase::test_create_issue_from_json_object()
     QCOMPARE(issue.property("expandedFields").toMap()["changelog"].toMap()["histories"].toList().size(), 0);
 }
 
-void IssueTestCase::test_create_issue_from_json_object_without_fields()
+void IssueTestCase::createIssueFromJsonObjectWithoutFields()
 {
     QByteArray data = "{"
                           "\"expand\":\"schema,names\","
@@ -54,7 +54,7 @@ void IssueTestCase::test_create_issue_from_json_object_without_fields()
     QCOMPARE(issue.property("expandedFields").toMap().size(), 0);
 }
 
-void IssueTestCase::test_create_issue_from_empty_json_object()
+void IssueTestCase::createIssueFromEmptyJsonObject()
 {
     QJsonObject testData;
 

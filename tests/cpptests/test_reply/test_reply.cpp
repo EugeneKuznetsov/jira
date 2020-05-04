@@ -15,7 +15,7 @@ void ReplyTestCase::errorSignal()
     Reply reply(network.get(request), this);
 
     QSignalSpy errorSpy(&reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(100));
+    QVERIFY(errorSpy.wait(250));
 }
 
 void ReplyTestCase::destroySignal()
