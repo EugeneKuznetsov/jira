@@ -1,5 +1,5 @@
-import QtQuick 2.0
-import QtTest 1.0
+import QtQuick 2.14
+import QtTest 1.14
 import Jira 1.0
 
 TestCase {
