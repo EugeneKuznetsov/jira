@@ -7,10 +7,9 @@ TestCase {
 
     name: "[User]"
 
-    function test_create_user_object() {
+    function test_createUserObject() {
         try {
-            var issue = Qt.createQmlObject("import Jira 1.0; User { }", root)
-            verify(issue === null, "User object was successfuly created")
+            verify(Qt.createQmlObject("import Jira 1.0; User { }", root) === null)
         } catch (err) {
         }
     }
