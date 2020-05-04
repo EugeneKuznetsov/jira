@@ -1,104 +1,92 @@
 #include <QTest>
 #include <QSignalSpy>
-#include <QQmlEngine>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QVariant>
+#include "cutemockserver.h"
 #include "network/session.h"
 #include "network/reply.h"
 #include "test_session.h"
 
-void SessionTestCase::test_change_server()
+void SessionTestCase::testGetOffline()
 {
-    QQmlEngine engine;
-    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
-
-    Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
-    QVERIFY2(nullptr != reply, "GET method did not return Reply object");
-
-    QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY2(readySpy.wait(5000), "Ready signal was not emitted by Reply");
-    auto arguments = readySpy.takeFirst();
-    QVERIFY2(arguments.at(0).toInt() == 200, "Connection to the first server was invalid");
-
-    session.setServer(QUrl("/"));  // always offline server
-    reply = session.get(QUrl("/"));
-    QVERIFY2(nullptr != reply, "GET method did not return Reply object");
-    QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY2(errorSpy.wait(5000), "Error signal was not emitted by Reply");
-    arguments = errorSpy.takeFirst();
-    QVERIFY2(!arguments.at(0).toString().isEmpty(), "Connection to offline host did not produce any error string");
-}
-
-void SessionTestCase::test_session_get_with_invalid_networkmanager()
-{
-    QQmlEngine engine;
-    Session session(QUrl(""), nullptr, &engine);
+    QNetworkAccessManager network;
+    Session session(QUrl("http://localhost:8080"), &network, nullptr);
 
     Reply *reply = session.get(QUrl(""));
-    QVERIFY2(nullptr == reply, "GET method returned non-nullptr Reply object");
-}
 
-void SessionTestCase::test_session_post_with_invalid_networkmanager()
-{
-    QQmlEngine engine;
-    Session session(QUrl(""), nullptr, &engine);
-
-    Reply *reply = session.post(QUrl(""), QByteArray());
-    QVERIFY2(nullptr == reply, "POST method returned non-nullptr Reply object");
-}
-
-void SessionTestCase::test_session_get_with_invalid_hostname()
-{
-    QQmlEngine engine;
-    Session session(QUrl("https://a.b.c.d:12345"), engine.networkAccessManager(), &engine);
-
-    Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
-    QVERIFY2(nullptr != reply, "GET method did not return Reply object");
+    QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY2(errorSpy.wait(5000), "Error signal was not emitted by Reply");
-    auto arguments = errorSpy.takeFirst();
-    QVERIFY2(!arguments.at(0).toString().isEmpty(), "Connection to offline host did not produce any error string");
+    QVERIFY(errorSpy.wait(100));
 }
 
-void SessionTestCase::test_session_get_with_invalid_jira_server()
+void SessionTestCase::testGetOnline_data()
 {
-    QQmlEngine engine;
-    Session session(QUrl("https://google.com"), engine.networkAccessManager(), &engine);
+    QTest::addColumn<int>("method");
+    QTest::addColumn<int>("statusCode");
 
-    Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
-    QVERIFY2(nullptr != reply, "GET method did not return Reply object");
-    QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY2(readySpy.wait(5000), "Ready signal was not emitted by Reply");
-    auto arguments = readySpy.takeFirst();
-    QVERIFY2(arguments.at(0).toInt() == 404, "Connection to invalid jira server did not produce statusCode 404");
+    QTest::newRow("invalid") << static_cast<int>(CuteMockData::POST) << 404;
+    QTest::newRow("valid") << static_cast<int>(CuteMockData::GET) << 200;
 }
 
-void SessionTestCase::test_session_get_with_valid_jira_server()
-{
-    QQmlEngine engine;
-    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
 
-    Reply *reply = session.get(QUrl("/rest/api/2/serverInfo"));
-    QVERIFY2(nullptr != reply, "GET method did not return Reply object");
+void SessionTestCase::testGetOnline()
+{
+    QFETCH(int, method);
+    QFETCH(int, statusCode);
+    CuteMockServer mockServer;
+    CuteMockData cmd(statusCode, CuteMockData::TextHtml, "");
+    mockServer.setHttpRoute(static_cast<CuteMockData::Method>(method), QUrl("/"), cmd);
+    mockServer.listenHttp(8080);
+    QNetworkAccessManager network;
+    Session session(QUrl("http://localhost:8080"), &network, nullptr);
+
+    Reply *reply = session.get(QUrl(""));
+
+    QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY2(readySpy.wait(5000), "Ready signal was not emitted by Reply");
+    QVERIFY(readySpy.wait(50));
     auto arguments = readySpy.takeFirst();
-    QVERIFY2(arguments.at(0).toInt() == 200, "Connection to jira server did not produce statusCode 200");
+    QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
 
-void SessionTestCase::test_session_post_with_valid_jira_server()
+void SessionTestCase::testPostOffline()
 {
-    QQmlEngine engine;
-    Session session(QUrl("https://jira.atlassian.com"), engine.networkAccessManager(), &engine);
+    QNetworkAccessManager network;
+    Session session(QUrl("http://localhost:8080"), &network, nullptr);
 
-    const QByteArray payload = "{\"username\": \"\", \"password\": \"\"}";
-    Reply *reply = session.post(QUrl("/rest/auth/1/session"), payload);
-    QVERIFY2(nullptr != reply, "POST method did not return Reply object");
+    Reply *reply = session.post(QUrl(""), "");
+
+    QVERIFY(reply != nullptr);
+    QSignalSpy errorSpy(reply, &Reply::networkError);
+    QVERIFY(errorSpy.wait(100));
+}
+
+void SessionTestCase::testPostOnline_data()
+{
+    QTest::addColumn<int>("method");
+    QTest::addColumn<int>("statusCode");
+
+    QTest::newRow("invalid") << static_cast<int>(CuteMockData::GET) << 404;
+    QTest::newRow("valid") << static_cast<int>(CuteMockData::POST) << 200;
+}
+
+void SessionTestCase::testPostOnline()
+{
+    QFETCH(int, method);
+    QFETCH(int, statusCode);
+    CuteMockServer mockServer;
+    CuteMockData cmd(statusCode, CuteMockData::TextHtml, "");
+    mockServer.setHttpRoute(static_cast<CuteMockData::Method>(method), QUrl("/"), cmd);
+    mockServer.listenHttp(8080);
+    QNetworkAccessManager network;
+    Session session(QUrl("http://localhost:8080"), &network, nullptr);
+
+    Reply *reply = session.post(QUrl(""), "");
+
+    QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY2(readySpy.wait(5000), "Ready signal was not emitted by Reply");
+    QVERIFY(readySpy.wait(50));
     auto arguments = readySpy.takeFirst();
-    QVERIFY2(arguments.at(0).toInt() == 401, "Connection to jira server did not produce statusCode 401");
+    QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
 
 QTEST_GUILESS_MAIN(SessionTestCase)

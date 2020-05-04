@@ -13,8 +13,6 @@ class Session : public QObject
 
     Q_PROPERTY(QUrl server READ getServer WRITE setServer NOTIFY serverChanged)
 
-    Session();
-
 public:
     Session(const QUrl &server, QNetworkAccessManager *network, QObject *parent);
 

@@ -8,7 +8,9 @@ class ReplyTestCase : public QObject
 
 private slots:
     void errorSignal();
+
     void destroySignal();
+
     void readySignalStatusCode_data();
     void readySignalStatusCode();
     void readySignalData_data();

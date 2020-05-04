@@ -11,8 +11,8 @@ Session::Session(const QUrl &server, QNetworkAccessManager *network, QObject *pa
     , m_server(server)
 {
     if (nullptr == parent)
-        qCCritical(NETWORK_SESSION) << "parent was not set";
-    if (nullptr == parent)
+        qCWarning(NETWORK_SESSION) << "parent was not set";
+    if (nullptr == network)
         qCCritical(NETWORK_SESSION) << "network was not set";
     qCDebug(NETWORK_SESSION) << this << "new session server address:" << server;
 }

@@ -3,11 +3,9 @@
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
-#include <QJsonDocument>
-#include <QJsonObject>
+#include "cutemockserver.h"
 #include "network/reply.h"
 #include "test_reply.h"
-#include "cutemockserver.h"
 
 void ReplyTestCase::errorSignal()
 {
