@@ -1,0 +1,3 @@
+[submodule "tests/CuteMockServer"]
+	path = tests/CuteMockServer
+	url = git@github.com:EugeneKuznetsov/CuteMockServer.git

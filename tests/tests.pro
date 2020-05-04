@@ -1,3 +1,3 @@
 TEMPLATE = subdirs
 
-SUBDIRS = cpptests qmltests
+SUBDIRS = CuteMockServer cpptests qmltests

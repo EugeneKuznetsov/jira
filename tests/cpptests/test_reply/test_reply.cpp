@@ -1,6 +1,5 @@
 #include <QTest>
 #include <QSignalSpy>
-#include <QQmlEngine>
 #include <QNetworkAccessManager>
 #include <QNetworkRequest>
 #include <QNetworkReply>
@@ -8,91 +7,89 @@
 #include <QJsonObject>
 #include "network/reply.h"
 #include "test_reply.h"
+#include "cutemockserver.h"
 
-void ReplyTestCase::test_reply_from_invalid_hostname()
+void ReplyTestCase::errorSignal()
 {
-    QQmlEngine engine;
-    QNetworkAccessManager *network = engine.networkAccessManager();
+    QNetworkAccessManager network;
     QNetworkRequest request(QUrl("https://a.b.c.d:12345/rest/api/2/serverInfo"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("X-Atlassian-Token", "no-check");
 
-    Reply reply(network->get(request), this);
+    Reply reply(network.get(request), this);
 
-    QSignalSpy destroySpy(&reply, &Reply::destroy);
     QSignalSpy errorSpy(&reply, &Reply::networkError);
-    QSignalSpy readySpy(&reply, &Reply::ready);
-
-    QVERIFY2(destroySpy.wait(5000), "Destroy signal was not emitted by Reply");
-    QVERIFY2(errorSpy.count() == 1, "Error signal was not emitted by Reply");
-    auto arguments = errorSpy.takeFirst();
-    QVERIFY2(!arguments.at(0).toString().isEmpty(), "Connection to invalid host did not produce any error string");
-    QVERIFY2(readySpy.count() == 0, "Ready signal was emitted by Reply");
+    QVERIFY(errorSpy.wait(100));
 }
 
-void ReplyTestCase::test_reply_from_invalid_jira_server()
+void ReplyTestCase::destroySignal()
 {
-    QQmlEngine engine;
-    QNetworkAccessManager *network = engine.networkAccessManager();
-    QNetworkRequest request(QUrl("https://google.com/rest/api/2/serverInfo"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("X-Atlassian-Token", "no-check");
+    QNetworkAccessManager network;
+    QNetworkRequest request(QUrl("https://a.b.c.d:12345/rest/api/2/serverInfo"));
 
-    Reply reply(network->get(request), this);
+    Reply reply(network.get(request), this);
 
     QSignalSpy destroySpy(&reply, &Reply::destroy);
-    QSignalSpy errorSpy(&reply, &Reply::networkError);
-    QSignalSpy readySpy(&reply, &Reply::ready);
+    QVERIFY(destroySpy.wait(100));
+}
 
-    QVERIFY2(destroySpy.wait(5000), "Destroy signal was not emitted by Reply");
-    QVERIFY2(errorSpy.count() == 0, "Error signal was emitted by Reply");
-    QVERIFY2(readySpy.count() == 1, "Ready signal was not emitted by Reply");
+void ReplyTestCase::readySignalStatusCode_data()
+{
+    QTest::addColumn<QUrl>("uri");
+    QTest::addColumn<int>("statusCode");
+
+    QTest::newRow("200 OK") << QUrl("http://localhost:8080/") << 200;
+    QTest::newRow("404 Not Found") << QUrl("http://localhost:8080/wrong/resource") << 404;
+}
+
+void ReplyTestCase::readySignalStatusCode()
+{
+    QFETCH(QUrl, uri);
+    QFETCH(int, statusCode);
+
+    CuteMockServer mockServer;
+    CuteMockData cmd(200, CuteMockData::TextHtml, "");
+    mockServer.setHttpRoute(CuteMockData::GET, QUrl("/"), cmd);
+    mockServer.listenHttp(8080);
+    QNetworkAccessManager network;
+    QNetworkRequest request(uri);
+
+    Reply reply(network.get(request), this);
+
+    QSignalSpy readySpy(&reply, &Reply::ready);
+    QVERIFY(readySpy.wait(50));
     auto arguments = readySpy.takeFirst();
-    QVERIFY2(arguments.at(0).toInt() == 404, "Connection to invalid jira server did not produce status code 404");
-    QVERIFY2(!arguments.at(1).toByteArray().isEmpty(), "At least some data expected to be returned from an 'invalid' server");
+    QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
 
-void ReplyTestCase::test_reply_from_valid_offline_jira_server()
+void ReplyTestCase::readySignalData_data()
 {
-    QQmlEngine engine;
-    QNetworkAccessManager *network = engine.networkAccessManager();
-    QNetworkRequest request(QUrl("https://localhost:299/rest/api/2/serverInfo"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
-    request.setRawHeader("X-Atlassian-Token", "no-check");
+    QTest::addColumn<QUrl>("uri");
+    QTest::addColumn<QUrl>("route");
+    QTest::addColumn<QByteArray>("data");
 
-    Reply reply(network->get(request), this);
-
-    QSignalSpy destroySpy(&reply, &Reply::destroy);
-    QSignalSpy errorSpy(&reply, &Reply::networkError);
-    QSignalSpy readySpy(&reply, &Reply::ready);
-    QVERIFY2(destroySpy.wait(5000), "Destroy signal was not emitted by Reply");
-    QVERIFY2(errorSpy.count() == 1, "Error signal was not emitted by Reply");
-    auto arguments = errorSpy.takeFirst();
-    QVERIFY2(!arguments.at(0).toString().isEmpty(), "Connection to offline jira server did not produce any error string");
-    QVERIFY2(readySpy.count() == 0, "Ready signal was emitted by Reply");
+    QTest::newRow("empty") << QUrl("https://localhost:4443/no/data/") << QUrl("/no/data") << QByteArray("");
+    QTest::newRow("few words") << QUrl("https://localhost:4443/data/point") << QUrl("/data/point") << QByteArray("Some Mock Data");
 }
 
-void ReplyTestCase::test_reply_from_valid_online_jira_server()
+void ReplyTestCase::readySignalData()
 {
-    QQmlEngine engine;
-    QNetworkAccessManager *network = engine.networkAccessManager();
-    QNetworkRequest request(QUrl("https://jira.atlassian.com/rest/api/2/serverInfo"));
-    request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+    QFETCH(QUrl, uri);
+    QFETCH(QUrl, route);
+    QFETCH(QByteArray, data);
 
-    Reply reply(network->get(request), this);
-    connect(&reply, &Reply::ready, this, [](const int statusCode, const QByteArray &data){
-        QCOMPARE(statusCode, 200);
-        QJsonDocument json = QJsonDocument::fromJson(data);
-        QJsonObject root = json.object();
-        QVERIFY2(!root.isEmpty(), "Despite successful return code, data does not contain JSON object");
-    });
+    CuteMockServer mockServer;
+    CuteMockData cmd(200, CuteMockData::ApplicationJson, data);
+    mockServer.setHttpRoute(CuteMockData::POST, route, cmd);
+    mockServer.listenHttps(4443);
+    QNetworkAccessManager network;
+    QNetworkRequest request(uri);
+    mockServer.configureSecureRequest(&request);
 
-    QSignalSpy destroySpy(&reply, &Reply::destroy);
-    QSignalSpy errorSpy(&reply, &Reply::networkError);
+    Reply reply(network.post(request, ""), this);
+
     QSignalSpy readySpy(&reply, &Reply::ready);
-    QVERIFY2(destroySpy.wait(5000), "Destroy signal was not emitted by Reply");
-    QVERIFY2(errorSpy.count() == 0, "Error signal was emitted by Reply");
-    QVERIFY2(readySpy.count() == 1, "Ready signal was not emitted by Reply");
+    QVERIFY(readySpy.wait(50));
+    auto arguments = readySpy.takeFirst();
+    QCOMPARE(arguments.at(1).toByteArray(), data);
 }
 
 QTEST_GUILESS_MAIN(ReplyTestCase)
