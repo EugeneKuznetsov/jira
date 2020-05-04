@@ -9,13 +9,13 @@
 void SessionTestCase::testGetOffline()
 {
     QNetworkAccessManager network;
-    Session session(QUrl("http://localhost:8080"), &network, nullptr);
+    Session session(QUrl("http://a.b.c.d.x.y.z:8080"), &network, nullptr);
 
     Reply *reply = session.get(QUrl(""));
 
     QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(100));
+    QVERIFY(errorSpy.wait(10000));
 }
 
 void SessionTestCase::testGetOnline_data()
@@ -26,7 +26,6 @@ void SessionTestCase::testGetOnline_data()
     QTest::newRow("invalid") << static_cast<int>(CuteMockData::POST) << 404;
     QTest::newRow("valid") << static_cast<int>(CuteMockData::GET) << 200;
 }
-
 
 void SessionTestCase::testGetOnline()
 {
@@ -51,13 +50,13 @@ void SessionTestCase::testGetOnline()
 void SessionTestCase::testPostOffline()
 {
     QNetworkAccessManager network;
-    Session session(QUrl("http://localhost:8080"), &network, nullptr);
+    Session session(QUrl("http://a.b.c.d.x.y.z:8080"), &network, nullptr);
 
     Reply *reply = session.post(QUrl(""), "");
 
     QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(100));
+    QVERIFY(errorSpy.wait(250));
 }
 
 void SessionTestCase::testPostOnline_data()

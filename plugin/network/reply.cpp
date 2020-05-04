@@ -10,6 +10,15 @@ Reply::Reply(QNetworkReply *networkReply, QObject *parent)
         qCCritical(NETWORK_REPLY) << "parent was not set for this Reply:" << this;
     if (nullptr == networkReply)
         qCCritical(NETWORK_REPLY) << "networkReply was not set for this Reply:" << this;
+    else
+        networkReply->setParent(this);
+
+    // https://wiki.qt.io/New_Signal_Slot_Syntax#Overload
+    void (QNetworkReply:: *errorSignal)(QNetworkReply::NetworkError) = &QNetworkReply::error;
+    connect(networkReply, errorSignal, this, [this, networkReply](QNetworkReply::NetworkError) {
+        qCWarning(NETWORK_REPLY) << this << networkReply->errorString();
+        emit networkError(m_networkReply->errorString());
+    });
     connect(networkReply, &QNetworkReply::finished, this, &Reply::onReady);
 }
 
@@ -20,14 +29,10 @@ void Reply::onReady()
 
     qCDebug(NETWORK_REPLY) << this << "statusCode:" << statusCode << " data.size():" << data.size();
 
-    if (0 == statusCode) {
-        qCWarning(NETWORK_REPLY) << this << m_networkReply->errorString();
-        emit networkError(m_networkReply->errorString());
-    } else {
+    if (0 != statusCode) {
         qCDebug(NETWORK_REPLY_DATA) << this << data;
         emit ready(statusCode, data);
     }
 
-    m_networkReply->deleteLater();
     emit destroy();
 }
