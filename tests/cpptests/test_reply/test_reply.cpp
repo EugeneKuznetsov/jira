@@ -15,7 +15,7 @@ void ReplyTestCase::errorSignal()
     Reply reply(network.get(request), this);
 
     QSignalSpy errorSpy(&reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(250));
+    QVERIFY(errorSpy.wait(500));
 }
 
 void ReplyTestCase::destroySignal()
@@ -26,7 +26,7 @@ void ReplyTestCase::destroySignal()
     Reply reply(network.get(request), this);
 
     QSignalSpy destroySpy(&reply, &Reply::destroy);
-    QVERIFY(destroySpy.wait(250));
+    QVERIFY(destroySpy.wait(500));
 }
 
 void ReplyTestCase::readySignalStatusCode_data()
@@ -45,14 +45,14 @@ void ReplyTestCase::readySignalStatusCode()
 
     CuteMockServer mockServer;
     mockServer.setHttpRoute("GET", QUrl("/"), 200, "text/html", "");
-    mockServer.listenHttp(8080);
+    mockServer.listen(8080);
     QNetworkAccessManager network;
     QNetworkRequest request(uri);
 
     Reply reply(network.get(request), this);
 
     QSignalSpy readySpy(&reply, &Reply::ready);
-    QVERIFY(readySpy.wait(250));
+    QVERIFY(readySpy.wait(500));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
@@ -75,7 +75,7 @@ void ReplyTestCase::readySignalData()
 
     CuteMockServer mockServer;
     mockServer.setHttpRoute("POST", route, 200, "application/json", data);
-    mockServer.listenHttps(4443);
+    mockServer.listen(4443, true);
     QNetworkAccessManager network;
     QNetworkRequest request(uri);
     mockServer.configureSecureRequest(&request);
@@ -83,7 +83,7 @@ void ReplyTestCase::readySignalData()
     Reply reply(network.post(request, ""), this);
 
     QSignalSpy readySpy(&reply, &Reply::ready);
-    QVERIFY(readySpy.wait(250));
+    QVERIFY(readySpy.wait(500));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(1).toByteArray(), data);
 }

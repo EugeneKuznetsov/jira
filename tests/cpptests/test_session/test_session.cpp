@@ -15,7 +15,7 @@ void SessionTestCase::testGetOffline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(250));
+    QVERIFY(errorSpy.wait(500));
 }
 
 void SessionTestCase::testGetOnline_data()
@@ -33,7 +33,7 @@ void SessionTestCase::testGetOnline()
     QFETCH(int, statusCode);
     CuteMockServer mockServer;
     mockServer.setHttpRoute(method, QUrl("/"), statusCode, "text/html", "");
-    mockServer.listenHttp(8080);
+    mockServer.listen(8080);
     QNetworkAccessManager network;
     Session session(QUrl("http://localhost:8080"), &network, nullptr);
 
@@ -41,7 +41,7 @@ void SessionTestCase::testGetOnline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY(readySpy.wait(250));
+    QVERIFY(readySpy.wait(500));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
@@ -55,7 +55,7 @@ void SessionTestCase::testPostOffline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(250));
+    QVERIFY(errorSpy.wait(500));
 }
 
 void SessionTestCase::testPostOnline_data()
@@ -73,7 +73,7 @@ void SessionTestCase::testPostOnline()
     QFETCH(int, statusCode);
     CuteMockServer mockServer;
     mockServer.setHttpRoute(method, QUrl("/"), statusCode, "text/html", "");
-    mockServer.listenHttp(8080);
+    mockServer.listen(8080);
     QNetworkAccessManager network;
     Session session(QUrl("http://localhost:8080"), &network, nullptr);
 
@@ -81,7 +81,7 @@ void SessionTestCase::testPostOnline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY(readySpy.wait(250));
+    QVERIFY(readySpy.wait(500));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(0).toInt(), statusCode);
 }

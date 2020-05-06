@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>data/login/test_login.json</file>
+        <file>data/login/test_loginWithNetworkError.json</file>
     </qresource>
 </RCC>
