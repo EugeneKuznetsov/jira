@@ -35,30 +35,58 @@ void Jira::setOptions(Options *new_value)
     emit optionsChanged();
 }
 
-void Jira::login(const QJSValue &callback)
+bool Jira::login(const QJSValue &callback)
 {
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
+        return false;
+    }
+
     SessionEndpoint *endpoint = new SessionEndpoint(activeSession(), callback, this);
     endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
+
+    return true;
 }
 
-void Jira::issue(const QJSValue &callback, const QString &issueIdOrKey,
+bool Jira::issue(const QJSValue &callback, const QString &issueIdOrKey,
                  const QString &fields/* = "*all"*/, const QString &expand/* = ""*/)
 {
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
+        return false;
+    }
+
     IssueEndpoint *endpoint = new IssueEndpoint(activeSession(), callback, this);
     endpoint->getIssue(issueIdOrKey, fields, expand);
+
+    return true;
 }
 
-void Jira::search(const QJSValue &callback, const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/,
+bool Jira::search(const QJSValue &callback, const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/,
                   const QString &fields/* = "*navigable"*/, const QString &expand/* = ""*/)
 {
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
+        return false;
+    }
+
     SearchEndpoint *endpoint = new SearchEndpoint(activeSession(), callback, this);
     endpoint->search(jql, startAt, maxResults, fields, expand);
+
+    return true;
 }
 
-void Jira::user(const QJSValue &callback, const QString &username)
+bool Jira::user(const QJSValue &callback, const QString &username)
 {
+    if (!callback.isCallable()) {
+        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
+        return false;
+    }
+
     UserEndpoint *endpoint = new UserEndpoint(activeSession(), callback, this);
     endpoint->getUserResource(username);
+
+    return true;
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)

@@ -24,12 +24,12 @@ signals:
     void networkErrorDetails(const QString &errorString);
 
 public slots:
-    void login(const QJSValue &callback);
-    void issue(const QJSValue &callback, const QString &issueIdOrKey,
+    bool login(const QJSValue &callback);
+    bool issue(const QJSValue &callback, const QString &issueIdOrKey,
                const QString &fields = "*all", const QString &expand = "");
-    void search(const QJSValue &callback, const QString &jql, const int startAt = 0, const int maxResults = 50,
+    bool search(const QJSValue &callback, const QString &jql, const int startAt = 0, const int maxResults = 50,
                 const QString &fields = "*navigable", const QString &expand = "");
-    void user(const QJSValue &callback, const QString &username);
+    bool user(const QJSValue &callback, const QString &username);
 
 private:
     Session *activeSession(bool createNewSession = false);

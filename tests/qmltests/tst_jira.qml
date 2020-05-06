@@ -4,6 +4,11 @@ TestCase {
     id: root
 
     function test_loginWithInvalidCallback() {
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        compare(jiraClient.login(null), false);
+    }
+
+    function test_loginWithNetworkError() {
         fail("Test not implemented");
     }
 
@@ -24,22 +29,23 @@ TestCase {
         jiraClient.options.server = "http://localhost:8080/";
         jiraClient.options.username = testData["username"];
         jiraClient.options.password = testData["password"];
-        jiraClient.login(function(status) {
+        verify(jiraClient.login(function(status) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["errors"]);
             jiraServer = null;
-        });
+        }));
         tryVerify(function() {
             return jiraServer === null;
         }, 50);
         compare(errorSpy.count, 0);
     }
 
-    function test_loginWithNtworkError() {
-        fail("Test not implemented");
+    function test_issueWithInvalidCallback() {
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        compare(jiraClient.issue(null, ""), false);
     }
 
-    function test_issueWithInvalidCallback() {
+    function test_issueWithNetworkError() {
         fail("Test not implemented");
     }
 
@@ -52,6 +58,12 @@ TestCase {
     }
 
     function test_searchWithInvalidCallback() {
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        compare(jiraClient.search(null, ""), false);
+    }
+
+    function test_searchWithNetworkError() {
+        fail("Test not implemented");
     }
 
     function test_search_data() {
@@ -63,6 +75,11 @@ TestCase {
     }
 
     function test_userWithInvalidCallback() {
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        compare(jiraClient.user(null, ""), false);
+    }
+
+    function test_userWithNetworkError() {
         fail("Test not implemented");
     }
 
