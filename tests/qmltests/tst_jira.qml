@@ -14,6 +14,8 @@ TestCase {
         return JSON.parse(tests.data);
     }
 
+    // ToDo: Make reusable code for other Jira endpoints (issue, search, user),
+    // since other networkError tests are doing exactly the same things
     function test_loginWithNetworkError(testData) {
         var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
         var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
@@ -70,12 +72,33 @@ TestCase {
     }
 
     function test_issueWithNetworkError_data() {
-        fail("Test not implemented");
-        return [];
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/issue/test_issueWithNetworkError.json");
+        return JSON.parse(tests.data);
     }
 
+    // ToDo: Make reusable code for other Jira endpoints (login, search, user),
+    // since other networkError tests are doing exactly the same things
     function test_issueWithNetworkError(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        var callbackExecuted = false;
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(testData["serverPort"], testData["secureServer"]);
+        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraClient.options.server = testData["server"];
+        verify(jiraClient.issue(function(status) {
+            compare(status.success, testData["loginSuccess"]);
+            compare(status.errors.length, testData["jiraErrors"]);
+            callbackExecuted = true;
+        }, ""));
+        tryVerify(function() {
+            return (callbackExecuted || errorSpy.count);
+        }, 500);
+        compare(callbackExecuted, testData["callbackExecuted"]);
+        compare(errorSpy.count, testData["networkErrorCount"]);
     }
 
     function test_issue_data() {
@@ -93,12 +116,33 @@ TestCase {
     }
 
     function test_searchWithNetworkError_data() {
-        fail("Test not implemented");
-        return []
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/search/test_searchWithNetworkError.json");
+        return JSON.parse(tests.data);
     }
 
+    // ToDo: Make reusable code for other Jira endpoints (issue, login, user),
+    // since other networkError tests are doing exactly the same things
     function test_searchWithNetworkError(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        var callbackExecuted = false;
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(testData["serverPort"], testData["secureServer"]);
+        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraClient.options.server = testData["server"];
+        verify(jiraClient.search(function(status) {
+            compare(status.success, testData["loginSuccess"]);
+            compare(status.errors.length, testData["jiraErrors"]);
+            callbackExecuted = true;
+        }, ""));
+        tryVerify(function() {
+            return (callbackExecuted || errorSpy.count);
+        }, 500);
+        compare(callbackExecuted, testData["callbackExecuted"]);
+        compare(errorSpy.count, testData["networkErrorCount"]);
     }
 
     function test_search_data() {
@@ -116,12 +160,33 @@ TestCase {
     }
 
     function test_userWithNetworkError_data() {
-        fail("Test not implemented");
-        return []
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/user/test_userWithNetworkError.json");
+        return JSON.parse(tests.data);
     }
 
+    // ToDo: Make reusable code for other Jira endpoints (issue, search, login),
+    // since other networkError tests are doing exactly the same things
     function test_userWithNetworkError(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        var callbackExecuted = false;
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(testData["serverPort"], testData["secureServer"]);
+        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraClient.options.server = testData["server"];
+        verify(jiraClient.user(function(status) {
+            compare(status.success, testData["loginSuccess"]);
+            compare(status.errors.length, testData["jiraErrors"]);
+            callbackExecuted = true;
+        }, ""));
+        tryVerify(function() {
+            return (callbackExecuted || errorSpy.count);
+        }, 500);
+        compare(callbackExecuted, testData["callbackExecuted"]);
+        compare(errorSpy.count, testData["networkErrorCount"]);
     }
 
     function test_user_data() {
