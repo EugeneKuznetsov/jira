@@ -190,12 +190,29 @@ TestCase {
     }
 
     function test_user_data() {
-        fail("Test not implemented");
-        return [];
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/user/test_user.json");
+        return JSON.parse(tests.data);
     }
 
     function test_user(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(8080);
+        jiraServer.setHttpRoute("GET", "/rest/api/2/user" + testData["query"], testData["statusCode"], testData["contentType"], testData["content"]);
+        jiraClient.options.server = "http://localhost:8080/";
+        verify(jiraClient.user(function(status) {
+            compare(status.success, testData["success"]);
+            compare(status.errors.length, testData["errors"]);
+            jiraServer = null;
+        }, testData["username"]));
+        tryVerify(function() {
+            return jiraServer === null;
+        }, 500);
+        compare(errorSpy.count, 0);
     }
 
     name: "[Jira]"

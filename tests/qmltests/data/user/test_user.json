@@ -1,0 +1,27 @@
+[
+    {
+        "tag": "Anonymous request",
+        "query": "?username=eugene",
+        "username": "eugene",
+        "statusCode": 401,
+        "contentType": "application/xml;charset=UTF-8",
+        "content": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><status><status-code>401</status-code><message>Client must be authenticated to access this resource.</message></status>",
+        "errors": 0, "success": false
+    }, {
+        "tag": "Invalid user",
+        "query": "?username=null",
+        "username": "null",
+        "statusCode": 404,
+        "contentType": "application/json;charset=UTF-8",
+        "content": "{  \"errorMessages\": [    \"The user named 'null' does not exist\"  ],  \"errors\": {}}",
+        "errors": 1, "success": false
+    }, {
+        "tag": "Valid user",
+        "query": "?username=eugene",
+        "username": "eugene",
+        "statusCode": 200,
+        "contentType": "application/json;charset=UTF-8",
+        "content": "{  \"self\": \"http://localhost:8080/jira/rest/api/2/user?username=eugene\",  \"key\": \"eugene\",  \"name\": \"eugene\",  \"emailAddress\": \"eugene@localhost\",  \"avatarUrls\": {    \"48x48\": \"http://localhost:8080/jira/secure/useravatar?avatarId=10505\",    \"24x24\": \"http://localhost:8080/jira/secure/useravatar?size=small&avatarId=10505\",    \"16x16\": \"http://localhost:8080/jira/secure/useravatar?size=xsmall&avatarId=10505\",    \"32x32\": \"http://localhost:8080/jira/secure/useravatar?size=medium&avatarId=10505\"  },  \"displayName\": \"Eugene Kuznetsov\",  \"active\": true,  \"timeZone\": \"Europe/Berlin\",  \"locale\": \"en_US\",  \"groups\": {    \"size\": 3,    \"items\": []  },  \"applicationRoles\": {    \"size\": 2,    \"items\": []  },  \"expand\": \"groups,applicationRoles\"}",
+        "errors": 0, "success": true
+    }
+]
