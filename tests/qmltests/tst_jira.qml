@@ -33,7 +33,7 @@ TestCase {
         }));
         tryVerify(function() {
             return (callbackExecuted || errorSpy.count);
-        }, 500);
+        }, 3000);
         compare(callbackExecuted, testData["callbackExecuted"]);
         compare(errorSpy.count, testData["networkErrorCount"]);
     }
@@ -96,7 +96,7 @@ TestCase {
         }, ""));
         tryVerify(function() {
             return (callbackExecuted || errorSpy.count);
-        }, 500);
+        }, 3000);
         compare(callbackExecuted, testData["callbackExecuted"]);
         compare(errorSpy.count, testData["networkErrorCount"]);
     }
@@ -140,7 +140,7 @@ TestCase {
         }, ""));
         tryVerify(function() {
             return (callbackExecuted || errorSpy.count);
-        }, 500);
+        }, 3000);
         compare(callbackExecuted, testData["callbackExecuted"]);
         compare(errorSpy.count, testData["networkErrorCount"]);
     }
@@ -184,7 +184,7 @@ TestCase {
         }, ""));
         tryVerify(function() {
             return (callbackExecuted || errorSpy.count);
-        }, 500);
+        }, 3000);
         compare(callbackExecuted, testData["callbackExecuted"]);
         compare(errorSpy.count, testData["networkErrorCount"]);
     }
