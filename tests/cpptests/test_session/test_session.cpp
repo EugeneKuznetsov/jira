@@ -15,25 +15,24 @@ void SessionTestCase::testGetOffline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy errorSpy(reply, &Reply::networkError);
-    QVERIFY(errorSpy.wait(10000));
+    QVERIFY(errorSpy.wait(250));
 }
 
 void SessionTestCase::testGetOnline_data()
 {
-    QTest::addColumn<int>("method");
+    QTest::addColumn<QString>("method");
     QTest::addColumn<int>("statusCode");
 
-    QTest::newRow("invalid") << static_cast<int>(CuteMockData::POST) << 404;
-    QTest::newRow("valid") << static_cast<int>(CuteMockData::GET) << 200;
+    QTest::newRow("invalid") << "POST" << 404;
+    QTest::newRow("valid") << "GET" << 200;
 }
 
 void SessionTestCase::testGetOnline()
 {
-    QFETCH(int, method);
+    QFETCH(QString, method);
     QFETCH(int, statusCode);
     CuteMockServer mockServer;
-    CuteMockData cmd(statusCode, CuteMockData::TextHtml, "");
-    mockServer.setHttpRoute(static_cast<CuteMockData::Method>(method), QUrl("/"), cmd);
+    mockServer.setHttpRoute(method, QUrl("/"), statusCode, "text/html", "");
     mockServer.listenHttp(8080);
     QNetworkAccessManager network;
     Session session(QUrl("http://localhost:8080"), &network, nullptr);
@@ -42,7 +41,7 @@ void SessionTestCase::testGetOnline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY(readySpy.wait(50));
+    QVERIFY(readySpy.wait(250));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
@@ -61,20 +60,19 @@ void SessionTestCase::testPostOffline()
 
 void SessionTestCase::testPostOnline_data()
 {
-    QTest::addColumn<int>("method");
+    QTest::addColumn<QString>("method");
     QTest::addColumn<int>("statusCode");
 
-    QTest::newRow("invalid") << static_cast<int>(CuteMockData::GET) << 404;
-    QTest::newRow("valid") << static_cast<int>(CuteMockData::POST) << 200;
+    QTest::newRow("invalid") << "GET" << 404;
+    QTest::newRow("valid") << "POST" << 200;
 }
 
 void SessionTestCase::testPostOnline()
 {
-    QFETCH(int, method);
+    QFETCH(QString, method);
     QFETCH(int, statusCode);
     CuteMockServer mockServer;
-    CuteMockData cmd(statusCode, CuteMockData::TextHtml, "");
-    mockServer.setHttpRoute(static_cast<CuteMockData::Method>(method), QUrl("/"), cmd);
+    mockServer.setHttpRoute(method, QUrl("/"), statusCode, "text/html", "");
     mockServer.listenHttp(8080);
     QNetworkAccessManager network;
     Session session(QUrl("http://localhost:8080"), &network, nullptr);
@@ -83,7 +81,7 @@ void SessionTestCase::testPostOnline()
 
     QVERIFY(reply != nullptr);
     QSignalSpy readySpy(reply, &Reply::ready);
-    QVERIFY(readySpy.wait(50));
+    QVERIFY(readySpy.wait(250));
     auto arguments = readySpy.takeFirst();
     QCOMPARE(arguments.at(0).toInt(), statusCode);
 }
