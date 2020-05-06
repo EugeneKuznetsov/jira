@@ -8,6 +8,6 @@ TestCase {
     name: "[Options]"
 
     function test_createOptionsObject() {
-        verify(Qt.createQmlObject("import Jira 1.0; Options { }", root) !== null)
+        verify(createTemporaryQmlObject("import Jira 1.0; Options { }", root) !== null)
     }
 }

@@ -9,7 +9,7 @@ TestCase {
 
     function test_createUserObject() {
         try {
-            verify(Qt.createQmlObject("import Jira 1.0; User { }", root) === null)
+            verify(createTemporaryQmlObject("import Jira 1.0; User { }", root) === null)
         } catch (err) {
         }
     }
