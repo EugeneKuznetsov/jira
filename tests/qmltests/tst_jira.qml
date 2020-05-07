@@ -92,7 +92,7 @@ TestCase {
         verify(jiraClient.issue(function(status, issue) {
             compare(status.success, testData["loginSuccess"]);
             compare(status.errors.length, testData["jiraErrors"]);
-            compare(issue, null)
+            compare(issue, null);
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {
@@ -123,14 +123,14 @@ TestCase {
             compare(status.errors.length, testData["errors"]);
             if (testData["fields"] !== undefined) {
                 var fieldCount = 0;
-                for (var field in issue.fields)
-                    fieldCount++;
-                compare(fieldCount, testData["fieldCount"])
+                for (var field in issue.fields) fieldCount++
+                compare(fieldCount, testData["fieldCount"]);
             }
             if (testData["expand"] !== undefined && testData["expandField"] !== undefined)
-                verify(issue.expandedFields[testData["expandField"]] !== undefined)
+                verify(issue.expandedFields[testData["expandField"]] !== undefined);
+
             jiraServer = null;
-        }
+        };
         if (testData["fields"] === undefined)
             verify(jiraClient.issue(callback, testData["issue"]));
         else if (testData["expand"] === undefined)
@@ -169,8 +169,8 @@ TestCase {
         verify(jiraClient.search(function(status, issues, total) {
             compare(status.success, false);
             compare(status.errors.length, 0);
-            compare(issues, [])
-            compare(total, 0)
+            compare(issues, []);
+            compare(total, 0);
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {
@@ -181,12 +181,55 @@ TestCase {
     }
 
     function test_search_data() {
-        fail("Test not implemented");
-        return [];
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/search/test_search.json");
+        return JSON.parse(tests.data);
     }
 
     function test_search(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(8080);
+        jiraServer.setHttpRoute("POST", "/rest/api/2/search", testData["statusCode"], testData["contentType"], testData["content"], true);
+        jiraClient.options.server = "http://localhost:8080/";
+        var callback = function (status, issues, total) {
+            compare(status.success, testData["success"]);
+            compare(status.errors.length, testData["jiraErrors"]);
+            if (testData["expectedTotal"] !== undefined)
+                compare(total, testData["expectedTotal"]);
+
+            if (testData["expectedListSize"] !== undefined)
+                compare(issues.length, testData["expectedListSize"]);
+
+            if (testData["expectedLastIssueKey" !== undefined])
+                compare(issues[issues.length - 1].key === testData["expectedLastIssueKey"]);
+
+            if (testData["expectedFields"] !== undefined)
+                verify(issues[0].fields[testData["expectedFields"]] !== undefined);
+
+            if (testData["unexpectedFields"] !== undefined)
+                verify(issues[0].fields[testData["unexpectedFields"]] === undefined);
+
+            if (testData["expectedExpand"] !== undefined)
+                verify(issues[0].expandedFields[testData["expectedExpand"]] !== undefined);
+
+            if (testData["unexpectedExpand"] !== undefined)
+                verify(issues[0].expandedFields[testData["unexpectedExpand"]] === undefined);
+
+            jiraServer = null;
+        };
+        verify(jiraClient.search(callback, testData["query"],
+                                 (testData["startAt"] === undefined) ? 0 : testData["startAt"],
+                                 (testData["maxResults"] === undefined) ? 50 : testData["maxResults"],
+                                 (testData["fields"] === undefined) ? "*navigable" : testData["fields"],
+                                 (testData["expand"] === undefined) ? "" : testData["expand"]));
+        tryVerify(function() {
+            return jiraServer === null;
+        }, 500);
+        compare(errorSpy.count, 0);
     }
 
     function test_userWithInvalidCallback() {
@@ -213,9 +256,9 @@ TestCase {
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
         verify(jiraClient.user(function(status, user) {
-            compare(status.success, testData["loginSuccess"]);
-            compare(status.errors.length, testData["jiraErrors"]);
-            compare(user, null)
+            compare(status.success, false);
+            compare(status.errors.length, 0);
+            compare(user, null);
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {

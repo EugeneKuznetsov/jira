@@ -8,7 +8,6 @@
         "tag": "Internal server error",
         "secureServer": false, "serverPort": 8080, "server": "http://localhost:8080",
         "statusCode": 503,
-        "loginSuccess": false, "jiraErrors": 0,
         "callbackExecuted": true, "networkErrorCount": 0
     }, {
         "tag": "SSL handshake error",
