@@ -6,5 +6,6 @@
         <file>data/user/test_userWithNetworkError.json</file>
         <file>data/search/test_searchWithNetworkError.json</file>
         <file>data/user/test_user.json</file>
+        <file>data/issue/test_issue.json</file>
     </qresource>
 </RCC>

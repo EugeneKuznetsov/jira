@@ -89,9 +89,10 @@ TestCase {
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
-        verify(jiraClient.issue(function(status) {
+        verify(jiraClient.issue(function(status, issue) {
             compare(status.success, testData["loginSuccess"]);
             compare(status.errors.length, testData["jiraErrors"]);
+            compare(issue, null)
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {
@@ -102,12 +103,44 @@ TestCase {
     }
 
     function test_issue_data() {
-        fail("Test not implemented");
-        return [];
+        var tests = createTemporaryQmlObject("import CuteMockServer 0.5; CuteFile { }", root);
+        tests.openFile(":/data/issue/test_issue.json");
+        return JSON.parse(tests.data);
     }
 
     function test_issue(testData) {
-        fail("Test not implemented");
+        var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
+        errorSpy.target = jiraClient;
+        errorSpy.signalName = "networkErrorDetails";
+        jiraServer.listen(8080);
+        jiraServer.setHttpRoute("GET", "/rest/api/2/issue/" + testData["issue"], testData["statusCode"],
+                                testData["contentType"], testData["content"], true);
+        jiraClient.options.server = "http://localhost:8080/";
+        var callback = function(status, issue) {
+            compare(status.success, testData["success"]);
+            compare(status.errors.length, testData["errors"]);
+            if (testData["fields"] !== undefined) {
+                var fieldCount = 0;
+                for (var field in issue.fields)
+                    fieldCount++;
+                compare(fieldCount, testData["fieldCount"])
+            }
+            if (testData["expand"] !== undefined && testData["expandField"] !== undefined)
+                verify(issue.expandedFields[testData["expandField"]] !== undefined)
+            jiraServer = null;
+        }
+        if (testData["fields"] === undefined)
+            verify(jiraClient.issue(callback, testData["issue"]));
+        else if (testData["expand"] === undefined)
+            verify(jiraClient.issue(callback, testData["issue"], testData["fields"]));
+        else
+            verify(jiraClient.issue(callback, testData["issue"], testData["fields"], testData["expand"]));
+        tryVerify(function() {
+            return jiraServer === null;
+        }, 500);
+        compare(errorSpy.count, 0);
     }
 
     function test_searchWithInvalidCallback() {
@@ -133,9 +166,11 @@ TestCase {
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
-        verify(jiraClient.search(function(status) {
-            compare(status.success, testData["loginSuccess"]);
-            compare(status.errors.length, testData["jiraErrors"]);
+        verify(jiraClient.search(function(status, issues, total) {
+            compare(status.success, false);
+            compare(status.errors.length, 0);
+            compare(issues, [])
+            compare(total, 0)
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {
@@ -177,9 +212,10 @@ TestCase {
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
-        verify(jiraClient.user(function(status) {
+        verify(jiraClient.user(function(status, user) {
             compare(status.success, testData["loginSuccess"]);
             compare(status.errors.length, testData["jiraErrors"]);
+            compare(user, null)
             callbackExecuted = true;
         }, ""));
         tryVerify(function() {
@@ -204,9 +240,13 @@ TestCase {
         jiraServer.listen(8080);
         jiraServer.setHttpRoute("GET", "/rest/api/2/user" + testData["query"], testData["statusCode"], testData["contentType"], testData["content"]);
         jiraClient.options.server = "http://localhost:8080/";
-        verify(jiraClient.user(function(status) {
+        verify(jiraClient.user(function(status, user) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["errors"]);
+            if (testData["success"])
+                compare(user.name, testData["username"]);
+            else
+                compare(user, null);
             jiraServer = null;
         }, testData["username"]));
         tryVerify(function() {

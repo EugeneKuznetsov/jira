@@ -16,8 +16,7 @@
         "errors": 1, "success": false
     }, {
         "tag": "Valid Jira server, valid credentials, successful login",
-        "statusCode": 200, "contentType": "application/json;charset=UTF-8",
-        "content": "{\"session\":{\"name\":\"JSESSIONID\",\"value\":\"2EE7XXXX5910XXXX3ED9XXXX018FXXXX\"},\"loginInfo\":{\"failedLoginCount\":8,\"loginCount\":155,\"lastFailedLoginTime\":\"2020-05-05T18:34:43.835+0200\",\"previousLoginTime\":\"2020-05-05T18:34:51.574+0200\"}}",
+        "statusCode": 200, "contentType": "application/json;charset=UTF-8", "content": "{\"session\":{\"name\":\"JSESSIONID\",\"value\":\"2EE7XXXX5910XXXX3ED9XXXX018FXXXX\"},\"loginInfo\":{\"failedLoginCount\":8,\"loginCount\":155,\"lastFailedLoginTime\":\"2020-05-05T18:34:43.835+0200\",\"previousLoginTime\":\"2020-05-05T18:34:51.574+0200\"}}",
         "username": "user", "password": "pass",
         "errors": 0, "success": true
     }
