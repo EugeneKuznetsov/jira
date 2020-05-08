@@ -27,8 +27,8 @@ TestCase {
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
         verify(jiraClient.login(function(status) {
-            compare(status.success, testData["loginSuccess"]);
-            compare(status.errors.length, testData["jiraErrors"]);
+            compare(status.success, false);
+            compare(status.errors.length, 0);
             callbackExecuted = true;
         }));
         tryVerify(function() {
@@ -87,14 +87,14 @@ TestCase {
         errorSpy.target = jiraClient;
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
-        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraServer.setHttpRoute("GET", "/rest/api/2/issue/QJP-1", testData["statusCode"], "", "", true);
         jiraClient.options.server = testData["server"];
         verify(jiraClient.issue(function(status, issue) {
-            compare(status.success, testData["loginSuccess"]);
-            compare(status.errors.length, testData["jiraErrors"]);
+            compare(status.success, false);
+            compare(status.errors.length, 0);
             compare(issue, null);
             callbackExecuted = true;
-        }, ""));
+        }, "QJP-1"));
         tryVerify(function() {
             return (callbackExecuted || errorSpy.count);
         }, 3000);
@@ -164,7 +164,7 @@ TestCase {
         errorSpy.target = jiraClient;
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
-        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraServer.setHttpRoute("POST", "/rest/api/2/search", testData["statusCode"], "", "");
         jiraClient.options.server = testData["server"];
         verify(jiraClient.search(function(status, issues, total) {
             compare(status.success, false);
@@ -253,7 +253,7 @@ TestCase {
         errorSpy.target = jiraClient;
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(testData["serverPort"], testData["secureServer"]);
-        jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], "", "");
+        jiraServer.setHttpRoute("GET", "/rest/api/2/user", testData["statusCode"], "", "", true);
         jiraClient.options.server = testData["server"];
         verify(jiraClient.user(function(status, user) {
             compare(status.success, false);

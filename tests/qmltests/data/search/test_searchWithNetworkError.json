@@ -1,10 +1,5 @@
 [
     {
-        "tag": "Host not found",
-        "secureServer": false, "serverPort": 8080, "server": "http://lclhst:8080",
-        "statusCode": 0,
-        "callbackExecuted": false, "networkErrorCount": 1
-    }, {
         "tag": "Internal server error",
         "secureServer": false, "serverPort": 8080, "server": "http://localhost:8080",
         "statusCode": 503,
