@@ -1,30 +1,17 @@
 #pragma once
 
-#include <QObject>
-#include <QUrlQuery>
-#include <QJSValue>
-#include <QUrl>
+#include "endpoint.h"
 
-class Session;
-class Jira;
-
-class UserEndpoint : public QObject
+class UserEndpoint : public Endpoint
 {
     Q_OBJECT
     Q_DISABLE_COPY(UserEndpoint)
 
-    UserEndpoint();
-
 public:
-    explicit UserEndpoint(Session *session, const QJSValue &callback, Jira *parent);
+    UserEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent);
 
     void getUserResource(const QString &username);
 
 private:
     void getUser(const QUrlQuery &query);
-
-private:
-    Session     *m_session;
-    QJSValue    m_callback;
-    const QUrl  m_baseUri;
 };

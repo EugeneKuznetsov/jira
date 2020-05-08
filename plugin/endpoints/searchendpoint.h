@@ -1,21 +1,14 @@
 #pragma once
 
-#include <QObject>
-#include <QJSValue>
-#include <QUrl>
+#include "endpoint.h"
 
-class Session;
-class Jira;
-
-class SearchEndpoint : public QObject
+class SearchEndpoint : public Endpoint
 {
     Q_OBJECT
     Q_DISABLE_COPY(SearchEndpoint)
 
-    SearchEndpoint();
-
 public:
-    SearchEndpoint(Session *session, const QJSValue &callback, Jira *parent);
+    SearchEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent);
 
 public slots:
     void search(const QString &jql, const int startAt, const int maxResults, const QString &fields, const QString &expand);
