@@ -1,27 +1,14 @@
 #pragma once
 
-#include <QObject>
-#include <QJSValue>
-#include <QUrl>
+#include "endpoint.h"
 
-class Session;
-class Jira;
-
-class IssueEndpoint : public QObject
+class IssueEndpoint : public Endpoint
 {
     Q_OBJECT
     Q_DISABLE_COPY(IssueEndpoint)
 
-    IssueEndpoint();
-
 public:
-    IssueEndpoint(Session *session, const QJSValue &callback, Jira *parent);
+    IssueEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent);
 
-public slots:
     void getIssue(const QString &issueIdOrKey, const QString &fields, const QString &expand);
-
-private:
-    Session     *m_session;
-    QJSValue    m_callback;
-    const QUrl  m_baseUri;
 };
