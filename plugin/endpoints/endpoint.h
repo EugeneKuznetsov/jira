@@ -19,7 +19,7 @@ protected:
 
     Reply *post(const QByteArray &payload);
     Reply *get(const QUrlQuery &query);
-    Reply *get(const QString &queryPrefix, const QUrlQuery &query);
+    Reply *get(const QString &baseUriSuffix, const QUrlQuery &query);
 
     void callback(const int statusCode, const QByteArray &data, const StatusMap &codes, const QJSValueList &arguments = {});
 
@@ -27,6 +27,9 @@ protected:
     QJSValue jsArg(const T &value) {
         return qjsEngine(parent())->toScriptValue(value);
     }
+
+private:
+    Reply *adoptReply(Reply *reply);
 
 private:
     const QUrl m_baseUri;

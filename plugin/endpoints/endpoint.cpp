@@ -13,33 +13,19 @@ Endpoint::Endpoint(const QUrl &baseUri, const QJSValue &callback, Session *sessi
 
 Reply *Endpoint::post(const QByteArray &payload)
 {
-    Reply *reply = m_session->post(m_baseUri, payload);
-    reply->setParent(this);
-    connect(reply, &Reply::destroy, this, &Endpoint::deleteLater);
-    connect(reply, &Reply::networkError, qobject_cast<Jira*>(parent()), &Jira::networkErrorDetails);
-    return reply;
+    return adoptReply(m_session->post(m_baseUri, payload));
 }
 
 Reply *Endpoint::get(const QUrlQuery &query)
 {
-    QUrl uri(m_baseUri);
-    uri.setQuery(query);
-    Reply *reply = m_session->get(uri);
-    reply->setParent(this);
-    connect(reply, &Reply::destroy, this, &Endpoint::deleteLater);
-    connect(reply, &Reply::networkError, qobject_cast<Jira*>(parent()), &Jira::networkErrorDetails);
-    return reply;
+    return get("", query);
 }
 
-Reply *Endpoint::get(const QString &queryPrefix, const QUrlQuery &query)
+Reply *Endpoint::get(const QString &baseUriSuffix, const QUrlQuery &query)
 {
-    QUrl uri(m_baseUri.toString() + queryPrefix);
+    QUrl uri(m_baseUri.toString() + baseUriSuffix);
     uri.setQuery(query);
-    Reply *reply = m_session->get(uri);
-    reply->setParent(this);
-    connect(reply, &Reply::destroy, this, &Endpoint::deleteLater);
-    connect(reply, &Reply::networkError, qobject_cast<Jira*>(parent()), &Jira::networkErrorDetails);
-    return reply;
+    return adoptReply(m_session->get(uri));
 }
 
 void Endpoint::callback(const int statusCode, const QByteArray &data, const StatusMap &codes, const QJSValueList &arguments/* = {}*/)
@@ -49,4 +35,12 @@ void Endpoint::callback(const int statusCode, const QByteArray &data, const Stat
     QJSValueList argumentsCopy(arguments);
     argumentsCopy.insert(0, qjsEngine(parent())->toScriptValue(status));
     m_callback.call(argumentsCopy);
+}
+
+Reply *Endpoint::adoptReply(Reply *reply)
+{
+    reply->setParent(this);
+    connect(reply, &Reply::destroy, this, &Endpoint::deleteLater);
+    connect(reply, &Reply::networkError, qobject_cast<Jira*>(parent()), &Jira::networkErrorDetails);
+    return reply;
 }
