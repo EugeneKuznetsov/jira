@@ -3,11 +3,11 @@
 #include "qmltypes/jira.h"
 #include "endpoint.h"
 
-Endpoint::Endpoint(const QUrl &baseUri, const QJSValue &callback, Session *session, Jira *parent)
+Endpoint::Endpoint(const QUrl &baseUri, const QJSValue &callback, Jira *parent)
     : QObject(parent)
     , m_baseUri(baseUri)
     , m_callback(callback)
-    , m_session(session)
+    , m_session(parent->activeSession())
 {
 }
 

@@ -7,8 +7,8 @@
 #include "qmltypes/jira.h"
 #include "issueendpoint.h"
 
-IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent)
-    : Endpoint(QUrl("/rest/api/2/issue"), jsCallback, session, parent)
+IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Jira *parent)
+    : Endpoint(QUrl("/rest/api/2/issue"), jsCallback, parent)
 {
 }
 

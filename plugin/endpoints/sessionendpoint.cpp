@@ -7,8 +7,8 @@
 #include "utils/logging.h"
 #include "sessionendpoint.h"
 
-SessionEndpoint::SessionEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent)
-    : Endpoint(QUrl("/rest/auth/1/session"), jsCallback, session, parent)
+SessionEndpoint::SessionEndpoint(const QJSValue &jsCallback, Jira *parent)
+    : Endpoint(QUrl("/rest/auth/1/session"), jsCallback, parent)
 {
 }
 

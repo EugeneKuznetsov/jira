@@ -4,11 +4,10 @@
 
 class UserEndpoint : public Endpoint
 {
-    Q_OBJECT
     Q_DISABLE_COPY(UserEndpoint)
 
 public:
-    UserEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent);
+    UserEndpoint(const QJSValue &jsCallback, Jira *parent);
 
     void getUserResource(const QString &username);
 

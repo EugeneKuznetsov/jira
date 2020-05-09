@@ -42,7 +42,7 @@ bool Jira::login(const QJSValue &callback)
         return false;
     }
 
-    SessionEndpoint *endpoint = new SessionEndpoint(callback, activeSession(), this);
+    SessionEndpoint *endpoint = new SessionEndpoint(callback, this);
     endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
 
     return true;
@@ -56,7 +56,7 @@ bool Jira::issue(const QJSValue &callback, const QString &issueIdOrKey,
         return false;
     }
 
-    IssueEndpoint *endpoint = new IssueEndpoint(callback, activeSession(), this);
+    IssueEndpoint *endpoint = new IssueEndpoint(callback, this);
     endpoint->getIssue(issueIdOrKey, fields, expand);
 
     return true;
@@ -70,7 +70,7 @@ bool Jira::search(const QJSValue &callback, const QString &jql, const int startA
         return false;
     }
 
-    SearchEndpoint *endpoint = new SearchEndpoint(callback, activeSession(), this);
+    SearchEndpoint *endpoint = new SearchEndpoint(callback, this);
     endpoint->search(jql, startAt, maxResults, fields, expand);
 
     return true;
@@ -83,7 +83,7 @@ bool Jira::user(const QJSValue &callback, const QString &username)
         return false;
     }
 
-    UserEndpoint *endpoint = new UserEndpoint(callback, activeSession(), this);
+    UserEndpoint *endpoint = new UserEndpoint(callback, this);
     endpoint->getUserResource(username);
 
     return true;

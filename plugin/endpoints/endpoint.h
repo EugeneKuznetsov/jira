@@ -15,7 +15,7 @@ class Endpoint : public QObject
     Q_OBJECT
 
 protected:
-    Endpoint(const QUrl &baseUri, const QJSValue &callback, Session *session, Jira *parent);
+    Endpoint(const QUrl &baseUri, const QJSValue &callback, Jira *parent);
 
     Reply *post(const QByteArray &payload);
     Reply *get(const QUrlQuery &query);

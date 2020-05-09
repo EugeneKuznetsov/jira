@@ -7,8 +7,8 @@
 #include "qmltypes/jira.h"
 #include "userendpoint.h"
 
-UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent)
-    : Endpoint(QUrl("/rest/api/2/user"), jsCallback, session, parent)
+UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Jira *parent)
+    : Endpoint(QUrl("/rest/api/2/user"), jsCallback, parent)
 {
 }
 
