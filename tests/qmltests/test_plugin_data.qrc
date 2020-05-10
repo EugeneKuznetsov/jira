@@ -1,10 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>data/login/test_login.json</file>
-        <file>data/login/test_loginWithNetworkError.json</file>
-        <file>data/issue/test_issueWithNetworkError.json</file>
-        <file>data/user/test_userWithNetworkError.json</file>
-        <file>data/search/test_searchWithNetworkError.json</file>
         <file>data/user/test_user.json</file>
         <file>data/issue/test_issue.json</file>
         <file>data/search/test_search.json</file>

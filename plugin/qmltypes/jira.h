@@ -32,6 +32,7 @@ public slots:
     bool user(const QJSValue &callback, const QString &username);
 
 private:
+    friend class Endpoint;
     Session *activeSession(bool createNewSession = false);
 
 private:

@@ -6,8 +6,8 @@
 #include "qmltypes/jira.h"
 #include "searchendpoint.h"
 
-SearchEndpoint::SearchEndpoint(const QJSValue &jsCallback, Session *session, Jira *parent)
-    : Endpoint(QUrl("/rest/api/2/search"), jsCallback, session, parent)
+SearchEndpoint::SearchEndpoint(const QJSValue &jsCallback, Jira *parent)
+    : Endpoint(QUrl("/rest/api/2/search"), jsCallback, parent)
 {
 }
 

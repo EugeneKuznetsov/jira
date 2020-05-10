@@ -1,4 +1,5 @@
 #include <QQmlEngine>
+#include <QNetworkAccessManager>
 #include "jira.h"
 #include "utils/logging.h"
 #include "network/session.h"
@@ -42,7 +43,7 @@ bool Jira::login(const QJSValue &callback)
         return false;
     }
 
-    SessionEndpoint *endpoint = new SessionEndpoint(callback, activeSession(), this);
+    SessionEndpoint *endpoint = new SessionEndpoint(callback, this);
     endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
 
     return true;
@@ -56,7 +57,7 @@ bool Jira::issue(const QJSValue &callback, const QString &issueIdOrKey,
         return false;
     }
 
-    IssueEndpoint *endpoint = new IssueEndpoint(callback, activeSession(), this);
+    IssueEndpoint *endpoint = new IssueEndpoint(callback, this);
     endpoint->getIssue(issueIdOrKey, fields, expand);
 
     return true;
@@ -70,7 +71,7 @@ bool Jira::search(const QJSValue &callback, const QString &jql, const int startA
         return false;
     }
 
-    SearchEndpoint *endpoint = new SearchEndpoint(callback, activeSession(), this);
+    SearchEndpoint *endpoint = new SearchEndpoint(callback, this);
     endpoint->search(jql, startAt, maxResults, fields, expand);
 
     return true;
@@ -83,7 +84,7 @@ bool Jira::user(const QJSValue &callback, const QString &username)
         return false;
     }
 
-    UserEndpoint *endpoint = new UserEndpoint(callback, activeSession(), this);
+    UserEndpoint *endpoint = new UserEndpoint(callback, this);
     endpoint->getUserResource(username);
 
     return true;
@@ -102,7 +103,12 @@ Session *Jira::activeSession(bool createNewSession/* = false*/)
 
     if (nullptr == m_session) {
         QQmlEngine *engine = qmlEngine(this);
-        m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        if (nullptr == engine) {
+            qCWarning(JIRA_INTERNAL) << "Could not obtain QML Engine. Creating a new network access manager.";
+            m_session = new Session(m_options->property("server").toUrl(), new QNetworkAccessManager(this), this);
+        } else {
+            m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        }
         qCDebug(JIRA_INTERNAL) << "New session was created:" << m_session;
         QObject::connect(m_options, &Options::serverChanged, m_session, &Session::setServer);
     }
