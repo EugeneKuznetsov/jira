@@ -1,4 +1,5 @@
 #include <QQmlEngine>
+#include <QNetworkAccessManager>
 #include "jira.h"
 #include "utils/logging.h"
 #include "network/session.h"
@@ -102,7 +103,12 @@ Session *Jira::activeSession(bool createNewSession/* = false*/)
 
     if (nullptr == m_session) {
         QQmlEngine *engine = qmlEngine(this);
-        m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        if (nullptr == engine) {
+            qCWarning(JIRA_INTERNAL) << "Could not obtain QML Engine. Creating a new network access manager.";
+            m_session = new Session(m_options->property("server").toUrl(), new QNetworkAccessManager(this), this);
+        } else {
+            m_session = new Session(m_options->property("server").toUrl(), engine->networkAccessManager(), this);
+        }
         qCDebug(JIRA_INTERNAL) << "New session was created:" << m_session;
         QObject::connect(m_options, &Options::serverChanged, m_session, &Session::setServer);
     }
