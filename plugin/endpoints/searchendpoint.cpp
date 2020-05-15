@@ -11,8 +11,8 @@ SearchEndpoint::SearchEndpoint(const QJSValue &jsCallback, Jira *parent)
 {
 }
 
-void SearchEndpoint::search(const QString &jql, const int startAt, const int maxResults,
-                            const QString &fields, const QString &expand)
+void SearchEndpoint::search(const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/,
+                            const QString &fields/* = "*navigable"*/, const QString &expand/* = ""*/)
 {
     QJsonArray fieldsArray;
     for (auto field : fields.split(","))

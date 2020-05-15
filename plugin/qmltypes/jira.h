@@ -1,10 +1,13 @@
 #pragma once
 
+#include <QQmlEngine>
 #include <QObject>
 #include <QJSValue>
 #include "options.h"
 
 class Session;
+class SessionEndpoint;
+class IssueEndpoint;
 
 class Jira : public QObject
 {
@@ -24,12 +27,18 @@ signals:
     void networkErrorDetails(const QString &errorString);
 
 public slots:
-    bool login(const QJSValue &callback);
-    bool issue(const QJSValue &callback, const QString &issueIdOrKey,
-               const QString &fields = "*all", const QString &expand = "");
-    bool search(const QJSValue &callback, const QString &jql, const int startAt = 0, const int maxResults = 50,
-                const QString &fields = "*navigable", const QString &expand = "");
-    bool user(const QJSValue &callback, const QString &username);
+    QObject *session(QJSValue callback = QJSValue());
+    QObject *issue(QJSValue callback = QJSValue());
+    QObject *search(QJSValue callback = QJSValue());
+    QObject *user(QJSValue callback = QJSValue());
+
+private:
+    template <typename EP>
+    QObject *endpoint(QJSValue callback) {
+        EP *ep = new EP(callback, this);
+        qmlEngine(parent())->setObjectOwnership(ep, QQmlEngine::JavaScriptOwnership);
+        return ep;
+    }
 
 private:
     friend class Endpoint;

@@ -7,6 +7,11 @@
 #include "qmltypes/internal/responsestatus.h"
 #include "qmltypes/external/issue.h"
 #include "qmltypes/external/user.h"
+#include "endpoints/sessionendpoint.h"
+#include "endpoints/issueendpoint.h"
+#include "endpoints/searchendpoint.h"
+#include "endpoints/userendpoint.h"
+
 
 JiraQmlPlugin::JiraQmlPlugin(QObject *parent/* = nullptr*/)
     : QQmlExtensionPlugin(parent)
@@ -41,4 +46,8 @@ void JiraQmlPlugin::registerTypes(const char *uri)
         "User type can only be returned via callback and cannot be instantiated separately");
     qmlRegisterType<Options>(uri, 1, 0, "Options");
     qmlRegisterType<Jira>(uri, 1, 0, "Jira");
+    qmlRegisterUncreatableType<SessionEndpoint>(uri, 1, 0, "SessionEndpoint", "Only Jira instance can create Session endpoints");
+    qmlRegisterUncreatableType<IssueEndpoint>(uri, 1, 0, "IssueEndpoint", "Only Jira instance can create Issue endpoints");
+    qmlRegisterUncreatableType<SearchEndpoint>(uri, 1, 0, "SearchEndpoint", "Only Jira instance can create Search endpoints");
+    qmlRegisterUncreatableType<UserEndpoint>(uri, 1, 0, "UserEndpoint", "Only Jira instance can create User endpoints");
 }

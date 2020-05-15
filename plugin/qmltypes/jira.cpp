@@ -1,12 +1,11 @@
-#include <QQmlEngine>
 #include <QNetworkAccessManager>
-#include "jira.h"
 #include "utils/logging.h"
 #include "network/session.h"
 #include "endpoints/sessionendpoint.h"
 #include "endpoints/issueendpoint.h"
 #include "endpoints/searchendpoint.h"
 #include "endpoints/userendpoint.h"
+#include "jira.h"
 
 Jira::Jira(QObject *parent/* = nullptr*/)
     : QObject(parent)
@@ -36,58 +35,24 @@ void Jira::setOptions(Options *new_value)
     emit optionsChanged();
 }
 
-bool Jira::login(const QJSValue &callback)
+QObject *Jira::session(QJSValue callback/* = QJSValue()*/)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
-        return false;
-    }
-
-    SessionEndpoint *endpoint = new SessionEndpoint(callback, this);
-    endpoint->login(m_options->property("username").toString(), m_options->property("password").toString());
-
-    return true;
+    return endpoint<SessionEndpoint>(callback);
 }
 
-bool Jira::issue(const QJSValue &callback, const QString &issueIdOrKey,
-                 const QString &fields/* = "*all"*/, const QString &expand/* = ""*/)
+QObject *Jira::issue(QJSValue callback/* = QJSValue()*/)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
-        return false;
-    }
-
-    IssueEndpoint *endpoint = new IssueEndpoint(callback, this);
-    endpoint->getIssue(issueIdOrKey, fields, expand);
-
-    return true;
+    return endpoint<IssueEndpoint>(callback);
 }
 
-bool Jira::search(const QJSValue &callback, const QString &jql, const int startAt/* = 0*/, const int maxResults/* = 50*/,
-                  const QString &fields/* = "*navigable"*/, const QString &expand/* = ""*/)
+QObject *Jira::search(QJSValue callback/* = QJSValue()*/)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
-        return false;
-    }
-
-    SearchEndpoint *endpoint = new SearchEndpoint(callback, this);
-    endpoint->search(jql, startAt, maxResults, fields, expand);
-
-    return true;
+    return endpoint<SearchEndpoint>(callback);
 }
 
-bool Jira::user(const QJSValue &callback, const QString &username)
+QObject *Jira::user(QJSValue callback/* = QJSValue()*/)
 {
-    if (!callback.isCallable()) {
-        qCWarning(JIRA_INTERNAL) << this << "callback is not callable";
-        return false;
-    }
-
-    UserEndpoint *endpoint = new UserEndpoint(callback, this);
-    endpoint->getUserResource(username);
-
-    return true;
+    return endpoint<UserEndpoint>(callback);
 }
 
 Session *Jira::activeSession(bool createNewSession/* = false*/)

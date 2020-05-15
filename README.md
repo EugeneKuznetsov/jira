@@ -35,7 +35,7 @@ Window {
             } else if (status.errors.length) {
                 description.text = status.errors[0];
             }
-        }, "QTBUG-1", "summary,description")
+        }).getIssue("QTBUG-1", "summary,description")
     }
 
 }
@@ -44,8 +44,7 @@ Window {
 
 An ongoing project [Jira Tools](https://github.com/EugeneKuznetsov/JiraTools) is still
 in development phase and might be checked out from time to time in order to see how
-Jira QML extension could be used. Current repository contains examples for all available
-API calls of Jira module.
+Jira QML extension could be used.
 
 
 ## Prerequisites for building Jira REST API plugin for QML
