@@ -12,7 +12,7 @@ IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Jira *parent)
 {
 }
 
-void IssueEndpoint::getIssue(const QString &issueIdOrKey, const QString &fields, const QString &expand)
+void IssueEndpoint::getIssue(const QString &issueIdOrKey, const QString &fields/* = "*all"*/, const QString &expand/* = ""*/)
 {
     const QString queryPrefix = "/" + issueIdOrKey;
     const QUrlQuery query({{"fields", fields}, {"expand", expand}});

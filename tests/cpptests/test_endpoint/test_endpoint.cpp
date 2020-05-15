@@ -155,9 +155,4 @@ Reply *EndpointTestCase::AnyDerivedEndpoint::get(const QString &baseUriSuffix, c
     return Endpoint::get(baseUriSuffix, query);
 }
 
-void EndpointTestCase::AnyDerivedEndpoint::callback(const int statusCode, const QByteArray &data, const StatusMap &codes, const QJSValueList &arguments)
-{
-    Endpoint::callback(statusCode, data, codes, arguments);
-}
-
 QTEST_GUILESS_MAIN(EndpointTestCase)

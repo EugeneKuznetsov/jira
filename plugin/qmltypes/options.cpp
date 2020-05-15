@@ -4,8 +4,6 @@
 Options::Options(QObject *parent/* = nullptr*/)
     : QObject(parent)
     , m_server()
-    , m_username()
-    , m_password()
 {
     qCDebug(JIRA_INTERNAL) << "created:" << this;
 }
