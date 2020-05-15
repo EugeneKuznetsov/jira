@@ -12,7 +12,7 @@ UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Jira *parent)
 {
 }
 
-void UserEndpoint::getUserResource(const QString &username)
+void UserEndpoint::getUser(const QString &username)
 {
     const QUrlQuery query({{"username", username}});
     connect(get(query), &Reply::ready, [this](const int statusCode, const QByteArray &data) {

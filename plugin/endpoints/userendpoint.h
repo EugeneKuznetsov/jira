@@ -11,8 +11,5 @@ public:
     UserEndpoint(const QJSValue &jsCallback, Jira *parent);
 
 public slots:
-    void getUserResource(const QString &username);
-
-private:
-    void getUser(const QUrlQuery &query);
+    void getUser(const QString &username);
 };
