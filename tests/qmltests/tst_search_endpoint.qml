@@ -16,8 +16,8 @@ TestCase {
         errorSpy.target = jiraClient;
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(8080);
-        jiraServer.setHttpRoute("POST", "/rest/api/2/search", testData["statusCode"], testData["contentType"], testData["content"], true);
-        jiraClient.options.server = "http://localhost:8080/";
+        jiraServer.setHttpRoute("GET", "/rest/api/2/search", testData["statusCode"], testData["contentType"], testData["content"], true);
+        jiraClient.server = "http://localhost:8080/";
         var callback = function cb(status, issues, total) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["jiraErrors"]);
@@ -47,6 +47,7 @@ TestCase {
         jiraClient.search(callback).search(testData["query"],
                                            (testData["startAt"] === undefined) ? 0 : testData["startAt"],
                                            (testData["maxResults"] === undefined) ? 50 : testData["maxResults"],
+                                           false,
                                            (testData["fields"] === undefined) ? "*navigable" : testData["fields"],
                                            (testData["expand"] === undefined) ? "" : testData["expand"]);
         tryVerify(function() {

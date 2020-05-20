@@ -1,16 +1,19 @@
 #pragma once
 
-#include "endpoint.h"
+#include "proxies/searchendpointproxy.h"
 
-class SearchEndpoint : public Endpoint
+class SearchEndpoint : public SearchEndpointProxy
 {
     Q_OBJECT
     Q_DISABLE_COPY(SearchEndpoint)
 
 public:
-    SearchEndpoint(const QJSValue &jsCallback, Jira *parent);
+    SearchEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
 
-public slots:
-    void search(const QString &jql, const int startAt = 0, const int maxResults = 50,
-                const QString &fields = "*navigable", const QString &expand = "");
+protected:
+    virtual Reply *onSearchUsingSearchRequestRequest() override;
+
+protected:
+    virtual QJSValueList onSearchSuccess(const QByteArray &data) override;
+    virtual QJSValueList onSearchError(const QByteArray &) override;
 };

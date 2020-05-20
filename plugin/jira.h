@@ -3,28 +3,24 @@
 #include <QQmlEngine>
 #include <QObject>
 #include <QJSValue>
-#include "options.h"
 
 class Session;
 class SessionEndpoint;
-class IssueEndpoint;
 
 class Jira : public QObject
 {
     Q_OBJECT
-
-    Q_PROPERTY(Options *options READ getOptions WRITE setOptions NOTIFY optionsChanged)
+    Q_PROPERTY(QUrl server READ getServer WRITE setServer NOTIFY serverChanged)
 
 public:
     explicit Jira(QObject *parent = nullptr);
 
-    Options *getOptions() const;
-
-    void setOptions(Options *new_value);
+    const QUrl &getServer() const;
+    void setServer(const QUrl &server);
 
 signals:
-    void optionsChanged();
     void networkErrorDetails(const QString &errorString);
+    void serverChanged();
 
 public slots:
     QObject *session(QJSValue callback = QJSValue());
@@ -35,16 +31,13 @@ public slots:
 private:
     template <typename EP>
     QObject *endpoint(QJSValue callback) {
-        EP *ep = new EP(callback, this);
+        EP *ep = new EP(callback, m_session, qjsEngine(this), qmlEngine(this));
         qmlEngine(parent())->setObjectOwnership(ep, QQmlEngine::JavaScriptOwnership);
         return ep;
     }
 
-private:
-    friend class Endpoint;
-    Session *activeSession(bool createNewSession = false);
+    Session *newSession(const QUrl &server);
 
 private:
-    Options *m_options;
     Session *m_session;
 };

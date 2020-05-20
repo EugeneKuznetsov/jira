@@ -1,6 +1,5 @@
 #include <QJsonObject>
 #include "issue.h"
-#include "utils/logging.h"
 
 Issue::Issue(QObject *parent/* = nullptr*/)
     : QObject(parent)
@@ -11,7 +10,6 @@ Issue::Issue(QObject *parent/* = nullptr*/)
     , m_fields()
     , m_expandedFields()
 {
-    qCDebug(RESOURCES) << "created:" << this;
 }
 
 Issue::Issue(const QJsonObject &issueJson)
@@ -24,8 +22,6 @@ Issue::Issue(const QJsonObject &issueJson)
     if (!issueJson.value("fields").isUndefined())
         m_fields = issueJson["fields"].toObject().toVariantMap();
     parseExpandedJson(issueJson);
-    qCDebug(RESOURCES) << "created:" << this;
-    qCDebug(RESOURCES) << this << QJsonDocument(issueJson).toJson(QJsonDocument::Indented);
 }
 
 const QString &Issue::getId() const

@@ -4,16 +4,14 @@ set(target ${PROJECT_NAME})
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jira)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-add_subdirectory(utils)
-add_subdirectory(network)
+add_subdirectory(ifgenerator)
 add_subdirectory(qmltypes)
 add_subdirectory(endpoints)
 
 set(imports imports/qmldir)
-set(headers jiraqmlplugin.h )
-set(sources jiraqmlplugin.cpp)
+set(headers jiraqmlplugin.h jira.h)
+set(sources jiraqmlplugin.cpp jira.cpp)
 
 add_library(${target} SHARED ${sources} ${headers} ${imports})
 
@@ -23,13 +21,7 @@ endif()
 set_target_properties(${target} PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(${target} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
-target_link_libraries(${target}
-    PRIVATE plugin_network
-    PRIVATE plugin_endpoints
-    PRIVATE plugin_qmltypes_internal
-    PRIVATE plugin_qmltypes_external
-    PRIVATE plugin_qmltypes
-    PRIVATE plugin_utils)
+target_link_libraries(${target} PRIVATE plugin_endpoints PRIVATE plugin_qmltypes)
 
 foreach(import ${imports})
     add_custom_command(TARGET ${target}

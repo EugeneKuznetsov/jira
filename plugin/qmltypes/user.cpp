@@ -1,5 +1,4 @@
 #include "user.h"
-#include "utils/logging.h"
 
 User::User(QObject *parent/* = nullptr*/)
     : QObject(parent)
@@ -17,8 +16,6 @@ User::User(const QJsonObject &userJson)
     m_name = userJson["name"].toString();
     m_displayName = userJson["displayName"].toString();
     m_avatarUrls = userJson["avatarUrls"].toVariant().toMap();
-    qCDebug(RESOURCES) << "created:" << this;
-    qCDebug(RESOURCES) << this << QJsonDocument(userJson).toJson(QJsonDocument::Indented);
 }
 
 const QUrl &User::getSelf() const
