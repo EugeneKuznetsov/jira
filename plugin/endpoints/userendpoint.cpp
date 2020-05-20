@@ -1,31 +1,80 @@
-#include <QUrlQuery>
 #include <QJsonDocument>
-#include "network/session.h"
-#include "network/reply.h"
-#include "qmltypes/internal/responsestatus.h"
-#include "qmltypes/external/user.h"
-#include "qmltypes/jira.h"
+#include "user.h"
 #include "userendpoint.h"
 
-UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Jira *parent)
-    : Endpoint(QUrl("/rest/api/2/user"), jsCallback, parent)
+UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng)
+    : UserEndpointProxy(jsCallback, parent, jsEng, qmlEng)
 {
 }
 
-void UserEndpoint::getUser(const QString &username)
+Reply *UserEndpoint::onAddUserToApplicationRequest()
 {
-    const QUrlQuery query({{"username", username}});
-    connect(get(query), &Reply::ready, [this](const int statusCode, const QByteArray &data) {
-        User *user = nullptr;
-        if (200 == statusCode) {
-            user = new User(QJsonDocument::fromJson(data).object());
-            qmlEngine(parent())->setObjectOwnership(user, QQmlEngine::JavaScriptOwnership);
-        }
-        const StatusMap codes = {
-            {200, true},    // a full representation of a JIRA user in JSON format
-            {401, false},   // current user is not authenticated
-            {404, false}    // requested user is not found
-        };
-        callback(statusCode, data, codes, QJSValueList{jsArg(user)});
-    });
+    return UserEndpointProxy::onAddUserToApplicationRequest();
+}
+
+Reply *UserEndpoint::onChangeUserPasswordRequest()
+{
+    return UserEndpointProxy::onChangeUserPasswordRequest();
+}
+
+Reply *UserEndpoint::onCreateAvatarFromTemporaryRequest()
+{
+    return UserEndpointProxy::onCreateAvatarFromTemporaryRequest();
+}
+
+Reply *UserEndpoint::onCreateUserRequest()
+{
+    return UserEndpointProxy::onCreateUserRequest();
+}
+
+Reply *UserEndpoint::onScheduleUserAnonymizationRequest()
+{
+    return UserEndpointProxy::onScheduleUserAnonymizationRequest();
+}
+
+Reply *UserEndpoint::onScheduleUserAnonymizationRerunRequest()
+{
+    return UserEndpointProxy::onScheduleUserAnonymizationRerunRequest();
+}
+
+Reply *UserEndpoint::onSetColumnsRequest()
+{
+    return UserEndpointProxy::onSetColumnsRequest();
+}
+
+Reply *UserEndpoint::onSetPropertyRequest()
+{
+    return UserEndpointProxy::onSetPropertyRequest();
+}
+
+Reply *UserEndpoint::onStoreTemporaryAvatarRequest()
+{
+    return UserEndpointProxy::onStoreTemporaryAvatarRequest();
+}
+
+Reply *UserEndpoint::onStoreTemporaryAvatarUsingMultiPartRequest()
+{
+    return UserEndpointProxy::onStoreTemporaryAvatarUsingMultiPartRequest();
+}
+
+Reply *UserEndpoint::onUpdateProjectAvatarRequest()
+{
+    return UserEndpointProxy::onUpdateProjectAvatarRequest();
+}
+
+Reply *UserEndpoint::onUpdateUserRequest()
+{
+    return UserEndpointProxy::onUpdateUserRequest();
+}
+
+QJSValueList UserEndpoint::onGetUserSuccess(const QByteArray &data)
+{
+    User *user = new User(QJsonDocument::fromJson(data).object());
+    getQmlEngine()->setObjectOwnership(user, QQmlEngine::JavaScriptOwnership);
+    return QJSValueList{jsArg(user)};
+}
+
+QJSValueList UserEndpoint::onGetUserError(const QByteArray &)
+{
+    return QJSValueList{jsArg(nullptr)};
 }

@@ -1,17 +1,27 @@
 #pragma once
 
-#include "endpoint.h"
+#include "proxies/sessionendpointproxy.h"
 
-class SessionEndpoint : public Endpoint
+class Session;
+
+class SessionEndpoint : public SessionEndpointProxy
 {
     Q_OBJECT
     Q_DISABLE_COPY(SessionEndpoint)
+    Q_PROPERTY(QString username MEMBER m_username NOTIFY usernameChanged)
+    Q_PROPERTY(QString password MEMBER m_password NOTIFY passwordChanged)
 
 public:
-    SessionEndpoint(const QJSValue &jsCallback, Jira *parent);
+    SessionEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
 
-public slots:
-    void login(const QString &username, const QString &password);
-    void logout();
-    void currentUser();
+signals:
+    void usernameChanged();
+    void passwordChanged();
+
+protected:
+    virtual Reply *onLoginRequest() override;
+
+private:
+    QString m_username;
+    QString m_password;
 };

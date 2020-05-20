@@ -17,7 +17,7 @@ TestCase {
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(8080);
         jiraServer.setHttpRoute("GET", "/rest/api/2/user" + testData["query"], testData["statusCode"], testData["contentType"], testData["content"]);
-        jiraClient.options.server = "http://localhost:8080/";
+        jiraClient.server = "http://localhost:8080/";
         jiraClient.user(function(status, user) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["errors"]);
@@ -26,7 +26,7 @@ TestCase {
             else
                 compare(user, null);
             jiraServer = null;
-        }).getUser(testData["username"]);
+        }).getUser(testData["username"], "");
         tryVerify(function() {
             return jiraServer === null;
         }, 500);

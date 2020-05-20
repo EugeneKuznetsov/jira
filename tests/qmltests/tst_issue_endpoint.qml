@@ -17,7 +17,7 @@ TestCase {
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(8080);
         jiraServer.setHttpRoute("GET", "/rest/api/2/issue/" + testData["issue"], testData["statusCode"], testData["contentType"], testData["content"], true);
-        jiraClient.options.server = "http://localhost:8080/";
+        jiraClient.server = "http://localhost:8080/";
         var callback = function cb(status, issue) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["errors"]);
@@ -32,11 +32,11 @@ TestCase {
             jiraServer = null;
         };
         if (testData["fields"] === undefined)
-            jiraClient.issue(callback).getIssue(testData["issue"]);
+            jiraClient.issue(callback).getIssue(testData["issue"], "", "", "", false);
         else if (testData["expand"] === undefined)
-            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"]);
+            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], "", "", false);
         else
-            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], testData["expand"]);
+            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], testData["expand"], "", false);
         tryVerify(function() {
             return jiraServer === null;
         }, 500);

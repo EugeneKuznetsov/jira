@@ -1,32 +1,120 @@
 #include <QJsonDocument>
-#include <QUrlQuery>
-#include "network/session.h"
-#include "network/reply.h"
-#include "qmltypes/internal/responsestatus.h"
-#include "qmltypes/external/issue.h"
-#include "qmltypes/jira.h"
+#include "issue.h"
 #include "issueendpoint.h"
 
-IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Jira *parent)
-    : Endpoint(QUrl("/rest/api/2/issue"), jsCallback, parent)
+IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng)
+    : IssueEndpointProxy(jsCallback, parent, jsEng, qmlEng)
 {
 }
 
-void IssueEndpoint::getIssue(const QString &issueIdOrKey, const QString &fields/* = "*all"*/, const QString &expand/* = ""*/)
+Reply *IssueEndpoint::onAddAttachmentRequest()
 {
-    const QString queryPrefix = "/" + issueIdOrKey;
-    const QUrlQuery query({{"fields", fields}, {"expand", expand}});
-    connect(get(queryPrefix, query), &Reply::ready, [this](const int statusCode, const QByteArray &data) {
-        Issue *issue = nullptr;
-        if (200 == statusCode) {
-            issue = new Issue(QJsonDocument::fromJson(data).object());
-            qmlEngine(parent())->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
-        }
-        const StatusMap codes = {
-            {200, true},    // a full representation of a JIRA issue in JSON format
-            {404, false}    // requested issue is not found, or the user does not have permission to view it
-        };
-        callback(statusCode, data, codes, QJSValueList{jsArg(issue)});
-    });
+    return IssueEndpointProxy::onAddAttachmentRequest();
 }
 
+Reply *IssueEndpoint::onAddCommentRequest()
+{
+    return IssueEndpointProxy::onAddCommentRequest();
+}
+
+Reply *IssueEndpoint::onAddVoteRequest()
+{
+    return IssueEndpointProxy::onAddVoteRequest();
+}
+
+Reply *IssueEndpoint::onAddWatcherRequest()
+{
+    return IssueEndpointProxy::onAddWatcherRequest();
+}
+
+Reply *IssueEndpoint::onAddWorklogRequest()
+{
+    return IssueEndpointProxy::onAddWorklogRequest();
+}
+
+Reply *IssueEndpoint::onArchiveIssueRequest()
+{
+    return IssueEndpointProxy::onArchiveIssueRequest();
+}
+
+Reply *IssueEndpoint::onArchiveIssuesRequest()
+{
+    return IssueEndpointProxy::onArchiveIssuesRequest();
+}
+
+Reply *IssueEndpoint::onAssignRequest()
+{
+    return IssueEndpointProxy::onAssignRequest();
+}
+
+Reply *IssueEndpoint::onCreateIssueRequest()
+{
+    return IssueEndpointProxy::onCreateIssueRequest();
+}
+
+Reply *IssueEndpoint::onCreateIssuesRequest()
+{
+    return IssueEndpointProxy::onCreateIssuesRequest();
+}
+
+Reply *IssueEndpoint::onCreateOrUpdateRemoteIssueLinkRequest()
+{
+    return IssueEndpointProxy::onCreateOrUpdateRemoteIssueLinkRequest();
+}
+
+Reply *IssueEndpoint::onDoTransitionRequest()
+{
+    return IssueEndpointProxy::onDoTransitionRequest();
+}
+
+Reply *IssueEndpoint::onEditIssueRequest()
+{
+    return IssueEndpointProxy::onEditIssueRequest();
+}
+
+Reply *IssueEndpoint::onMoveSubTasksRequest()
+{
+    return IssueEndpointProxy::onMoveSubTasksRequest();
+}
+
+Reply *IssueEndpoint::onNotifyRequest()
+{
+    return IssueEndpointProxy::onNotifyRequest();
+}
+
+Reply *IssueEndpoint::onRestoreIssueRequest()
+{
+    return IssueEndpointProxy::onRestoreIssueRequest();
+}
+
+Reply *IssueEndpoint::onSetPropertyRequest()
+{
+    return IssueEndpointProxy::onSetPropertyRequest();
+}
+
+Reply *IssueEndpoint::onUpdateCommentRequest()
+{
+    return IssueEndpointProxy::onUpdateCommentRequest();
+}
+
+Reply *IssueEndpoint::onUpdateRemoteIssueLinkRequest()
+{
+    return IssueEndpointProxy::onUpdateRemoteIssueLinkRequest();
+}
+
+Reply *IssueEndpoint::onUpdateWorklogRequest()
+{
+    return IssueEndpointProxy::onUpdateWorklogRequest();
+}
+
+QJSValueList IssueEndpoint::onGetIssueSuccess(const QByteArray &data)
+{
+    Issue *issue = new Issue(QJsonDocument::fromJson(data).object());
+    getQmlEngine()->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
+    return QJSValueList{jsArg(issue)};
+}
+
+QJSValueList IssueEndpoint::onGetIssueError(const QByteArray &)
+{
+    return QJSValueList{jsArg(nullptr)};
+}

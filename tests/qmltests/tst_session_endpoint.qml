@@ -17,12 +17,15 @@ TestCase {
         errorSpy.signalName = "networkErrorDetails";
         jiraServer.listen(8080);
         jiraServer.setHttpRoute("POST", "/rest/auth/1/session", testData["statusCode"], testData["contentType"], testData["content"]);
-        jiraClient.options.server = "http://localhost:8080/";
-        jiraClient.session(function(status) {
+        jiraClient.server = "http://localhost:8080/";
+        var session = jiraClient.session(function(status) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["errors"]);
             jiraServer = null;
-        }).login(testData["username"], testData["password"]);
+        });
+        session.username = testData["username"];
+        session.password = testData["password"];
+        session.login();
         tryVerify(function() {
             return jiraServer === null;
         }, 500);
