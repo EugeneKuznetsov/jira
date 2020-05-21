@@ -32,11 +32,11 @@ TestCase {
             jiraServer = null;
         };
         if (testData["fields"] === undefined)
-            jiraClient.issue(callback).getIssue(testData["issue"], "", "", "", false);
+            jiraClient.issue(callback).getIssue(testData["issue"]);
         else if (testData["expand"] === undefined)
-            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], "", "", false);
+            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"]);
         else
-            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], testData["expand"], "", false);
+            jiraClient.issue(callback).getIssue(testData["issue"], testData["fields"], testData["expand"]);
         tryVerify(function() {
             return jiraServer === null;
         }, 500);

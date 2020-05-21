@@ -10,6 +10,10 @@ class IssueEndpoint : public IssueEndpointProxy
 public:
     IssueEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
 
+public slots:
+    virtual void getIssue(const QString &issueIdOrKey, const QString &fields = "*all",
+                          const QString &expand = "", const QString &properties = "", const bool updateHistory = false) override;
+
 protected:
     virtual Reply *onAddAttachmentRequest() override;
     virtual Reply *onAddCommentRequest() override;

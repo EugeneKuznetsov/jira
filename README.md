@@ -1,6 +1,7 @@
 # Jira REST API plugin for QML
 A QML extension module for interacting with Jira Server on top of REST API calls.
-Current implementation has a limited functionality and is in phase of development.
+Current implementation has Jira 8.8.1 Server calls with limited implementation due
+to ongoing phase of development.
 
 
 ## Vision
@@ -27,7 +28,7 @@ Window {
     }
 
     Jira {
-        options.server: "https://bugreports.qt.io"
+        server: "https://bugreports.qt.io"
         Component.onCompleted: issue(function(status, issue) {
             if (status.success) {
                 root.title = issue.key + ". " + issue.fields["summary"];
@@ -49,18 +50,13 @@ Jira QML extension could be used.
 
 ## Prerequisites for building Jira REST API plugin for QML
 This project was built and tested only on Windows 10 and Ubuntu 19.10
-with Qt 5.14 and CMake 3.16 (should work on older versions as well,
-after changing imports and CMake minimum required version).
+with Qt 5.14, Python 3.8 and CMake 3.16.
 
 
 ## Versioning
-At the moment Jira extension module is not synchronized with tags released in master
-branch. It has a constant version 1.0 which will be changed withing upcoming
-releases and will follow the version provided in tags.
 Change in Major version of an extension module indicates a major API change, e.g.
-an implementation of a new endpoint or change of the signature of some call.
-Change in Minor version, indicates any other minor changes were valuable to be
-released.
+removal or a significant change of any of existing endpoints.
+Change in Minor version, indicates any other minor changes.
 
 
 ## License

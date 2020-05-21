@@ -7,6 +7,12 @@ IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Session *parent, QJSEng
 {
 }
 
+void IssueEndpoint::getIssue(const QString &issueIdOrKey, const QString &fields/* = "*all"*/,
+                             const QString &expand/* = ""*/, const QString &properties/* = ""*/, const bool updateHistory/* = false*/)
+{
+    IssueEndpointProxy::getIssue(issueIdOrKey, fields, expand, properties, updateHistory);
+}
+
 Reply *IssueEndpoint::onAddAttachmentRequest()
 {
     return IssueEndpointProxy::onAddAttachmentRequest();
