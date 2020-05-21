@@ -1,30 +1,30 @@
 #pragma once
 
-#include <QObject>
-#include <QUrlQuery>
-#include <QJSValue>
-#include <QUrl>
+#include "proxies/userendpointproxy.h"
 
-class Session;
-class Jira;
-
-class UserEndpoint : public QObject
+class UserEndpoint : public UserEndpointProxy
 {
     Q_OBJECT
     Q_DISABLE_COPY(UserEndpoint)
 
-    UserEndpoint();
-
 public:
-    explicit UserEndpoint(Session *session, const QJSValue &callback, Jira *parent);
+    UserEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
 
-    void getUserResource(const QString &username);
+protected:
+    virtual Reply *onAddUserToApplicationRequest() override;
+    virtual Reply *onChangeUserPasswordRequest() override;
+    virtual Reply *onCreateAvatarFromTemporaryRequest() override;
+    virtual Reply *onCreateUserRequest() override;
+    virtual Reply *onScheduleUserAnonymizationRequest() override;
+    virtual Reply *onScheduleUserAnonymizationRerunRequest() override;
+    virtual Reply *onSetColumnsRequest() override;
+    virtual Reply *onSetPropertyRequest() override;
+    virtual Reply *onStoreTemporaryAvatarRequest() override;
+    virtual Reply *onStoreTemporaryAvatarUsingMultiPartRequest() override;
+    virtual Reply *onUpdateProjectAvatarRequest() override;
+    virtual Reply *onUpdateUserRequest() override;
 
-private:
-    void getUser(const QUrlQuery &query);
-
-private:
-    Session     *m_session;
-    QJSValue    m_callback;
-    const QUrl  m_baseUri;
+protected:
+    virtual QJSValueList onGetUserSuccess(const QByteArray &data) override;
+    virtual QJSValueList onGetUserError(const QByteArray &) override;
 };

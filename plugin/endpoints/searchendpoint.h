@@ -1,27 +1,19 @@
 #pragma once
 
-#include <QObject>
-#include <QJSValue>
-#include <QUrl>
+#include "proxies/searchendpointproxy.h"
 
-class Session;
-class Jira;
-
-class SearchEndpoint : public QObject
+class SearchEndpoint : public SearchEndpointProxy
 {
     Q_OBJECT
     Q_DISABLE_COPY(SearchEndpoint)
 
-    SearchEndpoint();
-
 public:
-    SearchEndpoint(Session *session, const QJSValue &callback, Jira *parent);
+    SearchEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
 
-public slots:
-    void search(const QString &jql, const int startAt, const int maxResults, const QString &fields, const QString &expand);
+protected:
+    virtual Reply *onSearchUsingSearchRequestRequest() override;
 
-private:
-    Session     *m_session;
-    QJSValue    m_callback;
-    const QUrl  m_baseUri;
+protected:
+    virtual QJSValueList onSearchSuccess(const QByteArray &data) override;
+    virtual QJSValueList onSearchError(const QByteArray &) override;
 };

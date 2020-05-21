@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(qmljiraplugin VERSION 0.5.1 LANGUAGES CXX)
+project(qmljiraplugin VERSION 1.0 LANGUAGES CXX)
 
-find_package(Qt5 COMPONENTS Core Gui Qml Network Test QuickTest REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Gui Qml Network Test QuickTest)
 
 if(NOT DEFINED QML_JIRA_PLUGIN_BUILD_TESTS)
     set(QML_JIRA_PLUGIN_BUILD_TESTS ON)
 endif()
 if(NOT DEFINED QML_JIRA_PLUGIN_BUILD_EXAMPLES)
-    set(QML_JIRA_PLUGIN_BUILD_EXAMPLES ON)
+    set(QML_JIRA_PLUGIN_BUILD_EXAMPLES OFF)
 endif()
 
 set(CMAKE_CXX_STANDARD 11)
