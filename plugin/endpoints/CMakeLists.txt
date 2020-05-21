@@ -6,19 +6,242 @@ generate_endpoints("${PROJECT_SOURCE_DIR}/plugin/ifgenerator/wadl/jira-rest-plug
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-include("${CMAKE_CURRENT_BINARY_DIR}/proxies/sessionendpointproxy.cmake")
+# ToDo: think about generating "all.cmake" and corresponding targets
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/api2endpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/applicationpropertiesendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/applicationroleendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/attachmentendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/auditingendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/avatarendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/clusterendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/commentendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/componentendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/configurationendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/customfieldoptionendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/customfieldsendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/dashboardendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/fieldendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/filterendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/groupendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/groupsendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/groupuserpickerendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/indexendpointproxy.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issueendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issuelinkendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issuelinktypeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issuesecurityschemesendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issuetypeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/issuetypeschemeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/jqlendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/licensevalidatorendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/monitoringendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/mypreferencesendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/myselfendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/notificationschemeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/passwordendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/permissionschemeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/priorityendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/priorityschemesendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/projectcategoryendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/projectendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/projectvalidateendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/reindexendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/resolutionendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/roleendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/screensendpointproxy.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/proxies/searchendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/securitylevelendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/serverinfoendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/sessionendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/settingsendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/statuscategoryendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/statusendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/universal_avatarendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/upgradeendpointproxy.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/proxies/userendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/versionendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/websudoendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/workflowendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/workflowschemeendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/proxies/worklogendpointproxy.cmake")
 
-set(headers sessionendpoint.h issueendpoint.h searchendpoint.h userendpoint.h)
-set(sources sessionendpoint.cpp issueendpoint.cpp searchendpoint.cpp userendpoint.cpp)
+set(headers
+    api2endpoint.h
+    applicationpropertiesendpoint.h
+    applicationroleendpoint.h
+    attachmentendpoint.h
+    auditingendpoint.h
+    avatarendpoint.h
+    clusterendpoint.h
+    commentendpoint.h
+    componentendpoint.h
+    configurationendpoint.h
+    customfieldoptionendpoint.h
+    customfieldsendpoint.h
+    dashboardendpoint.h
+    fieldendpoint.h
+    filterendpoint.h
+    groupendpoint.h
+    groupsendpoint.h
+    groupuserpickerendpoint.h
+    indexendpoint.h
+    issueendpoint.h
+    issuelinkendpoint.h
+    issuelinktypeendpoint.h
+    issuesecurityschemesendpoint.h
+    issuetypeendpoint.h
+    issuetypeschemeendpoint.h
+    jqlendpoint.h
+    licensevalidatorendpoint.h
+    monitoringendpoint.h
+    mypreferencesendpoint.h
+    myselfendpoint.h
+    notificationschemeendpoint.h
+    passwordendpoint.h
+    permissionschemeendpoint.h
+    priorityendpoint.h
+    priorityschemesendpoint.h
+    projectcategoryendpoint.h
+    projectendpoint.h
+    projectvalidateendpoint.h
+    reindexendpoint.h
+    resolutionendpoint.h
+    roleendpoint.h
+    screensendpoint.h
+    searchendpoint.h
+    securitylevelendpoint.h
+    serverinfoendpoint.h
+    sessionendpoint.h
+    settingsendpoint.h
+    statuscategoryendpoint.h
+    statusendpoint.h
+    universalavatarendpoint.h
+    upgradeendpoint.h
+    userendpoint.h
+    versionendpoint.h
+    websudoendpoint.h
+    workflowendpoint.h
+    workflowschemeendpoint.h
+    worklogendpoint.h)
+
+set(sources
+    api2endpoint.cpp
+    applicationpropertiesendpoint.cpp
+    applicationroleendpoint.cpp
+    attachmentendpoint.cpp
+    auditingendpoint.cpp
+    avatarendpoint.cpp
+    clusterendpoint.cpp
+    commentendpoint.cpp
+    componentendpoint.cpp
+    configurationendpoint.cpp
+    customfieldoptionendpoint.cpp
+    customfieldsendpoint.cpp
+    dashboardendpoint.cpp
+    fieldendpoint.cpp
+    filterendpoint.cpp
+    groupendpoint.cpp
+    groupsendpoint.cpp
+    groupuserpickerendpoint.cpp
+    indexendpoint.cpp
+    issueendpoint.cpp
+    issuelinkendpoint.cpp
+    issuelinktypeendpoint.cpp
+    issuesecurityschemesendpoint.cpp
+    issuetypeendpoint.cpp
+    issuetypeschemeendpoint.cpp
+    jqlendpoint.cpp
+    licensevalidatorendpoint.cpp
+    monitoringendpoint.cpp
+    mypreferencesendpoint.cpp
+    myselfendpoint.cpp
+    notificationschemeendpoint.cpp
+    passwordendpoint.cpp
+    permissionschemeendpoint.cpp
+    priorityendpoint.cpp
+    priorityschemesendpoint.cpp
+    projectcategoryendpoint.cpp
+    projectendpoint.cpp
+    projectvalidateendpoint.cpp
+    reindexendpoint.cpp
+    resolutionendpoint.cpp
+    roleendpoint.cpp
+    screensendpoint.cpp
+    searchendpoint.cpp
+    securitylevelendpoint.cpp
+    serverinfoendpoint.cpp
+    sessionendpoint.cpp
+    settingsendpoint.cpp
+    statuscategoryendpoint.cpp
+    statusendpoint.cpp
+    universalavatarendpoint.cpp
+    upgradeendpoint.cpp
+    userendpoint.cpp
+    versionendpoint.cpp
+    websudoendpoint.cpp
+    workflowendpoint.cpp
+    workflowschemeendpoint.cpp
+    worklogendpoint.cpp)
 
 add_library(${target} OBJECT ${headers} ${sources}
-    ${generated_sessionendpointproxy}
+    ${generated_api2endpointproxy}
+    ${generated_applicationpropertiesendpointproxy}
+    ${generated_applicationroleendpointproxy}
+    ${generated_attachmentendpointproxy}
+    ${generated_auditingendpointproxy}
+    ${generated_avatarendpointproxy}
+    ${generated_clusterendpointproxy}
+    ${generated_commentendpointproxy}
+    ${generated_componentendpointproxy}
+    ${generated_configurationendpointproxy}
+    ${generated_customfieldoptionendpointproxy}
+    ${generated_customfieldsendpointproxy}
+    ${generated_dashboardendpointproxy}
+    ${generated_fieldendpointproxy}
+    ${generated_filterendpointproxy}
+    ${generated_groupendpointproxy}
+    ${generated_groupsendpointproxy}
+    ${generated_groupuserpickerendpointproxy}
+    ${generated_indexendpointproxy}
     ${generated_issueendpointproxy}
+    ${generated_issuelinkendpointproxy}
+    ${generated_issuelinktypeendpointproxy}
+    ${generated_issuesecurityschemesendpointproxy}
+    ${generated_issuetypeendpointproxy}
+    ${generated_issuetypeschemeendpointproxy}
+    ${generated_jqlendpointproxy}
+    ${generated_licensevalidatorendpointproxy}
+    ${generated_monitoringendpointproxy}
+    ${generated_mypreferencesendpointproxy}
+    ${generated_myselfendpointproxy}
+    ${generated_notificationschemeendpointproxy}
+    ${generated_passwordendpointproxy}
+    ${generated_permissionschemeendpointproxy}
+    ${generated_priorityendpointproxy}
+    ${generated_priorityschemesendpointproxy}
+    ${generated_projectcategoryendpointproxy}
+    ${generated_projectendpointproxy}
+    ${generated_projectvalidateendpointproxy}
+    ${generated_reindexendpointproxy}
+    ${generated_resolutionendpointproxy}
+    ${generated_roleendpointproxy}
+    ${generated_screensendpointproxy}
     ${generated_searchendpointproxy}
-    ${generated_userendpointproxy})
+    ${generated_securitylevelendpointproxy}
+    ${generated_serverinfoendpointproxy}
+    ${generated_sessionendpointproxy}
+    ${generated_settingsendpointproxy}
+    ${generated_statuscategoryendpointproxy}
+    ${generated_statusendpointproxy}
+    ${generated_universal_avatarendpointproxy}
+    ${generated_upgradeendpointproxy}
+    ${generated_userendpointproxy}
+    ${generated_versionendpointproxy}
+    ${generated_websudoendpointproxy}
+    ${generated_workflowendpointproxy}
+    ${generated_workflowschemeendpointproxy}
+    ${generated_worklogendpointproxy})
+
 target_include_directories(${target}
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
