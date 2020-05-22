@@ -80,6 +80,11 @@ public slots:
     QObject *workflow(QJSValue callback = QJSValue());
     QObject *workflowScheme(QJSValue callback = QJSValue());
     QObject *worklog(QJSValue callback = QJSValue());
+    QObject *agileBacklog(QJSValue callback = QJSValue());
+    QObject *agileBoard(QJSValue callback = QJSValue());
+    QObject *agileEpic(QJSValue callback = QJSValue());
+    QObject *agileIssue(QJSValue callback = QJSValue());
+    QObject *agileSprint(QJSValue callback = QJSValue());
 
 private:
     template <typename EP>

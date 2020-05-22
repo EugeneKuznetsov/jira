@@ -55,6 +55,11 @@
 #include "workflowendpoint.h"
 #include "workflowschemeendpoint.h"
 #include "worklogendpoint.h"
+#include "agilebacklogendpoint.h"
+#include "agileboardendpoint.h"
+#include "agileepicendpoint.h"
+#include "agileissueendpoint.h"
+#include "agilesprintendpoint.h"
 #include "session.h"
 #include "jira.h"
 
@@ -367,6 +372,31 @@ QObject *Jira::workflowScheme(QJSValue callback/* = QJSValue()*/)
 QObject *Jira::worklog(QJSValue callback/* = QJSValue()*/)
 {
     return endpoint<WorklogEndpoint>(callback);
+}
+
+QObject *Jira::agileBacklog(QJSValue callback)
+{
+    return endpoint<AgileBacklogEndpoint>(callback);
+}
+
+QObject *Jira::agileBoard(QJSValue callback)
+{
+    return endpoint<AgileBoardEndpoint>(callback);
+}
+
+QObject *Jira::agileEpic(QJSValue callback)
+{
+    return endpoint<AgileEpicEndpoint>(callback);
+}
+
+QObject *Jira::agileIssue(QJSValue callback)
+{
+    return endpoint<AgileIssueEndpoint>(callback);
+}
+
+QObject *Jira::agileSprint(QJSValue callback)
+{
+    return endpoint<AgileSprintEndpoint>(callback);
 }
 
 Session *Jira::newSession(const QUrl &server)

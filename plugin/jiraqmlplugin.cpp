@@ -1,10 +1,8 @@
 #include <qqml.h>
-
-#include "jiraqmlplugin.h"
-#include "jira.h"
 #include "qmltypes/issue.h"
 #include "qmltypes/user.h"
-
+#include "jira.h"
+#include "jiraqmlplugin.h"
 
 JiraQmlPlugin::JiraQmlPlugin(QObject *parent/* = nullptr*/)
     : QQmlExtensionPlugin(parent)
@@ -14,8 +12,8 @@ JiraQmlPlugin::JiraQmlPlugin(QObject *parent/* = nullptr*/)
 void JiraQmlPlugin::registerTypes(const char *uri)
 {
     Q_ASSERT(uri == QLatin1String("Jira"));
-    qmlRegisterType<Issue>(uri, 1, 0, "Issue");
-    qmlRegisterUncreatableType<User>(uri, 1, 0, "User",
+    qmlRegisterType<Issue>(uri, 1, 1, "Issue");
+    qmlRegisterUncreatableType<User>(uri, 1, 1, "User",
         "User type can only be returned via callback and cannot be instantiated separately");
-    qmlRegisterType<Jira>(uri, 1, 0, "Jira");
+    qmlRegisterType<Jira>(uri, 1, 1, "Jira");
 }
