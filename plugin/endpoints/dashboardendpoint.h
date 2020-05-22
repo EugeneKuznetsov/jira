@@ -2,7 +2,7 @@
 
 #include "proxies/dashboardendpointproxy.h"
 
-class DashboardEndpoint : public DashboardEndpointProxy
+class DashboardEndpoint : public DashBoardEndpointProxy
 {
     Q_OBJECT
     Q_DISABLE_COPY(DashboardEndpoint)

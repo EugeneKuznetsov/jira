@@ -2,7 +2,14 @@ cmake_minimum_required(VERSION 3.16)
 
 set(target plugin_endpoints)
 
-generate_endpoints("${PROJECT_SOURCE_DIR}/plugin/ifgenerator/wadl/jira-rest-plugin_8.8.1.wadl" "${CMAKE_CURRENT_BINARY_DIR}/proxies")
+generate_endpoints(
+    "${PROJECT_SOURCE_DIR}/plugin/ifgenerator/wadl/jira-rest-plugin_8.8.1.wadl"
+    "${CMAKE_CURRENT_BINARY_DIR}/proxies"
+    "")
+generate_endpoints(
+    "${PROJECT_SOURCE_DIR}/plugin/ifgenerator/wadl/jira-agile-rest-plugin_7.3.1_unofficial.wadl"
+    "${CMAKE_CURRENT_BINARY_DIR}/agileproxies"
+    "agile")
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -65,6 +72,12 @@ include("${CMAKE_CURRENT_BINARY_DIR}/proxies/workflowendpointproxy.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/proxies/workflowschemeendpointproxy.cmake")
 include("${CMAKE_CURRENT_BINARY_DIR}/proxies/worklogendpointproxy.cmake")
 
+include("${CMAKE_CURRENT_BINARY_DIR}/agileproxies/agilebacklogendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/agileproxies/agileboardendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/agileproxies/agileepicendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/agileproxies/agileissueendpointproxy.cmake")
+include("${CMAKE_CURRENT_BINARY_DIR}/agileproxies/agilesprintendpointproxy.cmake")
+
 set(headers
     api2endpoint.h
     applicationpropertiesendpoint.h
@@ -122,7 +135,12 @@ set(headers
     websudoendpoint.h
     workflowendpoint.h
     workflowschemeendpoint.h
-    worklogendpoint.h)
+    worklogendpoint.h
+    agilebacklogendpoint.h
+    agileboardendpoint.h
+    agileepicendpoint.h
+    agileissueendpoint.h
+    agilesprintendpoint.h)
 
 set(sources
     api2endpoint.cpp
@@ -181,7 +199,12 @@ set(sources
     websudoendpoint.cpp
     workflowendpoint.cpp
     workflowschemeendpoint.cpp
-    worklogendpoint.cpp)
+    worklogendpoint.cpp
+    agilebacklogendpoint.cpp
+    agileboardendpoint.cpp
+    agileepicendpoint.cpp
+    agileissueendpoint.cpp
+    agilesprintendpoint.cpp)
 
 add_library(${target} OBJECT ${headers} ${sources}
     ${generated_api2endpointproxy}
@@ -240,7 +263,13 @@ add_library(${target} OBJECT ${headers} ${sources}
     ${generated_websudoendpointproxy}
     ${generated_workflowendpointproxy}
     ${generated_workflowschemeendpointproxy}
-    ${generated_worklogendpointproxy})
+    ${generated_worklogendpointproxy}
+    ${generated_agilebacklogendpointproxy}
+    ${generated_agileboardendpointproxy}
+    ${generated_agileepicendpointproxy}
+    ${generated_agileissueendpointproxy}
+    ${generated_agilesprintendpointproxy}
+    )
 
 target_include_directories(${target}
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
