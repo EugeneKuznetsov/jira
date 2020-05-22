@@ -66,6 +66,7 @@
 Jira::Jira(QObject *parent/* = nullptr*/)
     : QObject(parent)
     , m_session(nullptr)
+    , m_caCertificateFile()
 {
 }
 
@@ -84,9 +85,26 @@ void Jira::setServer(const QUrl &server)
         m_session->deleteLater();
 
     m_session = newSession(server);
+    m_session->setupCaCertificateFile(m_caCertificateFile);
+    connect(this, &Jira::caCertificateFileChanged, m_session, &Session::setupCaCertificateFile);
     connect(m_session, &Session::networkError, this, &Jira::networkErrorDetails);
 
     emit serverChanged();
+}
+
+const QString &Jira::getCaCertificateFile() const
+{
+    return m_caCertificateFile;
+}
+
+void Jira::setCaCertificateFile(const QString &caCertificateFile)
+{
+    if (m_caCertificateFile == caCertificateFile)
+        return;
+
+    m_caCertificateFile = caCertificateFile;
+
+    emit caCertificateFileChanged(m_caCertificateFile);
 }
 
 QObject *Jira::api2(QJSValue callback/* = QJSValue()*/)
