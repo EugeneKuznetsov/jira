@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(qmljiraplugin VERSION 1.0 LANGUAGES CXX)
+project(qmljiraplugin VERSION 1.1 LANGUAGES CXX)
 
 find_package(Qt5 REQUIRED COMPONENTS Core Gui Qml Network Test QuickTest)
 

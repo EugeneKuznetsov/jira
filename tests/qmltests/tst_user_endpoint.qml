@@ -11,7 +11,7 @@ TestCase {
 
     function test_getUser(testData) {
         var jiraServer = createTemporaryQmlObject("import CuteMockServer 0.5; CuteMockServer { }", root);
-        var jiraClient = createTemporaryQmlObject("import Jira 1.0; Jira { }", root);
+        var jiraClient = createTemporaryQmlObject("import Jira 1.1; Jira { }", root);
         var errorSpy = createTemporaryQmlObject("import QtTest 1.14; SignalSpy { }", root);
         errorSpy.target = jiraClient;
         errorSpy.signalName = "networkErrorDetails";
