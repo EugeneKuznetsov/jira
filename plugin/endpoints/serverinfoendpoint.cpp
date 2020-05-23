@@ -1,6 +1,3 @@
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
 #include "serverinfoendpoint.h"
 
 ServerInfoEndpoint::ServerInfoEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng)
