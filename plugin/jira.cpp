@@ -86,7 +86,6 @@ void Jira::setServer(const QUrl &server)
 
     m_session = newSession(server);
     m_session->setupCaCertificateFile(m_caCertificateFile);
-    connect(this, &Jira::caCertificateFileChanged, m_session, &Session::setupCaCertificateFile);
     connect(m_session, &Session::networkError, this, &Jira::networkErrorDetails);
 
     emit serverChanged();
@@ -103,6 +102,9 @@ void Jira::setCaCertificateFile(const QString &caCertificateFile)
         return;
 
     m_caCertificateFile = caCertificateFile;
+
+    if (nullptr != m_session)
+        m_session->setupCaCertificateFile(m_caCertificateFile);
 
     emit caCertificateFileChanged(m_caCertificateFile);
 }

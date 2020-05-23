@@ -93,6 +93,8 @@ public slots:
 private:
     template <typename EP>
     QObject *endpoint(QJSValue callback) {
+        if (nullptr == m_session)
+            return nullptr;
         EP *ep = new EP(callback, m_session, qjsEngine(this), qmlEngine(this));
         qmlEngine(parent())->setObjectOwnership(ep, QQmlEngine::JavaScriptOwnership);
         return ep;
