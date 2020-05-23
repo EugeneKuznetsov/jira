@@ -12,8 +12,4 @@ public:
 
 protected:
     virtual Reply *onSearchUsingSearchRequestRequest() override;
-
-protected:
-    virtual QJSValueList onSearchSuccess(const QByteArray &data) override;
-    virtual QJSValueList onSearchError(const QByteArray &) override;
 };

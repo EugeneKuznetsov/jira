@@ -1,5 +1,4 @@
 #include <QJsonDocument>
-#include "user.h"
 #include "userendpoint.h"
 
 UserEndpoint::UserEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng)
@@ -65,16 +64,4 @@ Reply *UserEndpoint::onUpdateProjectAvatarRequest()
 Reply *UserEndpoint::onUpdateUserRequest()
 {
     return UserEndpointProxy::onUpdateUserRequest();
-}
-
-QJSValueList UserEndpoint::onGetUserSuccess(const QByteArray &data)
-{
-    User *user = new User(QJsonDocument::fromJson(data).object());
-    getQmlEngine()->setObjectOwnership(user, QQmlEngine::JavaScriptOwnership);
-    return QJSValueList{jsArg(user)};
-}
-
-QJSValueList UserEndpoint::onGetUserError(const QByteArray &)
-{
-    return QJSValueList{jsArg(nullptr)};
 }

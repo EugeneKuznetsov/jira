@@ -274,4 +274,4 @@ add_library(${target} OBJECT ${headers} ${sources}
 target_include_directories(${target}
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
-target_link_libraries(${target} PUBLIC ifgenerator PRIVATE plugin_qmltypes)
+target_link_libraries(${target} PUBLIC ifgenerator)

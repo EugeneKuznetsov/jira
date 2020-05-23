@@ -27,7 +27,7 @@ TestCase {
                 compare(fieldCount, testData["fieldCount"]);
             }
             if (testData["expand"] !== undefined && testData["expandField"] !== undefined)
-                verify(issue.expandedFields[testData["expandField"]] !== undefined);
+                verify(issue[testData["expandField"]] !== undefined);
 
             jiraServer = null;
         };

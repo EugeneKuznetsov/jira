@@ -5,8 +5,6 @@ set(target test_plugin)
 set(QML_IMPORT_PATH "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports" CACHE INTERNAL "Hello QtCreator! ;-)")
 
 set(qmltests
-    tst_issue.qml
-    tst_user.qml
     tst_session_endpoint.qml
     tst_search_endpoint.qml
     tst_user_endpoint.qml

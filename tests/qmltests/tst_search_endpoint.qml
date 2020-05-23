@@ -18,29 +18,29 @@ TestCase {
         jiraServer.listen(8080);
         jiraServer.setHttpRoute("GET", "/rest/api/2/search", testData["statusCode"], testData["contentType"], testData["content"], true);
         jiraClient.server = "http://localhost:8080/";
-        var callback = function cb(status, issues, total) {
+        var callback = function cb(status, results) {
             compare(status.success, testData["success"]);
             compare(status.errors.length, testData["jiraErrors"]);
             if (testData["expectedTotal"] !== undefined)
-                compare(total, testData["expectedTotal"]);
+                compare(results.total, testData["expectedTotal"]);
 
             if (testData["expectedListSize"] !== undefined)
-                compare(issues.length, testData["expectedListSize"]);
+                compare(results.issues.length, testData["expectedListSize"]);
 
             if (testData["expectedLastIssueKey" !== undefined])
-                compare(issues[issues.length - 1].key === testData["expectedLastIssueKey"]);
+                compare(results.issues[results.issues.length - 1].key === testData["expectedLastIssueKey"]);
 
             if (testData["expectedFields"] !== undefined)
-                verify(issues[0].fields[testData["expectedFields"]] !== undefined);
+                verify(results.issues[0].fields[testData["expectedFields"]] !== undefined);
 
             if (testData["unexpectedFields"] !== undefined)
-                verify(issues[0].fields[testData["unexpectedFields"]] === undefined);
+                verify(results.issues[0].fields[testData["unexpectedFields"]] === undefined);
 
             if (testData["expectedExpand"] !== undefined)
-                verify(issues[0].expandedFields[testData["expectedExpand"]] !== undefined);
+                verify(results.issues[0][testData["expectedExpand"]] !== undefined);
 
             if (testData["unexpectedExpand"] !== undefined)
-                verify(issues[0].expandedFields[testData["unexpectedExpand"]] === undefined);
+                verify(results.issues[0][testData["unexpectedExpand"]] === undefined);
 
             jiraServer = null;
         };

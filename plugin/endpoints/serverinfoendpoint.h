@@ -9,4 +9,7 @@ class ServerInfoEndpoint : public ServerInfoEndpointProxy
 
 public:
     ServerInfoEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng);
+
+public slots:
+    virtual void getServerInfo(const bool doHealthCheck = false) override;
 };

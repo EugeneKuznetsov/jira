@@ -23,8 +23,4 @@ protected:
     virtual Reply *onStoreTemporaryAvatarUsingMultiPartRequest() override;
     virtual Reply *onUpdateProjectAvatarRequest() override;
     virtual Reply *onUpdateUserRequest() override;
-
-protected:
-    virtual QJSValueList onGetUserSuccess(const QByteArray &data) override;
-    virtual QJSValueList onGetUserError(const QByteArray &) override;
 };

@@ -35,8 +35,4 @@ protected:
     virtual Reply *onUpdateCommentRequest() override;
     virtual Reply *onUpdateRemoteIssueLinkRequest() override;
     virtual Reply *onUpdateWorklogRequest() override;
-
-protected:
-    virtual QJSValueList onGetIssueSuccess(const QByteArray &data) override;
-    virtual QJSValueList onGetIssueError(const QByteArray &) override;
 };

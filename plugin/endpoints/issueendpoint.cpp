@@ -1,5 +1,4 @@
 #include <QJsonDocument>
-#include "issue.h"
 #include "issueendpoint.h"
 
 IssueEndpoint::IssueEndpoint(const QJSValue &jsCallback, Session *parent, QJSEngine *jsEng, QQmlEngine *qmlEng)
@@ -111,16 +110,4 @@ Reply *IssueEndpoint::onUpdateRemoteIssueLinkRequest()
 Reply *IssueEndpoint::onUpdateWorklogRequest()
 {
     return IssueEndpointProxy::onUpdateWorklogRequest();
-}
-
-QJSValueList IssueEndpoint::onGetIssueSuccess(const QByteArray &data)
-{
-    Issue *issue = new Issue(QJsonDocument::fromJson(data).object());
-    getQmlEngine()->setObjectOwnership(issue, QQmlEngine::JavaScriptOwnership);
-    return QJSValueList{jsArg(issue)};
-}
-
-QJSValueList IssueEndpoint::onGetIssueError(const QByteArray &)
-{
-    return QJSValueList{jsArg(nullptr)};
 }

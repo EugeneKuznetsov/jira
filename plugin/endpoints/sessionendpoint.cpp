@@ -11,5 +11,5 @@ SessionEndpoint::SessionEndpoint(const QJSValue &jsCallback, Session *parent, QJ
 Reply *SessionEndpoint::onLoginRequest()
 {
     QJsonDocument payload({{"username", m_username}, {"password", m_password}});
-    return http_post(payload.toJson());
+    return httpPost(payload.toJson());
 }

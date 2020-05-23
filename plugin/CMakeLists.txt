@@ -6,7 +6,6 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/imports/Jir
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/imports/Jira)
 
 add_subdirectory(ifgenerator)
-add_subdirectory(qmltypes)
 add_subdirectory(endpoints)
 
 set(imports imports/qmldir)
@@ -21,7 +20,7 @@ endif()
 set_target_properties(${target} PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(${target} PROPERTIES SOVERSION ${PROJECT_VERSION})
 
-target_link_libraries(${target} PRIVATE plugin_endpoints PRIVATE plugin_qmltypes)
+target_link_libraries(${target} PRIVATE plugin_endpoints)
 
 foreach(import ${imports})
     add_custom_command(TARGET ${target}
