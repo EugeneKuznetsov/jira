@@ -1,9 +1,0 @@
-<RCC>
-    <qresource prefix="/qml">
-        <file>Main.qml</file>
-        <file>UserInputField.qml</file>
-        <file>UserInputLabel.qml</file>
-        <file>CredentialsLayout.qml</file>
-        <file>CredentialsButton.qml</file>
-    </qresource>
-</RCC>
