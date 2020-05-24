@@ -14,3 +14,10 @@ Reply *AgileBoardEndpoint::onSetPropertyRequest()
 {
     return AgileBoardEndpointProxy::onSetPropertyRequest();
 }
+
+
+void AgileBoardEndpoint::getAllBoards(const long long startAt/* = 0*/, const int maxResults/* = 50*/, const QString &type/* = ""*/,
+                                      const QString &name/* = ""*/, const QString &projectKeyOrId/* = ""*/)
+{
+    AgileBoardEndpointProxy::getAllBoards(startAt, maxResults, type, name, projectKeyOrId);
+}

@@ -13,4 +13,8 @@ public:
 protected:
     virtual Reply *onCreateBoardRequest() override;
     virtual Reply *onSetPropertyRequest() override;
+
+public slots:
+    virtual void getAllBoards(const long long startAt = 0, const int maxResults = 50, const QString &type = "",
+                              const QString &name = "", const QString &projectKeyOrId = "") override;
 };
