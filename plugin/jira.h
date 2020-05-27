@@ -11,20 +11,20 @@ class Jira : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QUrl server READ getServer WRITE setServer NOTIFY serverChanged)
-    Q_PROPERTY(QString caCertificateFile READ getCaCertificateFile WRITE setCaCertificateFile NOTIFY caCertificateFileChanged)
+    Q_PROPERTY(QUrl caCertificateFile READ getCaCertificateFile WRITE setCaCertificateFile NOTIFY caCertificateFileChanged)
 
 public:
     explicit Jira(QObject *parent = nullptr);
 
     const QUrl &getServer() const;
     void setServer(const QUrl &server);
-    const QString &getCaCertificateFile() const;
-    void setCaCertificateFile(const QString &caCertificateFile);
+    const QUrl &getCaCertificateFile() const;
+    void setCaCertificateFile(const QUrl &caCertificateFile);
 
 signals:
-    void networkErrorDetails(const QString &errorString);
+    void networkErrorDetails(const QString &errorString, const bool sslError);
     void serverChanged();
-    void caCertificateFileChanged(const QString &newCaCertificateFile);
+    void caCertificateFileChanged(const QUrl &newCaCertificateFile);
 
 public slots:
     QObject *api2(QJSValue callback = QJSValue());
@@ -104,5 +104,5 @@ private:
 
 private:
     Session *m_session;
-    QString m_caCertificateFile;
+    QUrl    m_caCertificateFile;
 };

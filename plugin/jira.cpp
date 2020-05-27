@@ -91,12 +91,12 @@ void Jira::setServer(const QUrl &server)
     emit serverChanged();
 }
 
-const QString &Jira::getCaCertificateFile() const
+const QUrl &Jira::getCaCertificateFile() const
 {
     return m_caCertificateFile;
 }
 
-void Jira::setCaCertificateFile(const QString &caCertificateFile)
+void Jira::setCaCertificateFile(const QUrl &caCertificateFile)
 {
     if (m_caCertificateFile == caCertificateFile)
         return;
