@@ -21,6 +21,8 @@ signals:
 protected:
     virtual Reply *onLoginRequest() override;
 
+    virtual QJSValueList onCurrentUserSuccess(const QByteArray &data) override;
+
 private:
     QString m_username;
     QString m_password;
